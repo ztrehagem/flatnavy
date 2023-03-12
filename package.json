@@ -1,0 +1,19 @@
+{
+  "name": "plainstyle",
+  "private": true,
+  "packageManager": "pnpm@7.29.1",
+  "scripts": {
+    "dev": "pnpm --recursive --if-present --parallel run '/^dev($|:.*)/'",
+    "build": "pnpm --recursive --if-present run build",
+    "check": "pnpm run '/^check:/'",
+    "check:format": "prettier --ignore-path .gitignore --check . '!pnpm-lock.yaml'",
+    "fix": "pnpm run '/^fix:/'",
+    "fix:format": "pnpm run check:format --write"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.0",
+    "nodemon": "^2.0.21",
+    "prettier": "^2.8.4",
+    "typescript": "^4.9.5"
+  }
+}

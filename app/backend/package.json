@@ -1,0 +1,15 @@
+{
+  "name": "@plainstyle/app-backend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:build": "tsc -w",
+    "dev:start": "nodemon ./dist/start.js",
+    "build": "tsc",
+    "start": "node ./dist/start.js"
+  },
+  "dependencies": {
+    "@fastify/static": "^6.9.0",
+    "fastify": "^4.14.1"
+  }
+}
