@@ -9,7 +9,7 @@ export const App = defineComponent({
 
     return () => (
       <div>
-        <h1>alpha.plain.style</h1>
+        <h1>plainstyle</h1>
 
         <PostForm />
 
