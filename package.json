@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "pnpm --recursive --if-present --parallel run '/^dev($|:.*)/'",
     "build": "pnpm --recursive --if-present run build",
+    "start": "pnpm -C app/backend start",
     "check": "pnpm run '/^check:/'",
     "check:format": "prettier --ignore-path .gitignore --check . '!pnpm-lock.yaml'",
     "fix": "pnpm run '/^fix:/'",
