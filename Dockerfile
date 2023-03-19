@@ -11,6 +11,7 @@ COPY pnpm-lock.yaml pnpm-lock.yaml
 COPY app/ app/
 
 RUN pnpm install --frozen-lockfile
+RUN pnpm run build
 
 EXPOSE 3000
 
