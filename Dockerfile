@@ -1,6 +1,6 @@
 FROM node:18.15.0-slim
 
-WORKDIR /opt/plainstyle
+WORKDIR /opt/flatnavy
 
 COPY package.json package.json
 
