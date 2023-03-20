@@ -1,5 +1,5 @@
 {
-  "name": "@plainstyle/app-backend",
+  "name": "@flatnavy/app-backend",
   "private": true,
   "type": "module",
   "scripts": {

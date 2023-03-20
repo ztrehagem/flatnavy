@@ -1,4 +1,4 @@
-# plainstyle
+# FlatNavy
 
 ## Development
 

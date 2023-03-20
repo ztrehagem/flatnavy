@@ -1,5 +1,5 @@
 {
-  "name": "@plainstyle/app-frontend",
+  "name": "@flatnavy/app-frontend",
   "private": true,
   "type": "module",
   "scripts": {
