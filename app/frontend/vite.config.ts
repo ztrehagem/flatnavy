@@ -16,10 +16,4 @@ export default defineConfig({
     outDir: path.resolve("dist"),
     emptyOutDir: true,
   },
-
-  server: {
-    proxy: {
-      "/api/": "http://localhost:3000",
-    },
-  },
 });

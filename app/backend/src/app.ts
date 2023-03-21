@@ -1,11 +1,12 @@
 import * as path from "node:path";
 import { fastify } from "fastify";
 import { default as fastifyStatic } from "@fastify/static";
+import { router } from "./router.js";
 
 const app = fastify();
 
-app.get("/api/", (req, reply) => {
-  reply.send({ hello: "world" });
+app.register(router, {
+  prefix: "/api/",
 });
 
 app.register(fastifyStatic, {

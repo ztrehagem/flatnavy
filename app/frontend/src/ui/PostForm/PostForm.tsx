@@ -1,16 +1,14 @@
-import { defineComponent, inject, ref } from "vue";
+import { defineComponent, ref } from "vue";
 import * as css from "./PostForm.css.js";
-import { Timeline } from "../../state/Timeline.js";
+import { apiOrigin } from "../../lib/api.js";
 
 export const PostForm = defineComponent({
   setup() {
-    const timeline = inject(Timeline.key);
-
     const input = ref("");
 
-    const post = (e: Event) => {
+    const post = async (e: Event) => {
       e.preventDefault();
-      timeline?.push(input.value);
+      await postPost(input.value);
       input.value = "";
     };
 
@@ -24,3 +22,14 @@ export const PostForm = defineComponent({
     );
   },
 });
+
+const postPost = async (post: string) => {
+  const apiUrl = new URL("/api/posts", apiOrigin);
+  await fetch(apiUrl, {
+    method: "POST",
+    body: JSON.stringify({ post }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
