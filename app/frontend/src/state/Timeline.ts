@@ -1,13 +1,23 @@
 import { ref, InjectionKey } from "vue";
+import { apiOrigin } from "../lib/api.js";
 
 export class Timeline {
   #posts = ref<string[]>([]);
+
+  constructor() {
+    const url = new URL("/api/sse", apiOrigin);
+    const eventSource = new EventSource(url);
+    eventSource.addEventListener("message", (e) => {
+      const { post } = JSON.parse(e.data);
+      this.#push(post);
+    });
+  }
 
   get posts(): readonly string[] {
     return this.#posts.value;
   }
 
-  push(post: string): void {
+  #push(post: string): void {
     this.#posts.value.unshift(post);
   }
 

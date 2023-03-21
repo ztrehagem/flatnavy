@@ -1,6 +1,9 @@
 import { app } from "./app.js";
 
-app.listen({ host: "0.0.0.0", port: 3000 }, (error, address) => {
+const host = process.env.HOST ?? "0.0.0.0";
+const port = Number(process.env.PORT ?? 3000);
+
+app.listen({ host, port }, (error, address) => {
   if (error) {
     throw error;
   }
