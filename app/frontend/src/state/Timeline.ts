@@ -8,8 +8,9 @@ export class Timeline {
     const url = new URL("/api/sse", apiOrigin);
     const eventSource = new EventSource(url);
     eventSource.addEventListener("message", (e) => {
-      const { post } = JSON.parse(e.data);
-      this.#push(post);
+      const obj = JSON.parse(e.data);
+      if (obj.type != "post") return;
+      this.#push(obj.post);
     });
   }
 
