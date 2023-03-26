@@ -1,11 +1,10 @@
 import { RouteHandlerMethod } from "fastify";
 import { PostStore } from "../store/PostStore.js";
 
-export const postPost = (): RouteHandlerMethod => (req, reply) => {
-  const { post } = req.body as Record<string, any>;
+export const postPost = (): RouteHandlerMethod => async (req, reply) => {
+  const { post } = req.body as { post: string };
 
   PostStore.global.pushPost(post);
 
-  reply.status(201);
-  reply.send();
+  await reply.status(201).send();
 };

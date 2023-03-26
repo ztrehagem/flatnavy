@@ -4,7 +4,7 @@ import { sse } from "./controllers/sse.js";
 import { postPost } from "./controllers/postPost.js";
 
 export const router: FastifyPluginAsync = async (app) => {
-  app.register(fastifyCors, {
+  await app.register(fastifyCors, {
     origin: process.env.NODE_ENV != "production",
   });
 

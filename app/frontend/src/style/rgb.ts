@@ -1,5 +1,3 @@
-import { createVar, globalStyle } from "@vanilla-extract/css";
-
 const createColor =
   (r: number, g: number, b: number) =>
   (opacity = 1) =>

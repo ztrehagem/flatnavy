@@ -6,7 +6,8 @@
     "dev:build": "tsc -w",
     "dev:start": "nodemon ./dist/start.js",
     "build": "tsc",
-    "start": "node ./dist/start.js"
+    "start": "node ./dist/start.js",
+    "check:type": "tsc --noEmit"
   },
   "dependencies": {
     "@fastify/cors": "^8.2.1",

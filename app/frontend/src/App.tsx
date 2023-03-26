@@ -4,7 +4,7 @@ import { PostForm } from "./ui/PostForm/PostForm.jsx";
 import { TimelineView } from "./ui/TimelineView/TimelineView.jsx";
 
 export const App = defineComponent({
-  setup: (props) => {
+  setup: () => {
     provide(Timeline.key, new Timeline());
 
     return () => (

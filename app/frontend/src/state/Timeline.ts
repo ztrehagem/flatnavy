@@ -7,8 +7,8 @@ export class Timeline {
   constructor() {
     const url = new URL("/api/sse", apiOrigin);
     const eventSource = new EventSource(url);
-    eventSource.addEventListener("message", (e) => {
-      const obj = JSON.parse(e.data);
+    eventSource.addEventListener("message", (e: MessageEvent<string>) => {
+      const obj = JSON.parse(e.data) as { type: string; post: string };
       if (obj.type != "post") return;
       this.#push(obj.post);
     });

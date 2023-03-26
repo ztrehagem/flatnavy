@@ -6,10 +6,11 @@ export const PostForm = defineComponent({
   setup() {
     const input = ref("");
 
-    const post = async (e: Event) => {
+    const post = (e: Event) => {
       e.preventDefault();
-      await postPost(input.value);
-      input.value = "";
+      void postPost(input.value).then(() => {
+        input.value = "";
+      });
     };
 
     return () => (

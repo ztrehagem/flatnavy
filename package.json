@@ -7,12 +7,20 @@
     "build": "pnpm --recursive --if-present run build",
     "start": "pnpm -C app/backend start",
     "check": "pnpm run '/^check:/'",
-    "check:format": "prettier --ignore-path .gitignore --check . '!pnpm-lock.yaml'",
+    "check:eslint": "eslint --ignore-path .gitignore --max-warnings 0 .",
+    "check:prettier": "prettier --ignore-path .gitignore --check . '!pnpm-lock.yaml'",
+    "check:type": "pnpm --recursive --if-present run check:type",
     "fix": "pnpm run '/^fix:/'",
-    "fix:format": "pnpm run check:format --write"
+    "fix:eslint": "pnpm run check:eslint --fix",
+    "fix:prettier": "pnpm run check:prettier --write"
   },
   "devDependencies": {
     "@types/node": "^18.15.10",
+    "@typescript-eslint/eslint-plugin": "^5.56.0",
+    "@typescript-eslint/parser": "^5.56.0",
+    "eslint": "^8.36.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-vue": "^9.10.0",
     "nodemon": "^2.0.22",
     "prettier": "^2.8.7",
     "typescript": "^5.0.2"
