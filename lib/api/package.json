@@ -1,0 +1,13 @@
+{
+  "name": "@flatnavy/lib-api",
+  "private": true,
+  "type": "module",
+  "main": "./dist/main.js",
+  "scripts": {
+    "codegen": "openapi-typescript ../../api.yaml --output src/spec.generated.ts",
+    "dev": "tsc -w --preserveWatchOutput",
+    "build": "tsc",
+    "clean": "rm -r dist src/*.generated.ts || true"
+  },
+  "dependencies": {}
+}

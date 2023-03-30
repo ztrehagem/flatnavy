@@ -16,6 +16,7 @@ parserOptions:
   project:
     - app/frontend/tsconfig.eslint.json
     - app/backend/tsconfig.json
+    - lib/api/tsconfig.json
   sourceType: module
   ecmaVersion: latest
   ecmaFeatures:

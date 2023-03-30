@@ -3,7 +3,7 @@ name: Code Check
 on: push
 
 jobs:
-  lint:
+  eslint:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,5 +27,57 @@ jobs:
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+      - run: pnpm run eslint
 
-      - run: pnpm run check
+  prettier:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get pnpm version
+        run: |
+          PNPM_VERSION=`cat package.json | jq -r '.packageManager | split("@")[1]'`
+          echo "PNPM_VERSION=${PNPM_VERSION}" >> $GITHUB_ENV
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run prettier
+
+  typecheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get pnpm version
+        run: |
+          PNPM_VERSION=`cat package.json | jq -r '.packageManager | split("@")[1]'`
+          echo "PNPM_VERSION=${PNPM_VERSION}" >> $GITHUB_ENV
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run typecheck

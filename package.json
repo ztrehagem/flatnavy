@@ -3,16 +3,16 @@
   "private": true,
   "packageManager": "pnpm@7.30.3",
   "scripts": {
-    "dev": "pnpm --recursive --if-present --parallel run '/^dev($|:.*)/'",
-    "build": "pnpm --recursive --if-present run build",
-    "start": "pnpm -C app/backend start",
-    "check": "pnpm run '/^check:/'",
-    "check:eslint": "eslint --ignore-path .gitignore --max-warnings 0 .",
-    "check:prettier": "prettier --ignore-path .gitignore --check . '!pnpm-lock.yaml'",
-    "check:type": "pnpm --recursive --if-present run check:type",
-    "fix": "pnpm run '/^fix:/'",
-    "fix:eslint": "pnpm run check:eslint --fix",
-    "fix:prettier": "pnpm run check:prettier --write"
+    "dev": "turbo run dev",
+    "clean": "turbo run clean",
+    "build": "turbo run build",
+    "start": "pnpm run -C app/backend start",
+    "typecheck": "turbo run typecheck",
+    "eslint": "eslint --cache --ignore-path .gitignore --max-warnings 0 .",
+    "prettier": "prettier --cache --ignore-path .gitignore --check . '!pnpm-lock.yaml'",
+    "fix": "pnpm run fix:eslint && pnpm run fix:prettier",
+    "fix:eslint": "pnpm run eslint --fix",
+    "fix:prettier": "pnpm run prettier --write"
   },
   "devDependencies": {
     "@types/node": "^18.15.10",
@@ -22,7 +22,9 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-vue": "^9.10.0",
     "nodemon": "^2.0.22",
+    "openapi-typescript": "^6.2.0",
     "prettier": "^2.8.7",
+    "turbo": "^1.8.8",
     "typescript": "^5.0.2"
   }
 }
