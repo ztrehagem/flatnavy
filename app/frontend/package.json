@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@flatnavy/lib-api": "*",
     "@vanilla-extract/css": "^1.10.0",
     "@vanilla-extract/vite-plugin": "^3.8.0",
     "@vitejs/plugin-vue-jsx": "^3.0.0",

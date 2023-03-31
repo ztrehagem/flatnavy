@@ -11,8 +11,9 @@ tags:
     description: Streaming API
 
 paths:
-  /posts:
+  /api/posts:
     post:
+      operationId: createPost
       tags:
         - Post
       requestBody:
@@ -37,8 +38,12 @@ paths:
                     $ref: "#/components/schemas/Post"
                 required:
                   - post
+        400:
+          description: Bad Request
+          content:
+            application/json: {}
 
-  /sse:
+  /api/sse:
     get:
       tags:
         - Streaming

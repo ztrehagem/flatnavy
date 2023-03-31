@@ -1,6 +1,6 @@
 import { defineComponent, ref } from "vue";
 import * as css from "./PostForm.css.js";
-import { apiOrigin } from "../../lib/api.js";
+import { api } from "../../lib/api.js";
 
 export const PostForm = defineComponent({
   setup() {
@@ -8,7 +8,8 @@ export const PostForm = defineComponent({
 
     const post = (e: Event) => {
       e.preventDefault();
-      void postPost(input.value).then(() => {
+
+      void api.createPost({ body: input.value }).then(() => {
         input.value = "";
       });
     };
@@ -23,14 +24,3 @@ export const PostForm = defineComponent({
     );
   },
 });
-
-const postPost = async (post: string) => {
-  const apiUrl = new URL("/api/posts", apiOrigin);
-  await fetch(apiUrl, {
-    method: "POST",
-    body: JSON.stringify({ post }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-};
