@@ -5,12 +5,164 @@ info:
   version: 0.0.0
 
 tags:
+  - name: User
   - name: Post
-    description: CRUD for posts
   - name: Streaming
-    description: Streaming API
 
 paths:
+  /api/users:
+    get:
+      operationId: indexUser
+      summary: ユーザ一覧取得
+      tags:
+        - User
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+                required:
+                  - users
+    post:
+      operationId: createUser
+      summary: ユーザ登録
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                handle:
+                  type: string
+                  minLength: 1
+                  maxLength: 64
+                name:
+                  type: string
+                  minLength: 0
+                  maxLength: 64
+                password:
+                  type: string
+                  minLength: 8
+                  maxLength: 255
+              required:
+                - handle
+                - name
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+                required:
+                  - user
+        400:
+          description: Bad Request
+        409:
+          description: Conflicted / conflicted handle
+
+  /api/users/{userHandle}:
+    parameters:
+      - name: userHandle
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/UserHandle"
+    get:
+      operationId: getUser
+      summary: ユーザ情報取得
+      tags:
+        - User
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+        404:
+          description: Not Found
+    patch:
+      operationId: updateUser
+      summary: ユーザ情報更新
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 0
+                  maxLength: 64
+                currentPassword:
+                  type: string
+                newPassword:
+                  type: string
+                  minLength: 8
+                  maxLength: 255
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+    delete:
+      operationId: deleteUser
+      summary: ユーザ削除
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+              required:
+                - password
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+
   /api/posts:
     post:
       operationId: createPost
@@ -40,8 +192,6 @@ paths:
                   - post
         400:
           description: Bad Request
-          content:
-            application/json: {}
 
   /api/sse:
     get:
@@ -57,6 +207,22 @@ paths:
 
 components:
   schemas:
+    User:
+      type: object
+      properties:
+        handle:
+          $ref: "#/components/schemas/UserHandle"
+        name:
+          type:
+            - string
+            - "null"
+          example: "John Doe ✌"
+      required:
+        - handle
+        - name
+    UserHandle:
+      type: string
+      example: "JohnDoe123"
     Post:
       type: object
       properties:

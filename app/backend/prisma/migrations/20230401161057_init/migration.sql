@@ -1,8 +1,8 @@
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
-    "userName" TEXT NOT NULL,
-    "displayName" TEXT,
+    "handle" TEXT NOT NULL,
+    "name" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -16,4 +16,4 @@ CREATE TABLE "Post" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_userName_key" ON "User"("userName");
+CREATE UNIQUE INDEX "User_handle_key" ON "User"("handle");
