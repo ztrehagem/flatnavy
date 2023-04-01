@@ -2,14 +2,14 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "clean": {},
-    "codegen": {},
+    "prepare": {},
     "dev": {
-      "dependsOn": ["codegen"],
+      "dependsOn": ["prepare"],
       "persistent": true,
       "cache": false
     },
     "build": {
-      "dependsOn": ["^build", "codegen"],
+      "dependsOn": ["^build", "prepare"],
       "outputs": ["dist/**"]
     },
     "typecheck": {

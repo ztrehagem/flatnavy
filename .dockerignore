@@ -8,8 +8,12 @@ node_modules/
 .eslintcache
 
 # Turborepo
-.turbo
+.turbo/
 
 # App
 dist/
 *.generated.ts
+
+# Env
+.env
+.envrc

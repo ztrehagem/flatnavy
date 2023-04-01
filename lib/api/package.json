@@ -8,6 +8,7 @@
     "./client": "./dist/client/main.js"
   },
   "scripts": {
+    "prepare": "pnpm run codegen",
     "codegen": "openapi-typescript ./api.yaml --output src/spec.generated.ts",
     "dev": "tsc -w --preserveWatchOutput",
     "build": "tsc",

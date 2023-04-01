@@ -1,4 +1,5 @@
 import EventEmitter from "events";
+import { prisma } from "../db.js";
 
 const EVENT_POST = "post";
 
@@ -12,7 +13,15 @@ export class PostStore {
   }
 
   pushPost(post: string): void {
-    this.#ee.emit(EVENT_POST, post);
+    void prisma.post
+      .create({
+        data: {
+          body: post,
+        },
+      })
+      .then(() => {
+        this.#ee.emit(EVENT_POST, post);
+      });
   }
 
   on(eventName: typeof EVENT_POST, listener: (post: string) => void): void {
