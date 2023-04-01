@@ -5,11 +5,11 @@ import { router } from "./router.js";
 
 const app = fastify();
 
-app.register(router, {
+await app.register(router, {
   prefix: "/api/",
 });
 
-app.register(fastifyStatic, {
+await app.register(fastifyStatic, {
   root: path.resolve("../frontend/dist"),
 });
 

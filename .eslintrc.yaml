@@ -1,0 +1,35 @@
+env:
+  browser: true
+  es2021: true
+  node: true
+
+extends:
+  - eslint:recommended
+  - plugin:vue/vue3-recommended
+  - plugin:@typescript-eslint/recommended
+  - plugin:@typescript-eslint/recommended-requiring-type-checking
+  - prettier
+
+parser: "@typescript-eslint/parser"
+
+parserOptions:
+  project:
+    - app/frontend/tsconfig.eslint.json
+    - app/backend/tsconfig.json
+    - lib/api/tsconfig.json
+  sourceType: module
+  ecmaVersion: latest
+  ecmaFeatures:
+    jsx: true
+
+rules:
+  no-console: error
+  no-debugger: error
+  "@typescript-eslint/explicit-module-boundary-types": warn
+  "@typescript-eslint/no-unused-vars":
+    - warn
+    - varsIgnorePattern: "^_"
+      args: none
+      ignoreRestSiblings: true
+
+overrides: []

@@ -8,5 +8,6 @@ app.listen({ host, port }, (error, address) => {
     throw error;
   }
 
+  // eslint-disable-next-line no-console
   console.log(`Server is now listening on ${address}`);
 });

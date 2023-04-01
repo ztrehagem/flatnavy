@@ -9,19 +9,24 @@ export const sse = (): RouteHandlerMethod => (req, reply) => {
     "Cache-Control": "no-store",
   });
 
-  const sendEvent = (message: string) => {
+  const sendEvent = (obj: object) => {
+    const message = JSON.stringify(obj);
     reply.raw.write(`data: ${message}\n\n`);
   };
 
-  const listener = (post: string) => {
-    const message = JSON.stringify({ post });
-    sendEvent(message);
+  const heartbeatIntervalId = setInterval(() => {
+    sendEvent({});
+  }, 5000);
+
+  const onPost = (post: string) => {
+    sendEvent({ type: "post", post });
   };
 
-  PostStore.global.on("post", listener);
+  PostStore.global.on("post", onPost);
 
   req.socket.on("close", () => {
-    PostStore.global.off("post", listener);
+    PostStore.global.off("post", onPost);
+    clearInterval(heartbeatIntervalId);
     reply.raw.end();
   });
 };

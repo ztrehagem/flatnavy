@@ -3,14 +3,17 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev:build": "tsc -w",
+    "dev": "pnpm run '/^dev:/'",
+    "dev:build": "tsc -w --preserveWatchOutput",
     "dev:start": "nodemon ./dist/start.js",
     "build": "tsc",
-    "start": "node ./dist/start.js"
+    "start": "node ./dist/start.js",
+    "clean": "rm -r dist || true"
   },
   "dependencies": {
     "@fastify/cors": "^8.2.1",
     "@fastify/static": "^6.9.0",
+    "@flatnavy/lib-api": "*",
     "fastify": "^4.14.1"
   }
 }

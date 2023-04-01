@@ -1,0 +1,69 @@
+openapi: 3.1.0
+
+info:
+  title: FlatNavy
+  version: 0.0.0
+
+tags:
+  - name: Post
+    description: CRUD for posts
+  - name: Streaming
+    description: Streaming API
+
+paths:
+  /api/posts:
+    post:
+      operationId: createPost
+      tags:
+        - Post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+              required:
+                - body
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  post:
+                    $ref: "#/components/schemas/Post"
+                required:
+                  - post
+        400:
+          description: Bad Request
+          content:
+            application/json: {}
+
+  /api/sse:
+    get:
+      tags:
+        - Streaming
+      responses:
+        200:
+          description: Server Sent Events
+          content:
+            text/event-stream:
+              schema:
+                type: string
+
+components:
+  schemas:
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+        body:
+          type: string
+      required:
+        - id
+        - body
