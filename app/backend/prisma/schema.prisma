@@ -12,11 +12,33 @@ datasource db {
 
 model User {
   id Int @id @default(autoincrement())
+
   handle String @unique
   name String?
+
+  authentication UserAuthentication?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserAuthentication {
+  id Int @id @default(autoincrement())
+
+  hashedPassword String
+
+  user User @relation(fields: [userId], references: [id])
+  userId Int @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Post {
   id Int @id @default(autoincrement())
+
   body String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
