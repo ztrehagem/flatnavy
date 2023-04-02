@@ -10,8 +10,12 @@ export class UserRegistration {
   readonly user: User;
   password: HashedUserPassword;
 
-  constructor({ user, password }: Params) {
+  private constructor({ user, password }: Params) {
     this.user = user;
     this.password = password;
+  }
+
+  static from(params: Params): UserRegistration {
+    return new UserRegistration(params);
   }
 }

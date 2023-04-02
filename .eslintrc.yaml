@@ -31,5 +31,6 @@ rules:
     - varsIgnorePattern: "^_"
       args: none
       ignoreRestSiblings: true
+  "@typescript-eslint/no-non-null-assertion": off
 
 overrides: []

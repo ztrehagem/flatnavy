@@ -12,15 +12,22 @@ export class User {
   readonly handle: UserHandle;
   name: string | null;
 
-  constructor({ id, handle, name }: Params) {
+  private constructor({ id, handle, name }: Params) {
     this.id = id;
     this.handle = handle;
 
-    name = name?.trim() || null;
-
+    name = name?.trim() ?? null;
     if (name && name.length > 64) {
       throw new TypeError("User: too long name");
     }
-    this.name = name?.trim() || null;
+    this.name = name;
+  }
+
+  static from(params: Params): User | void {
+    try {
+      return new User(params);
+    } catch {
+      return;
+    }
   }
 }

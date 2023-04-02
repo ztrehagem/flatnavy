@@ -6,7 +6,6 @@ import { User } from "../../model/User/User.js";
 import { UserRegistration } from "../../model/User/UserRegistration.js";
 import { HashedUserPassword } from "../../model/User/HashedUserPassword.js";
 import { UserId } from "../../model/User/UserId.js";
-import { UsedUserHandleError } from "../../error/UsedUserHandleError.js";
 
 export const createUser =
   ({ userRepository }: Context): RouteHandlerMethod =>
@@ -16,24 +15,28 @@ export const createUser =
       "post"
     >["application/json"];
 
-    // TODO: handle validation error
-    const handle = new UserHandle(body.handle);
-    const user = new User({
+    const handle = UserHandle.from(body.handle);
+
+    if (!handle) {
+      return await reply.status(400).send();
+    }
+
+    const user = User.from({
       id: UserId.empty(),
       handle,
       name: body.name,
     });
+
+    if (!user) {
+      return await reply.status(400).send();
+    }
+
     const password = await HashedUserPassword.from(body.password);
-    const registration = new UserRegistration({ user, password });
+    const registration = UserRegistration.from({ user, password });
     const [error, createdUser] = await userRepository.create(registration);
 
     if (error) {
-      if (error instanceof UsedUserHandleError) {
-        await reply.status(409).send();
-        return;
-      }
-      await reply.status(500).send();
-      return;
+      return await reply.status(409).send();
     }
 
     const res: ResponsePayload<
