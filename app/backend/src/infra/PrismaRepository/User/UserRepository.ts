@@ -14,6 +14,16 @@ export class UserRepository implements IUserRepository {
   constructor({ prisma }: PrismaRepositoryContext) {
     this.#prisma = prisma;
   }
+
+  async index(): Promise<User[]> {
+    const userRecords = await this.#prisma.user.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 10,
+    });
+
+    return userRecords.map(mapUser);
+  }
+
   async create(
     registration: UserRegistration
   ): Promise<Result<User, UsedUserHandleError>> {

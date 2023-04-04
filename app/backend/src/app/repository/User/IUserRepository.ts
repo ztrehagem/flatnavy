@@ -4,6 +4,8 @@ import { UserRegistration } from "../../model/User/UserRegistration.js";
 import { UsedUserHandleError } from "../../error/UsedUserHandleError.js";
 
 export interface IUserRepository {
+  index(): Promise<User[]>;
+
   create(
     userRegistration: UserRegistration
   ): Promise<Result<User, UsedUserHandleError>>;
