@@ -15,23 +15,23 @@ export const createUser =
       "post"
     >["application/json"];
 
-    const handle = UserHandle.from(body.handle);
+    const [eHandle, handle] = UserHandle(body.handle);
 
-    if (!handle) {
+    if (eHandle) {
       return await reply.status(400).send();
     }
 
-    const user = User.from({
-      id: UserId.empty(),
+    const [eUser, user] = User({
+      id: UserId.placeholder(),
       handle,
       name: body.name,
     });
 
-    if (!user) {
+    if (eUser) {
       return await reply.status(400).send();
     }
 
-    const password = await HashedUserPassword.from(body.password);
+    const password = await HashedUserPassword(body.password);
     const registration = UserRegistration.from({ user, password });
     const [error, createdUser] = await userRepository.create(registration);
 
@@ -44,7 +44,7 @@ export const createUser =
       "post"
     >["201"]["application/json"] = {
       user: {
-        handle: createdUser.handle.valueOf(),
+        handle: createdUser.handle.value,
         name: createdUser.name,
       },
     };

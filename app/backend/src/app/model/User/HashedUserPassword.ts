@@ -1,18 +1,24 @@
 import { compare, hash } from "bcrypt";
+import { Brand } from "../../../utils/Brand.js";
 
-const round = 10;
+declare const brand: unique symbol;
 
-export class HashedUserPassword extends String {
-  private constructor(encrypted: string) {
-    super(encrypted);
-  }
+type IHashedUserPassword = {
+  readonly value: string;
+  compare(raw: string): Promise<boolean>;
+};
 
-  static async from(raw: string): Promise<HashedUserPassword> {
-    const encrypted = await hash(raw, round);
-    return new HashedUserPassword(encrypted);
-  }
+export type HashedUserPassword = Brand<IHashedUserPassword, typeof brand>;
 
-  async compare(raw: string): Promise<boolean> {
-    return compare(raw, this.valueOf());
-  }
-}
+const ROUND = 10;
+
+export const HashedUserPassword = async (
+  raw: string
+): Promise<HashedUserPassword> => {
+  const value = await hash(raw, ROUND);
+
+  return {
+    value,
+    compare: (raw) => compare(raw, value),
+  } satisfies IHashedUserPassword as HashedUserPassword;
+};

@@ -1,22 +1,23 @@
-export class UserId {
-  readonly #value?: number;
+import { Brand } from "../../../utils/Brand.js";
 
-  private constructor(value?: number) {
-    this.#value = value;
-  }
+declare const brand: unique symbol;
 
-  static from(value: number): UserId {
-    return new UserId(value);
-  }
+type IUserId = {
+  readonly value: number;
+};
 
-  static empty(): UserId {
-    return new UserId();
-  }
+export type UserId = Brand<IUserId, typeof brand>;
 
-  valueOf(): number {
-    if (this.#value == null) {
-      throw new Error("UserId: empty id");
-    }
-    return this.#value;
-  }
-}
+export const UserId = (value: number): UserId => {
+  return {
+    value,
+  } satisfies IUserId as UserId;
+};
+
+UserId.placeholder = (): UserId => {
+  return {
+    get value(): number {
+      throw new Error("UserId: read placeholder");
+    },
+  } satisfies IUserId as UserId;
+};

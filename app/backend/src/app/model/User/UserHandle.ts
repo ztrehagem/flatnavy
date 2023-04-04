@@ -1,19 +1,27 @@
-const pattern = /^[a-zA-Z0-9_]{1,64}$/;
+import { Brand } from "../../../utils/Brand.js";
+import { Result } from "../../../utils/Result.js";
+import { InvalidParameterError } from "../../error/InvalidParameterError.js";
 
-export class UserHandle extends String {
-  private constructor(handle: string) {
-    if (!pattern.test(handle)) {
-      throw new TypeError("UserHandle: invalid pattern");
-    }
+declare const brand: unique symbol;
 
-    super(handle);
+type IUserHandle = {
+  readonly value: string;
+};
+
+export type UserHandle = Brand<IUserHandle, typeof brand>;
+
+const PATTERN = /^[a-zA-Z0-9_]{1,64}$/;
+
+export const UserHandle = (
+  value: string
+): Result<UserHandle, InvalidParameterError> => {
+  if (!PATTERN.test(value)) {
+    return [new InvalidParameterError("UserHandle", "invalid pattern")];
   }
 
-  static from(handle: string): UserHandle | void {
-    try {
-      return new UserHandle(handle);
-    } catch {
-      return;
-    }
-  }
-}
+  const userHandle = {
+    value,
+  } satisfies IUserHandle as UserHandle;
+
+  return [null, userHandle];
+};

@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma } from "@prisma/client";
+import * as prisma from "@prisma/client";
 import { User } from "../../../app/model/User/User.js";
 import { UserHandle } from "../../../app/model/User/UserHandle.js";
 import { UserId } from "../../../app/model/User/UserId.js";
@@ -9,7 +9,7 @@ import { Result } from "../../../utils/Result.js";
 import { PrismaRepositoryContext } from "../PrismaRepositoryContext.js";
 
 export class UserRepository implements IUserRepository {
-  readonly #prisma: PrismaClient;
+  readonly #prisma: prisma.PrismaClient;
 
   constructor({ prisma }: PrismaRepositoryContext) {
     this.#prisma = prisma;
@@ -20,25 +20,19 @@ export class UserRepository implements IUserRepository {
     try {
       const userRecord = await this.#prisma.user.create({
         data: {
-          handle: registration.user.handle.valueOf(),
+          handle: registration.user.handle.value,
           name: registration.user.name,
           authentication: {
             create: {
-              hashedPassword: registration.password.valueOf(),
+              hashedPassword: registration.password.value,
             },
           },
         },
       });
 
-      const user = User.from({
-        id: UserId.from(userRecord.id),
-        handle: UserHandle.from(userRecord.handle)!,
-        name: userRecord.name,
-      })!;
-
-      return [null, user];
+      return [null, mapUser(userRecord)];
     } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error instanceof prisma.Prisma.PrismaClientKnownRequestError) {
         if (error.code == "P2002") {
           return [new UsedUserHandleError(registration.user.handle, error)];
         }
@@ -48,3 +42,15 @@ export class UserRepository implements IUserRepository {
     }
   }
 }
+
+const mapUser = (record: prisma.User): User => {
+  const [, handle] = UserHandle(record.handle);
+
+  const [, user] = User({
+    id: UserId(record.id)!,
+    handle: handle!,
+    name: record.name,
+  });
+
+  return user!;
+};
