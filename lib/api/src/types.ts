@@ -7,6 +7,16 @@ export type Operation<
   Path extends keyof paths
 > = paths[Path][Method];
 
+export type PathParameters<
+  Path extends keyof paths,
+  Method extends keyof paths[Path]
+> = (paths[Path] extends { parameters: { path: infer U } }
+  ? U
+  : Record<string, never>) &
+  (paths[Path][Method] extends { parameters: { path: infer U } }
+    ? U
+    : Record<string, never>);
+
 export type RequestPayload<
   Path extends keyof paths,
   Method extends keyof paths[Path]

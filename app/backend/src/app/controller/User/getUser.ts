@@ -1,0 +1,35 @@
+import { RouteHandlerMethod } from "fastify";
+import { Context } from "../../../context.js";
+import { PathParameters, ResponsePayload } from "@flatnavy/lib-api";
+import { serializeUser } from "../../serializer/User/User.js";
+import { UserHandle } from "../../model/User/UserHandle.js";
+
+export const getUser =
+  ({ userRepository }: Context): RouteHandlerMethod =>
+  async (req, reply) => {
+    const params = req.params as PathParameters<
+      "/api/users/{userHandle}",
+      "get"
+    >;
+
+    const [, userHandle] = UserHandle(params.userHandle);
+
+    if (!userHandle) {
+      return await reply.status(400).send();
+    }
+
+    const user = await userRepository.getByHandle(userHandle);
+
+    if (!user) {
+      return await reply.status(404).send();
+    }
+
+    const res: ResponsePayload<
+      "/api/users/{userHandle}",
+      "get"
+    >["200"]["application/json"] = {
+      user: serializeUser(user),
+    };
+
+    await reply.status(200).type("application/json").send(res);
+  };

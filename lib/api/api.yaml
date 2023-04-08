@@ -96,6 +96,8 @@ paths:
                 properties:
                   user:
                     $ref: "#/components/schemas/User"
+        400:
+          description: Bad Request
         404:
           description: Not Found
     patch:

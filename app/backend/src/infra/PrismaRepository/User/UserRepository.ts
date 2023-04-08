@@ -15,6 +15,20 @@ export class UserRepository implements IUserRepository {
     this.#prisma = prisma;
   }
 
+  async getByHandle(handle: UserHandle): Promise<User | null> {
+    const userRecord = await this.#prisma.user.findUnique({
+      where: {
+        handle: handle.value,
+      },
+    });
+
+    if (!userRecord) {
+      return null;
+    }
+
+    return mapUser(userRecord);
+  }
+
   async index(): Promise<User[]> {
     const userRecords = await this.#prisma.user.findMany({
       orderBy: { createdAt: "desc" },
