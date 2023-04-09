@@ -1,5 +1,5 @@
-import { paths } from "../spec.generated.js";
-import { Operation } from "../types.js";
+import type { paths } from "../spec.generated.js";
+import type { Operation } from "../types.js";
 
 export type Result<Data, Error extends NonNullable<unknown>> =
   | [Error]

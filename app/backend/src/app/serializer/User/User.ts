@@ -1,5 +1,5 @@
-import { schemas } from "@flatnavy/lib-api";
-import { User } from "../../model/User/User.js";
+import type { schemas } from "@flatnavy/lib-api";
+import type { User } from "../../model/User/User.js";
 
 export const serializeUser = (user: User): schemas["User"] => {
   return {

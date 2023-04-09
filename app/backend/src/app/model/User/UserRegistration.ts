@@ -1,5 +1,5 @@
-import { HashedUserPassword } from "./HashedUserPassword.js";
-import { User } from "./User.js";
+import type { HashedUserPassword } from "./HashedUserPassword.js";
+import type { User } from "./User.js";
 
 export type Params = {
   readonly user: User;

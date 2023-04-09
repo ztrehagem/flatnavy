@@ -1,4 +1,4 @@
-import { components, paths } from "./spec.generated.js";
+import type { components, paths } from "./spec.generated.js";
 
 export type schemas = components["schemas"];
 

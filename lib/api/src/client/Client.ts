@@ -1,7 +1,7 @@
-import { RequestPayload } from "../main.js";
-import { paths } from "../spec.generated.js";
-import { schemas } from "../types.js";
-import { ClientResponse, Result } from "./types.js";
+import type { RequestPayload } from "../main.js";
+import type { paths } from "../spec.generated.js";
+import type { schemas } from "../types.js";
+import type { ClientResponse, Result } from "./types.js";
 
 export class Client {
   readonly #origin: URL | string;

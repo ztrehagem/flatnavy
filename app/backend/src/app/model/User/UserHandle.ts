@@ -1,5 +1,5 @@
-import { Brand } from "../../../utils/Brand.js";
-import { Result } from "../../../utils/Result.js";
+import type { Brand } from "../../../utils/Brand.js";
+import type { Result } from "../../../utils/Result.js";
 import { InvalidParameterError } from "../../error/InvalidParameterError.js";
 
 declare const brand: unique symbol;

@@ -1,4 +1,4 @@
-import { Brand } from "../../../utils/Brand.js";
+import type { Brand } from "../../../utils/Brand.js";
 
 declare const brand: unique symbol;
 

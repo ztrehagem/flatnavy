@@ -2,10 +2,10 @@ import * as path from "node:path";
 import { fastify } from "fastify";
 import { default as fastifyStatic } from "@fastify/static";
 import { router } from "./router.js";
-import { Context } from "./context.js";
+import type { Context } from "./context.js";
 import { PrismaClient } from "@prisma/client";
 import { UserRepository } from "./infra/PrismaRepository/User/UserRepository.js";
-import { PrismaRepositoryContext } from "./infra/PrismaRepository/PrismaRepositoryContext.js";
+import type { PrismaRepositoryContext } from "./infra/PrismaRepository/PrismaRepositoryContext.js";
 
 const prismaRepositoryContext: PrismaRepositoryContext = {
   prisma: new PrismaClient(),

@@ -1,4 +1,4 @@
-import { UserHandle } from "../model/User/UserHandle.js";
+import type { UserHandle } from "../model/User/UserHandle.js";
 
 export class UsedUserHandleError extends Error {
   override name = "UsedUserHandleError" as const;

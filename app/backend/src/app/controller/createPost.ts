@@ -1,5 +1,5 @@
-import { RouteHandlerMethod } from "fastify";
-import { RequestPayload, ResponsePayload } from "@flatnavy/lib-api";
+import type { RouteHandlerMethod } from "fastify";
+import type { RequestPayload, ResponsePayload } from "@flatnavy/lib-api";
 import { PostStore } from "../store/PostStore.js";
 
 let id = 1;

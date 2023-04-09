@@ -7,7 +7,7 @@
     "rootDir": "./src",
     "moduleResolution": "NodeNext",
     "noEmit": true,
-    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,

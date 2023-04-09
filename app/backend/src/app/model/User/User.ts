@@ -1,8 +1,8 @@
-import { Brand } from "../../../utils/Brand.js";
-import { Result } from "../../../utils/Result.js";
+import type { Brand } from "../../../utils/Brand.js";
+import type { Result } from "../../../utils/Result.js";
 import { InvalidParameterError } from "../../error/InvalidParameterError.js";
-import { UserHandle } from "./UserHandle.js";
-import { UserId } from "./UserId.js";
+import type { UserHandle } from "./UserHandle.js";
+import type { UserId } from "./UserId.js";
 
 declare const brand: unique symbol;
 

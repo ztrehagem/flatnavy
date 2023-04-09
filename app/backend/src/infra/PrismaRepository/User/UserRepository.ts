@@ -2,11 +2,11 @@ import * as prisma from "@prisma/client";
 import { User } from "../../../app/model/User/User.js";
 import { UserHandle } from "../../../app/model/User/UserHandle.js";
 import { UserId } from "../../../app/model/User/UserId.js";
-import { UserRegistration } from "../../../app/model/User/UserRegistration.js";
-import { IUserRepository } from "../../../app/repository/User/IUserRepository.js";
+import type { UserRegistration } from "../../../app/model/User/UserRegistration.js";
+import type { IUserRepository } from "../../../app/repository/User/IUserRepository.js";
 import { UsedUserHandleError } from "../../../app/error/UsedUserHandleError.js";
-import { Result } from "../../../utils/Result.js";
-import { PrismaRepositoryContext } from "../PrismaRepositoryContext.js";
+import type { Result } from "../../../utils/Result.js";
+import type { PrismaRepositoryContext } from "../PrismaRepositoryContext.js";
 
 export class UserRepository implements IUserRepository {
   readonly #prisma: prisma.PrismaClient;

@@ -1,6 +1,6 @@
-import { RouteHandlerMethod } from "fastify";
-import { RequestPayload, ResponsePayload } from "@flatnavy/lib-api";
-import { Context } from "../../../context.js";
+import type { RouteHandlerMethod } from "fastify";
+import type { RequestPayload, ResponsePayload } from "@flatnavy/lib-api";
+import type { Context } from "../../../context.js";
 import { UserHandle } from "../../model/User/UserHandle.js";
 import { User } from "../../model/User/User.js";
 import { UserRegistration } from "../../model/User/UserRegistration.js";

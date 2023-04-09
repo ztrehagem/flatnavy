@@ -1,8 +1,8 @@
-import { Result } from "../../../utils/Result.js";
-import { User } from "../../model/User/User.js";
-import { UserRegistration } from "../../model/User/UserRegistration.js";
-import { UsedUserHandleError } from "../../error/UsedUserHandleError.js";
-import { UserHandle } from "../../model/User/UserHandle.js";
+import type { Result } from "../../../utils/Result.js";
+import type { User } from "../../model/User/User.js";
+import type { UserRegistration } from "../../model/User/UserRegistration.js";
+import type { UsedUserHandleError } from "../../error/UsedUserHandleError.js";
+import type { UserHandle } from "../../model/User/UserHandle.js";
 
 export interface IUserRepository {
   getByHandle(handle: UserHandle): Promise<User | null>;

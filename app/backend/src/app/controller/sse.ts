@@ -1,4 +1,4 @@
-import { RouteHandlerMethod } from "fastify";
+import type { RouteHandlerMethod } from "fastify";
 import { PostStore } from "../store/PostStore.js";
 
 export const sse = (): RouteHandlerMethod => (req, reply) => {
