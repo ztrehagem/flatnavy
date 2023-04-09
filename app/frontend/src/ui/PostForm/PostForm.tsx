@@ -17,7 +17,9 @@ export const PostForm = defineComponent({
     return () => (
       <form onSubmit={post} class={css.root}>
         <div>
-          <button type="submit">post</button>
+          <button type="submit" class={css.submitButton}>
+            Post
+          </button>
         </div>
         <textarea v-model={input.value}></textarea>
       </form>

@@ -1,5 +1,5 @@
 import { createApp } from "vue";
-import "./global.css.js";
+import "./style/global.css.js";
 import { Root } from "./Root.jsx";
 import { router } from "./router/router.js";
 
