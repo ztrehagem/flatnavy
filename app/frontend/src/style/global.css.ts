@@ -8,6 +8,10 @@ globalStyle(":where(body, body *)", {
   lineHeight: "1",
 });
 
+globalStyle(":where(li)", {
+  display: "unset",
+});
+
 globalStyle("body", {
   background: bg,
   color: fg,

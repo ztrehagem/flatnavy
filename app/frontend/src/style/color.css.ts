@@ -7,6 +7,9 @@ export const dark = createVar();
 
 export const darkNavy = createVar();
 export const lightNavy = createVar();
+// #1D5BE0 blue
+// #4765A6 gray
+// #6089E0 water
 
 globalStyle(":root", {
   vars: {
@@ -15,8 +18,8 @@ globalStyle(":root", {
     [slate]: "rgb(64 64 64)",
     [dark]: "rgb(35 39 45)",
 
-    [darkNavy]: "rgb(120 140 200)",
-    [lightNavy]: "rgb(120 140 200)",
+    [darkNavy]: "#0D2761",
+    [lightNavy]: "#133C94",
   },
 });
 
@@ -30,7 +33,7 @@ globalStyle(":root", {
   vars: {
     [fg]: dark,
     [fgWeak]: slate,
-    [accent]: lightNavy,
+    [accent]: darkNavy,
     [bgStrong]: smoke,
     [bg]: light,
   },
@@ -39,7 +42,7 @@ globalStyle(":root", {
       vars: {
         [fg]: light,
         [fgWeak]: smoke,
-        [accent]: darkNavy,
+        [accent]: lightNavy,
         [bgStrong]: slate,
         [bg]: dark,
       },

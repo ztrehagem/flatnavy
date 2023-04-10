@@ -1,8 +1,8 @@
 import { style } from "@vanilla-extract/css";
 
-export const root = style({
+export const list = style({
   display: "flex",
   alignItems: "center",
-  justifyContent: "space-between",
-  padding: "16px",
+  justifyContent: "center",
+  gap: "8px",
 });
