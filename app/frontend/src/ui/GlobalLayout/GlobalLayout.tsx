@@ -1,4 +1,4 @@
-import { defineComponent } from "vue";
+import { Suspense, defineComponent } from "vue";
 import { GlobalNavigation } from "../GlobalNavigation/GlobalNavigation.jsx";
 import { RouterView } from "vue-router";
 
@@ -7,7 +7,9 @@ export const GlobalLayout = defineComponent({
     return () => (
       <div>
         <GlobalNavigation />
-        <RouterView />
+        <Suspense>
+          <RouterView />
+        </Suspense>
       </div>
     );
   },

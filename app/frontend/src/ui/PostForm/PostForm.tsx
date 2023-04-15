@@ -1,7 +1,8 @@
 import { defineComponent, ref } from "vue";
 import * as css from "./PostForm.css.js";
-import { api } from "../../lib/api.js";
+import { apiClientContext } from "../../lib/api.js";
 import { MaterialSymbol } from "../Symbol/MaterialSymbol.jsx";
+import { createPost } from "@flatnavy/lib-api/client";
 
 export const PostForm = defineComponent({
   setup() {
@@ -10,7 +11,7 @@ export const PostForm = defineComponent({
     const post = (e: Event) => {
       e.preventDefault();
 
-      void api.createPost({ body: input.value }).then(() => {
+      void createPost(apiClientContext)({ body: input.value }).then(() => {
         input.value = "";
       });
     };

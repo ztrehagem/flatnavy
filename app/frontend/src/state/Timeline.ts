@@ -3,7 +3,8 @@ import { ref } from "vue";
 import { apiOrigin } from "../lib/api.js";
 
 export class Timeline {
-  #posts = ref<string[]>([]);
+  readonly #eventSource: EventSource;
+  readonly #posts = ref<string[]>([]);
 
   constructor() {
     const url = new URL("/api/sse", apiOrigin);
@@ -13,10 +14,16 @@ export class Timeline {
       if (obj.type != "post") return;
       this.#push(obj.post);
     });
+
+    this.#eventSource = eventSource;
   }
 
   get posts(): readonly string[] {
     return this.#posts.value;
+  }
+
+  destruct(): void {
+    this.#eventSource.close();
   }
 
   #push(post: string): void {
