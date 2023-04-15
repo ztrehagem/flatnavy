@@ -2,7 +2,7 @@ import { defineComponent, ref } from "vue";
 import * as css from "./PostForm.css.js";
 import { apiClientContext } from "../../lib/api.js";
 import { MaterialSymbol } from "../Symbol/MaterialSymbol.jsx";
-import { createPost } from "@flatnavy/lib-api/client";
+import { createPost } from "@flatnavy/api/client";
 
 export const PostForm = defineComponent({
   setup() {

@@ -1,5 +1,5 @@
 {
-  "name": "@flatnavy/app-frontend",
+  "name": "@flatnavy/frontend",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,7 +9,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@flatnavy/lib-api": "*",
+    "@flatnavy/api": "*",
     "@vanilla-extract/css": "^1.11.0",
     "@vanilla-extract/vite-plugin": "^3.8.0",
     "@vitejs/plugin-vue-jsx": "^3.0.1",

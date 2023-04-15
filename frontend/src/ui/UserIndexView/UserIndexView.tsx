@@ -1,5 +1,5 @@
 import { defineComponent } from "vue";
-import { indexUser } from "@flatnavy/lib-api/client";
+import { indexUser } from "@flatnavy/api/client";
 import * as css from "./UserIndexView.css.js";
 import { apiClientContext } from "../../lib/api.js";
 

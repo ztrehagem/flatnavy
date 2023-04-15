@@ -48,7 +48,7 @@ importers:
       '@fastify/static':
         specifier: ^6.10.1
         version: 6.10.1
-      '@flatnavy/lib-api':
+      '@flatnavy/api':
         specifier: '*'
         version: link:../api
       '@prisma/client':
@@ -70,7 +70,7 @@ importers:
 
   frontend:
     dependencies:
-      '@flatnavy/lib-api':
+      '@flatnavy/api':
         specifier: '*'
         version: link:../api
       '@vanilla-extract/css':
