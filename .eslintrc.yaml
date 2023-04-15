@@ -31,5 +31,7 @@ rules:
     - varsIgnorePattern: "^_"
       args: none
       ignoreRestSiblings: true
+  "@typescript-eslint/no-non-null-assertion": off
+  "@typescript-eslint/consistent-type-imports": error
 
 overrides: []

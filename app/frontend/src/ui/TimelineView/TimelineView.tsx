@@ -1,4 +1,5 @@
 import { defineComponent, inject } from "vue";
+import * as css from "./TimelineView.css.js";
 import { Timeline } from "../../state/Timeline.js";
 
 export const TimelineView = defineComponent({
@@ -6,7 +7,7 @@ export const TimelineView = defineComponent({
     const timeline = inject(Timeline.key);
 
     return () => (
-      <ul>
+      <ul class={css.list}>
         {timeline?.posts.map((post) => (
           <li>{post}</li>
         ))}

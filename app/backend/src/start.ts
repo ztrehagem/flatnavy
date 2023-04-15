@@ -1,9 +1,9 @@
-import { app } from "./app.js";
+import { server } from "./server.js";
 
 const host = process.env.HOST ?? "0.0.0.0";
 const port = Number(process.env.PORT ?? 3000);
 
-app.listen({ host, port }, (error, address) => {
+server.listen({ host, port }, (error, address) => {
   if (error) {
     throw error;
   }

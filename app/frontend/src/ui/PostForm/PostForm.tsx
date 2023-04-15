@@ -1,6 +1,8 @@
 import { defineComponent, ref } from "vue";
 import * as css from "./PostForm.css.js";
-import { api } from "../../lib/api.js";
+import { apiClientContext } from "../../lib/api.js";
+import { MaterialSymbol } from "../Symbol/MaterialSymbol.jsx";
+import { createPost } from "@flatnavy/lib-api/client";
 
 export const PostForm = defineComponent({
   setup() {
@@ -9,17 +11,27 @@ export const PostForm = defineComponent({
     const post = (e: Event) => {
       e.preventDefault();
 
-      void api.createPost({ body: input.value }).then(() => {
+      void createPost(apiClientContext)({ body: input.value }).then(() => {
         input.value = "";
       });
     };
 
     return () => (
       <form onSubmit={post} class={css.root}>
-        <div>
-          <button type="submit">post</button>
+        <div class={css.postHeader}>
+          <div></div>
+
+          <button type="submit" class={css.submitButton}>
+            <MaterialSymbol name="send" />
+            Post
+          </button>
         </div>
-        <textarea v-model={input.value}></textarea>
+
+        <textarea
+          v-model={input.value}
+          placeholder="what you say"
+          class={css.textarea}
+        ></textarea>
       </form>
     );
   },
