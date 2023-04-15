@@ -11,9 +11,9 @@ node_modules/
 .turbo/
 
 # App
-dist/
+/*/dist/
 *.generated.ts
 
 # Env
-.env
-.envrc
+/.env
+/.envrc

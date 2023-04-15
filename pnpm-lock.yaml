@@ -28,7 +28,10 @@ importers:
       turbo: 1.8.8
       typescript: 5.0.2
 
-  app/backend:
+  api:
+    specifiers: {}
+
+  backend:
     specifiers:
       '@fastify/cors': ^8.2.1
       '@fastify/static': ^6.9.0
@@ -41,7 +44,7 @@ importers:
     dependencies:
       '@fastify/cors': 8.2.1
       '@fastify/static': 6.9.0
-      '@flatnavy/lib-api': link:../../lib/api
+      '@flatnavy/lib-api': link:../api
       '@prisma/client': 4.12.0_prisma@4.12.0
       bcrypt: 5.1.0
       fastify: 4.14.1
@@ -49,7 +52,7 @@ importers:
       '@types/bcrypt': 5.0.0
       prisma: 4.12.0
 
-  app/frontend:
+  frontend:
     specifiers:
       '@flatnavy/lib-api': '*'
       '@vanilla-extract/css': ^1.10.0
@@ -59,16 +62,13 @@ importers:
       vue: ^3.2.47
       vue-router: '4'
     dependencies:
-      '@flatnavy/lib-api': link:../../lib/api
+      '@flatnavy/lib-api': link:../api
       '@vanilla-extract/css': 1.10.0
       '@vanilla-extract/vite-plugin': 3.8.0_vite@4.1.4
       '@vitejs/plugin-vue-jsx': 3.0.0_vite@4.1.4+vue@3.2.47
       vite: 4.1.4
       vue: 3.2.47
       vue-router: 4.1.6_vue@3.2.47
-
-  lib/api:
-    specifiers: {}
 
 packages:
 

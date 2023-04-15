@@ -8,7 +8,9 @@ RUN corepack enable
 
 COPY pnpm-workspace.yaml pnpm-workspace.yaml
 COPY pnpm-lock.yaml pnpm-lock.yaml
-COPY app/ app/
+COPY api/ api/
+COPY backend/ backend/
+COPY frontend/ frontend/
 
 RUN pnpm install --frozen-lockfile
 RUN pnpm run build

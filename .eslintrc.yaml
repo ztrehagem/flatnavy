@@ -14,9 +14,9 @@ parser: "@typescript-eslint/parser"
 
 parserOptions:
   project:
-    - app/frontend/tsconfig.eslint.json
-    - app/backend/tsconfig.json
-    - lib/api/tsconfig.json
+    - frontend/tsconfig.eslint.json
+    - backend/tsconfig.json
+    - api/tsconfig.json
   sourceType: module
   ecmaVersion: latest
   ecmaFeatures:
