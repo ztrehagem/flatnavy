@@ -25,6 +25,9 @@ export const submitButton = style({
   alignItems: "center",
   gap: "8px",
   cursor: "pointer",
+});
+
+export const submitText = style({
   fontSize: "small",
 });
 

@@ -23,7 +23,7 @@ export const PostForm = defineComponent({
 
           <button type="submit" class={css.submitButton}>
             <MaterialSymbol name="send" />
-            Post
+            <span class={css.submitText}>Post</span>
           </button>
         </div>
 
