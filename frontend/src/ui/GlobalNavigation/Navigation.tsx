@@ -8,6 +8,7 @@ export const Navigation = defineComponent({
   setup() {
     const homeLocation = location("/", {});
     const usersLocation = location("/users", {});
+    const registerLocation = location("/register", {});
 
     return () => (
       <nav>
@@ -17,6 +18,9 @@ export const Navigation = defineComponent({
           </NavigationItem>
           <NavigationItem to={usersLocation}>
             <MaterialSymbol name="person_search" />
+          </NavigationItem>
+          <NavigationItem to={registerLocation}>
+            <MaterialSymbol name="person_add" />
           </NavigationItem>
         </ul>
       </nav>

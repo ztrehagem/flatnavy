@@ -31,7 +31,12 @@ export const createUser =
       return await reply.status(400).send();
     }
 
-    const password = await HashedUserPassword(body.password);
+    const [ePassword, password] = await HashedUserPassword(body.password);
+
+    if (ePassword) {
+      return await reply.status(400).send();
+    }
+
     const registration = UserRegistration.from({ user, password });
     const [error, createdUser] = await userRepository.create(registration);
 
