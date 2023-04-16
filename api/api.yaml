@@ -67,12 +67,15 @@ paths:
                 properties:
                   user:
                     $ref: "#/components/schemas/User"
+                  token:
+                    type: string
                 required:
                   - user
+                  - token
         400:
           description: Bad Request
         409:
-          description: Conflicted / conflicted handle
+          description: Conflicted
 
   /api/users/{userHandle}:
     parameters:

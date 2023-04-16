@@ -2,7 +2,7 @@ import type { FastifyPluginAsync } from "fastify";
 import fastifyCors from "@fastify/cors";
 import { sse } from "./app/controller/sse.js";
 import { createPost } from "./app/controller/createPost.js";
-import type { Context } from "./context.js";
+import type { Context } from "./app/context.js";
 import { createUser } from "./app/controller/User/createUser.js";
 import { indexUser } from "./app/controller/User/indexUser.js";
 import { getUser } from "./app/controller/User/getUser.js";

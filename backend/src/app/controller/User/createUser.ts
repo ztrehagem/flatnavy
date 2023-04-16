@@ -1,6 +1,6 @@
 import type { RouteHandlerMethod } from "fastify";
 import type { RequestPayload, ResponsePayload } from "@flatnavy/api";
-import type { Context } from "../../../context.js";
+import type { Context } from "../../context.js";
 import { UserHandle } from "../../model/User/UserHandle.js";
 import { User } from "../../model/User/User.js";
 import { UserRegistration } from "../../model/User/UserRegistration.js";
@@ -8,7 +8,7 @@ import { HashedUserPassword } from "../../model/User/HashedUserPassword.js";
 import { UserId } from "../../model/User/UserId.js";
 
 export const createUser =
-  ({ userRepository }: Context): RouteHandlerMethod =>
+  ({ userRepository, serverKeyRepository }: Context): RouteHandlerMethod =>
   async (req, reply) => {
     const body = req.body as RequestPayload<
       "/api/users",
@@ -44,6 +44,8 @@ export const createUser =
       return await reply.status(409).send();
     }
 
+    const token = await serverKeyRepository.sign({ subject: handle.value });
+
     const res: ResponsePayload<
       "/api/users",
       "post"
@@ -52,6 +54,7 @@ export const createUser =
         handle: createdUser.handle.value,
         name: createdUser.name,
       },
+      token,
     };
 
     await reply.status(201).type("application/json").send(res);

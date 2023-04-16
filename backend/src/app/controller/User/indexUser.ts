@@ -1,5 +1,5 @@
 import type { RouteHandlerMethod } from "fastify";
-import type { Context } from "../../../context.js";
+import type { Context } from "../../context.js";
 import type { ResponsePayload } from "@flatnavy/api";
 import { serializeUser } from "../../serializer/User/User.js";
 
