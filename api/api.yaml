@@ -67,11 +67,14 @@ paths:
                 properties:
                   user:
                     $ref: "#/components/schemas/User"
-                  token:
+                  accessToken:
+                    type: string
+                  refreshToken:
                     type: string
                 required:
                   - user
-                  - token
+                  - accessToken
+                  - refreshToken
         400:
           description: Bad Request
         409:

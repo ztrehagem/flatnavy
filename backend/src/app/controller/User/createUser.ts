@@ -8,7 +8,7 @@ import { HashedUserPassword } from "../../model/User/HashedUserPassword.js";
 import { UserId } from "../../model/User/UserId.js";
 
 export const createUser =
-  ({ userRepository, serverKeyRepository }: Context): RouteHandlerMethod =>
+  ({ userRepository, sessionRepository, serverKeyRepository }: Context): RouteHandlerMethod =>
   async (req, reply) => {
     const body = req.body as RequestPayload<
       "/api/users",
@@ -44,7 +44,10 @@ export const createUser =
       return await reply.status(409).send();
     }
 
-    const token = await serverKeyRepository.sign({ subject: handle.value });
+    const serverKey = await serverKeyRepository.get();
+    const [accessToken, refreshToken] = await sessionRepository.createSession({ serverKey, user });
+    const accessTokenJwt = await serverKey.signAccessToken(accessToken);
+    const refreshTokenJwt = await serverKey.signRefreshToken(refreshToken);
 
     const res: ResponsePayload<
       "/api/users",
@@ -54,7 +57,8 @@ export const createUser =
         handle: createdUser.handle.value,
         name: createdUser.name,
       },
-      token,
+      accessToken: accessTokenJwt,
+      refreshToken: refreshTokenJwt,
     };
 
     await reply.status(201).type("application/json").send(res);

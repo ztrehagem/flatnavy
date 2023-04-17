@@ -4,6 +4,7 @@ import type { PrismaRepositoryContext } from "./infra/PrismaRepository/PrismaRep
 import type { Context } from "./app/context.js";
 import { UserRepository } from "./infra/PrismaRepository/User/UserRepository.js";
 import { ServerKeyRepository } from "./infra/PrismaRepository/ServerKey/ServerKeyRepository.js";
+import { SessionRepository } from "./infra/PrismaRepository/SessionRepository/SessionRepository.js";
 
 const host = process.env.HOST ?? "0.0.0.0";
 const port = Number(process.env.PORT ?? 3000);
@@ -16,7 +17,8 @@ const repoCtx: PrismaRepositoryContext = {
 };
 
 const context: Context = {
-  serverKeyRepository: await ServerKeyRepository.create(repoCtx),
+  serverKeyRepository: new ServerKeyRepository(repoCtx),
+  sessionRepository: new SessionRepository(repoCtx),
   userRepository: new UserRepository(repoCtx),
 };
 
