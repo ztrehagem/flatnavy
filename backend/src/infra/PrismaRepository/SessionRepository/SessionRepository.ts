@@ -29,7 +29,7 @@ export class SessionRepository implements ISessionRepository {
       issuer: ISSUER,
       audience: [AUDIENCE],
       userHandle: user.handle,
-      sessionId: SessionId("1"),
+      sessionId: SessionId("1"), // TODO: Rotation
       scopes: [],
       issuedAt: now,
       expiredAt: now.add({ minutes: 1 }),
@@ -39,7 +39,7 @@ export class SessionRepository implements ISessionRepository {
       issuer: ISSUER,
       audience: [AUDIENCE],
       userHandle: user.handle,
-      sessionId: SessionId("1"),
+      sessionId: SessionId("1"), // TODO: Rotation
       scopes: [Scope.refresh],
       issuedAt: now,
       expiredAt: now.add({ minutes: 10 }),
