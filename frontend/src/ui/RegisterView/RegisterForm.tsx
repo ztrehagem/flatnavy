@@ -24,11 +24,11 @@ export const RegisterForm = defineComponent({
       state.submitting = true;
 
       void createUser(apiClientContext)(inputs)
-        .then(([error, user]) => {
+        .then(([error, result]) => {
           if (error) {
             alert(`Error: ${error}`);
           } else {
-            alert(`Created: ${user.handle}`);
+            alert(`Created: ${result.user.handle}`);
           }
         })
         .finally(() => {

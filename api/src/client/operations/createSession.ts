@@ -5,7 +5,6 @@ import { createRequestInit } from "../utils.js";
 
 export type Params = {
   readonly handle: string;
-  readonly name: string;
   readonly password: string;
 };
 
@@ -15,19 +14,15 @@ export type Return = {
   refreshToken: string;
 };
 
-export type ErrorType =
-  | "InvalidParameters"
-  | "ConflictedUserHandle"
-  | "UnexpectedResponse";
+export type ErrorType = "InvalidParameters" | "UnexpectedResponse";
 
-export const createUser =
+export const createSession =
   (context: ApiClientContext) =>
   async (params: Params): Promise<Result<Return, ErrorType>> => {
-    const request = createRequestInit(context, "/api/users", "post");
+    const request = createRequestInit(context, "/api/auth", "post");
 
-    const body: RequestPayload<"/api/users", "post">["application/json"] = {
+    const body: RequestPayload<"/api/auth", "post">["application/json"] = {
       handle: params.handle,
-      name: params.name,
       password: params.password,
     };
 
@@ -36,7 +31,7 @@ export const createUser =
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
-    })) as ClientResponse<"/api/users", "post">;
+    })) as ClientResponse<"/api/auth", "post">;
 
     switch (res.status) {
       case 201: {
@@ -48,11 +43,8 @@ export const createUser =
         return ["InvalidParameters"];
       }
 
-      case 409: {
-        return ["ConflictedUserHandle"];
-      }
-
-      default:
+      default: {
         return ["UnexpectedResponse"];
+      }
     }
   };
