@@ -15,7 +15,14 @@ export type HashedUserPassword = Brand<IHashedUserPassword, typeof brand>;
 const MAX_LENGTH = 64;
 const ROUND = 10;
 
-export const HashedUserPassword = async (
+export const HashedUserPassword = (value: string): HashedUserPassword => {
+  return {
+    value,
+    compare: (raw) => compare(raw, value),
+  } satisfies IHashedUserPassword as HashedUserPassword;
+};
+
+HashedUserPassword.hash = async (
   raw: string
 ): Promise<Result<HashedUserPassword, InvalidParameterError>> => {
   if (raw.length > MAX_LENGTH) {
@@ -26,10 +33,7 @@ export const HashedUserPassword = async (
 
   const value = await hash(raw, ROUND);
 
-  const result = {
-    value,
-    compare: (raw) => compare(raw, value),
-  } satisfies IHashedUserPassword as HashedUserPassword;
+  const hashedUserPassword = HashedUserPassword(value);
 
-  return [null, result];
+  return [null, hashedUserPassword];
 };

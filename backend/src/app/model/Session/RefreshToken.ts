@@ -6,7 +6,7 @@ import type { UserHandle } from "../User/UserHandle.js";
 import { Scope } from "./Scope.js";
 import type { SessionId } from "./SessionId.js";
 
-declare const brand: unique symbol
+declare const brand: unique symbol;
 
 type IRefreshToken = {
   readonly issuer: string;
@@ -16,7 +16,7 @@ type IRefreshToken = {
   readonly scopes: readonly string[];
   readonly issuedAt: Temporal.Instant;
   readonly expiredAt: Temporal.Instant;
-}
+};
 
 export type RefreshToken = Brand<IRefreshToken, typeof brand>;
 
@@ -28,9 +28,11 @@ export type Params = {
   readonly scopes: readonly string[];
   readonly issuedAt: Temporal.Instant;
   readonly expiredAt: Temporal.Instant;
-}
+};
 
-export const RefreshToken = (params: Params): Result<RefreshToken, InvalidParameterError> => {
+export const RefreshToken = (
+  params: Params
+): Result<RefreshToken, InvalidParameterError> => {
   if (!params.scopes.includes(Scope.refresh)) {
     return [new InvalidParameterError("RefreshToken", "invalid scope")];
   }
@@ -45,5 +47,5 @@ export const RefreshToken = (params: Params): Result<RefreshToken, InvalidParame
     expiredAt: params.expiredAt,
   } satisfies IRefreshToken as RefreshToken;
 
-  return [null, refreshToken]
-}
+  return [null, refreshToken];
+};

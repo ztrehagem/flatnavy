@@ -5,11 +5,92 @@ info:
   version: 0.0.0
 
 tags:
+  - name: Authentication
   - name: User
   - name: Post
   - name: Streaming
 
 paths:
+  /api/auth:
+    post:
+      operationId: createAuthentication
+      summary: トークン発行
+      tags:
+        - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                handle:
+                  type: string
+                password:
+                  type: string
+                  format: password
+              required:
+                - handle
+                - password
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+                  accessToken:
+                    type: string
+                  refreshToken:
+                    type: string
+                required:
+                  - user
+                  - accessToken
+                  - refreshToken
+        400:
+          description: Bad Request
+    put:
+      operationId: refreshAuthentication
+      summary: トークン更新
+      tags:
+        - Authentication
+      security:
+        - RefreshToken: []
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+                  accessToken:
+                    type: string
+                  refreshToken:
+                    type: string
+                required:
+                  - user
+                  - accessToken
+                  - refreshToken
+        401:
+          description: Unauthorized
+    delete:
+      operationId: deleteAuthentication
+      summary: トークン失効
+      tags:
+        - Authentication
+      security:
+        - AccessToken: []
+      responses:
+        204:
+          description: No Content
+        401:
+          description: Unauthorized
+
   /api/users:
     get:
       operationId: indexUser
@@ -51,6 +132,7 @@ paths:
                   maxLength: 64
                 password:
                   type: string
+                  format: password
                   minLength: 8
                   maxLength: 255
               required:
@@ -111,6 +193,8 @@ paths:
       summary: ユーザ情報更新
       tags:
         - User
+      security:
+        - AccessToken: []
       requestBody:
         content:
           application/json:
@@ -123,8 +207,10 @@ paths:
                   maxLength: 64
                 currentPassword:
                   type: string
+                  format: password
                 newPassword:
                   type: string
+                  format: password
                   minLength: 8
                   maxLength: 255
       responses:
@@ -150,6 +236,8 @@ paths:
       summary: ユーザ削除
       tags:
         - User
+      security:
+        - AccessToken: []
       requestBody:
         content:
           application/json:
@@ -158,6 +246,7 @@ paths:
               properties:
                 password:
                   type: string
+                  format: password
               required:
                 - password
       responses:
@@ -177,6 +266,8 @@ paths:
       operationId: createPost
       tags:
         - Post
+      security:
+        - AccessToken: []
       requestBody:
         content:
           application/json:
@@ -201,6 +292,8 @@ paths:
                   - post
         400:
           description: Bad Request
+        401:
+          description: Unauthorized
 
   /api/sse:
     get:
@@ -242,3 +335,15 @@ components:
       required:
         - id
         - body
+
+  securitySchemes:
+    AccessToken:
+      name: AccessToken
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    RefreshToken:
+      name: RefreshToken
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

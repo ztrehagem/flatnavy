@@ -8,7 +8,11 @@ import { HashedUserPassword } from "../../model/User/HashedUserPassword.js";
 import { UserId } from "../../model/User/UserId.js";
 
 export const createUser =
-  ({ userRepository, sessionRepository, serverKeyRepository }: Context): RouteHandlerMethod =>
+  ({
+    userRepository,
+    sessionRepository,
+    serverKeyRepository,
+  }: Context): RouteHandlerMethod =>
   async (req, reply) => {
     const body = req.body as RequestPayload<
       "/api/users",
@@ -31,13 +35,13 @@ export const createUser =
       return await reply.status(400).send();
     }
 
-    const [ePassword, password] = await HashedUserPassword(body.password);
+    const [ePassword, password] = await HashedUserPassword.hash(body.password);
 
     if (ePassword) {
       return await reply.status(400).send();
     }
 
-    const registration = UserRegistration.from({ user, password });
+    const registration = UserRegistration({ user, password });
     const [error, createdUser] = await userRepository.create(registration);
 
     if (error) {
@@ -45,7 +49,9 @@ export const createUser =
     }
 
     const serverKey = await serverKeyRepository.get();
-    const [accessToken, refreshToken] = await sessionRepository.createSession({ serverKey, user });
+    const [accessToken, refreshToken] = await sessionRepository.createSession({
+      user,
+    });
     const accessTokenJwt = await serverKey.signAccessToken(accessToken);
     const refreshTokenJwt = await serverKey.signRefreshToken(refreshToken);
 

@@ -1,5 +1,8 @@
-import type * as prisma from "@prisma/client"
-import type { CreateSessionParams, ISessionRepository } from "../../../app/repository/Session/ISessionRepository.js";
+import type * as prisma from "@prisma/client";
+import type {
+  CreateSessionParams,
+  ISessionRepository,
+} from "../../../app/repository/Session/ISessionRepository.js";
 import type { PrismaRepositoryContext } from "../PrismaRepositoryContext.js";
 import { AccessToken } from "../../../app/model/Session/AccessToken.js";
 import { RefreshToken } from "../../../app/model/Session/RefreshToken.js";
@@ -17,28 +20,30 @@ export class SessionRepository implements ISessionRepository {
     this.#prisma = prisma;
   }
 
-  async createSession(params: CreateSessionParams): Promise<[AccessToken, RefreshToken]> {
+  async createSession({
+    user,
+  }: CreateSessionParams): Promise<[AccessToken, RefreshToken]> {
     const now = Temporal.Now.instant();
 
     const accessToken = AccessToken({
       issuer: ISSUER,
       audience: [AUDIENCE],
-      userHandle: params.user.handle,
+      userHandle: user.handle,
       sessionId: SessionId("1"),
       scopes: [],
       issuedAt: now,
       expiredAt: now.add({ minutes: 1 }),
-    })
+    });
 
     const [, refreshToken] = RefreshToken({
       issuer: ISSUER,
       audience: [AUDIENCE],
-      userHandle: params.user.handle,
+      userHandle: user.handle,
       sessionId: SessionId("1"),
       scopes: [Scope.refresh],
       issuedAt: now,
       expiredAt: now.add({ minutes: 10 }),
-    })
+    });
 
     await Promise.resolve();
 

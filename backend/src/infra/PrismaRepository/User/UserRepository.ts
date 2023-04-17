@@ -2,11 +2,12 @@ import * as prisma from "@prisma/client";
 import { User } from "../../../app/model/User/User.js";
 import { UserHandle } from "../../../app/model/User/UserHandle.js";
 import { UserId } from "../../../app/model/User/UserId.js";
-import type { UserRegistration } from "../../../app/model/User/UserRegistration.js";
+import { UserRegistration } from "../../../app/model/User/UserRegistration.js";
 import type { IUserRepository } from "../../../app/repository/User/IUserRepository.js";
 import { UsedUserHandleError } from "../../../app/error/UsedUserHandleError.js";
 import type { Result } from "../../../utils/Result.js";
 import type { PrismaRepositoryContext } from "../PrismaRepositoryContext.js";
+import { HashedUserPassword } from "../../../app/model/User/HashedUserPassword.js";
 
 export class UserRepository implements IUserRepository {
   readonly #prisma: prisma.PrismaClient;
@@ -64,6 +65,28 @@ export class UserRepository implements IUserRepository {
 
       throw error;
     }
+  }
+
+  async getRegistrationByHandle(
+    handle: UserHandle
+  ): Promise<UserRegistration | null> {
+    const record = await this.#prisma.user.findUnique({
+      where: {
+        handle: handle.value,
+      },
+      include: {
+        authentication: true,
+      },
+    });
+
+    if (!record || !record.authentication) {
+      return null;
+    }
+
+    const user = mapUser(record);
+    const password = HashedUserPassword(record.authentication.hashedPassword);
+
+    return UserRegistration({ user, password });
   }
 }
 

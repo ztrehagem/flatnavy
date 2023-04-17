@@ -30,7 +30,7 @@ export class ServerKeyRepository implements IServerKeyRepository {
         publicKeyPem: record.publicKeyPem,
         publicKeyDer: record.publicKeyDer,
         publicKeyJwk: record.publicKeyJWK as JsonWebKey,
-      })
+      });
     }
   }
 

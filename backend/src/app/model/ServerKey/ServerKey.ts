@@ -18,10 +18,10 @@ type IServerKey = {
   signAccessToken: (accessToken: AccessToken) => Promise<JWT>;
   signRefreshToken: (refreshToken: RefreshToken) => Promise<JWT>;
   verifyAccessToken: (
-    accessTokenString: string,
+    accessTokenString: string
   ) => Promise<Result<AccessToken, InvalidParameterError>>;
   verifyRefreshToken: (
-    refreshTokenString: string,
+    refreshTokenString: string
   ) => Promise<Result<RefreshToken, InvalidParameterError>>;
 };
 
@@ -205,7 +205,7 @@ ServerKey.generateParams = async (): Promise<Params> => {
     publicKey: KeyObject;
   }>((resolve, reject) => {
     generateKeyPair("ed25519", {}, (error, publicKey, privateKey) =>
-      error ? reject(error) : resolve({ publicKey, privateKey }),
+      error ? reject(error) : resolve({ publicKey, privateKey })
     );
   });
 

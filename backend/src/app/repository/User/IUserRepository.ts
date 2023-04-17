@@ -12,4 +12,6 @@ export interface IUserRepository {
   create(
     userRegistration: UserRegistration
   ): Promise<Result<User, UsedUserHandleError>>;
+
+  getRegistrationByHandle(handle: UserHandle): Promise<UserRegistration | null>;
 }
