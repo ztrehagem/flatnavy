@@ -1,30 +1,31 @@
-import { type RouteRecordRaw } from "vue-router";
-import { GlobalLayout } from "../ui/GlobalLayout/GlobalLayout.jsx";
+import React from "react";
+import type { RouteObject } from "react-router-dom";
 import { MainView } from "../ui/MainView/MainView.jsx";
+import { GlobalLayout } from "../ui/GlobalLayout/GlobalLayout.jsx";
 import { UserIndexView } from "../ui/UserIndexView/UserIndexView.jsx";
 import { RegisterView } from "../ui/RegisterView/RegisterView.jsx";
 
 export const routes = [
   {
     path: "" as const,
-    component: GlobalLayout,
+    element: <GlobalLayout />,
     children: [
       {
         path: "" as const,
-        component: MainView,
+        element: <MainView />,
       },
       {
         path: "register" as const,
-        component: RegisterView,
+        element: <RegisterView />,
       },
       {
         path: "users" as const,
-        component: UserIndexView,
+        element: <UserIndexView />,
       },
       {
         path: "users/:userId" as const,
-        component: UserIndexView,
+        element: <div>users/:userId</div>,
       },
     ],
   },
-] satisfies RouteRecordRaw[];
+] satisfies RouteObject[];

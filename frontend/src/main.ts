@@ -1,8 +1,8 @@
-import { createApp } from "vue";
+import { createElement } from "react";
+import { createRoot } from "react-dom/client";
 import "./style/global.css.js";
 import { Root } from "./Root.jsx";
-import { router } from "./router/router.js";
 
-const app = createApp(Root);
-app.use(router);
-app.mount("#app");
+const container = window.document.getElementById("app");
+const root = container && createRoot(container);
+root?.render(createElement(Root));

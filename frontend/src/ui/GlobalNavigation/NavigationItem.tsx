@@ -1,22 +1,19 @@
-import { defineComponent, type PropType } from "vue";
-import { RouterLink, type RouteLocationRaw } from "vue-router";
+import React from "react";
+import { Link } from "react-router-dom";
 import * as css from "./NavigationItem.css.js";
+import type { To } from "react-router-dom";
 
-export const NavigationItem = defineComponent({
-  props: {
-    to: {
-      type: Object as PropType<RouteLocationRaw>,
-      required: true,
-    },
-  },
+export type Props = {
+  to: To;
+  children: React.ReactNode;
+};
 
-  setup(props, { slots }) {
-    return () => (
-      <li>
-        <RouterLink to={props.to} class={css.link}>
-          {slots.default?.()}
-        </RouterLink>
-      </li>
-    );
-  },
-});
+export const NavigationItem: React.FC<Props> = ({ to, children }) => {
+  return (
+    <li>
+      <Link to={to} className={css.link}>
+        {children}
+      </Link>
+    </li>
+  );
+};

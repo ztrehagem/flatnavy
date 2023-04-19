@@ -1,38 +1,37 @@
-import { defineComponent, ref } from "vue";
+import React, { useState, type FormEvent } from "react";
 import * as css from "./PostForm.css.js";
 import { apiClientContext } from "../../lib/api.js";
 import { MaterialSymbol } from "../Symbol/MaterialSymbol.jsx";
 import { createPost } from "@flatnavy/api/client";
 
-export const PostForm = defineComponent({
-  setup() {
-    const input = ref("");
+export const PostForm: React.FC = () => {
+  const [text, setText] = useState("");
 
-    const post = (e: Event) => {
-      e.preventDefault();
+  const onPost = (e: FormEvent) => {
+    e.preventDefault();
 
-      void createPost(apiClientContext)({ body: input.value }).then(() => {
-        input.value = "";
-      });
-    };
+    void createPost(apiClientContext)({ body: text }).then(() => {
+      setText("");
+    });
+  };
 
-    return () => (
-      <form onSubmit={post} class={css.root}>
-        <div class={css.postHeader}>
-          <div></div>
+  return (
+    <form onSubmit={onPost} className={css.root}>
+      <div className={css.postHeader}>
+        <div></div>
 
-          <button type="submit" class={css.submitButton}>
-            <MaterialSymbol name="send" />
-            <span class={css.submitText}>Post</span>
-          </button>
-        </div>
+        <button type="submit" className={css.submitButton}>
+          <MaterialSymbol name="send" />
+          <span className={css.submitText}>Post</span>
+        </button>
+      </div>
 
-        <textarea
-          v-model={input.value}
-          placeholder="what you say"
-          class={css.textarea}
-        ></textarea>
-      </form>
-    );
-  },
-});
+      <textarea
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="what you say"
+        className={css.textarea}
+      ></textarea>
+    </form>
+  );
+};

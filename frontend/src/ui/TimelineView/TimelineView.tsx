@@ -1,17 +1,10 @@
-import { defineComponent, inject } from "vue";
+import React from "react";
 import * as css from "./TimelineView.css.js";
-import { Timeline } from "../../state/Timeline.js";
 
-export const TimelineView = defineComponent({
-  setup: () => {
-    const timeline = inject(Timeline.key);
-
-    return () => (
-      <ul class={css.list}>
-        {timeline?.posts.map((post) => (
-          <li>{post}</li>
-        ))}
-      </ul>
-    );
-  },
-});
+export const TimelineView: React.FC = () => {
+  return (
+    <ul className={css.list}>
+      <li>foo</li>
+    </ul>
+  );
+};

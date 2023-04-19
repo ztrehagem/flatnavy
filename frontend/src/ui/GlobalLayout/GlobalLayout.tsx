@@ -1,16 +1,15 @@
-import { Suspense, defineComponent } from "vue";
+import React from "react";
 import { GlobalNavigation } from "../GlobalNavigation/GlobalNavigation.jsx";
-import { RouterView } from "vue-router";
+import { Outlet } from "react-router-dom";
 
-export const GlobalLayout = defineComponent({
-  setup() {
-    return () => (
-      <div>
-        <GlobalNavigation />
-        <Suspense>
-          <RouterView />
-        </Suspense>
-      </div>
-    );
-  },
-});
+export const GlobalLayout: React.FC = () => {
+  return (
+    <div>
+      <GlobalNavigation />
+
+      <React.Suspense>
+        <Outlet />
+      </React.Suspense>
+    </div>
+  );
+};

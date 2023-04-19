@@ -1,23 +1,20 @@
-import { defineComponent } from "vue";
-import { indexUser } from "@flatnavy/api/client";
+import React from "react";
 import * as css from "./UserIndexView.css.js";
-import { apiClientContext } from "../../lib/api.js";
 
-export const UserIndexView = defineComponent({
-  async setup() {
-    const [, users = []] = await indexUser(apiClientContext)();
+export const UserIndexView: React.FC = () => {
+  // const [, users = []] = await indexUser(apiClientContext)();
+  const users = ["foo", "bar"];
 
-    return () => (
-      <div class={css.root}>
-        <ul class={css.list}>
-          {users.map((user) => (
-            <li>
-              <div>{user.name}</div>
-              <div>@{user.handle}</div>
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
-  },
-});
+  return (
+    <div className={css.root}>
+      <ul className={css.list}>
+        {users.map((user) => (
+          <li key={user}>
+            <div>{user}</div>
+            <div>@{user}</div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};

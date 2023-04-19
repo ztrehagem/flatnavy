@@ -1,13 +1,11 @@
-import { defineComponent } from "vue";
+import React from "react";
 import * as css from "./RegisterView.css.js";
 import { RegisterForm } from "./RegisterForm.jsx";
 
-export const RegisterView = defineComponent({
-  setup() {
-    return () => (
-      <div class={css.root}>
-        <RegisterForm />
-      </div>
-    );
-  },
-});
+export const RegisterView: React.FC = () => {
+  return (
+    <div className={css.root}>
+      <RegisterForm />
+    </div>
+  );
+};

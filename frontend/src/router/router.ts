@@ -1,7 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
 import { routes } from "./routes.js";
+import { createBrowserRouter } from "react-router-dom";
 
-export const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes,
-});
+export const router = createBrowserRouter(routes);

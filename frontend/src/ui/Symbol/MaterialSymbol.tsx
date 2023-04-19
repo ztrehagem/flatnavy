@@ -1,15 +1,10 @@
-import { defineComponent } from "vue";
+import React from "react";
 import * as css from "./MaterialSymbol.css.js";
 
-export const MaterialSymbol = defineComponent({
-  props: {
-    name: {
-      type: String,
-      required: true,
-    },
-  },
+export type Props = {
+  name: string;
+};
 
-  setup(props) {
-    return () => <span class={css.root}>{props.name}</span>;
-  },
-});
+export const MaterialSymbol: React.FC<Props> = ({ name }) => {
+  return <span className={css.root}>{name}</span>;
+};
