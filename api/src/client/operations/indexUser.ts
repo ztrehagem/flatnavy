@@ -10,10 +10,12 @@ export const indexUser =
   async (): Promise<Result<schemas["User"][], ErrorType>> => {
     const request = createRequestInit(context, "/api/users", "get");
 
+    const headers = new Headers(context.init?.headers);
+    headers.set("Content-Type", "application/json");
+
     const res = (await fetch(request, {
-      headers: {
-        "Content-Type": "application/json",
-      },
+      ...context.init,
+      headers,
     })) as ClientResponse<"/api/users", "get">;
 
     switch (res.status) {

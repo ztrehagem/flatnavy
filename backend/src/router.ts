@@ -18,6 +18,7 @@ export const router: FastifyPluginAsync<RouterOptions> = async (
 ) => {
   await app.register(fastifyCors, {
     origin: process.env.NODE_ENV != "production",
+    credentials: true,
   });
 
   app.post("/api/auth", createSession(context));

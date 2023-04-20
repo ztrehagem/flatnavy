@@ -26,10 +26,12 @@ export const createSession =
       password: params.password,
     };
 
+    const headers = new Headers(context.init?.headers);
+    headers.set("Content-Type", "application/json");
+
     const res = (await fetch(request, {
-      headers: {
-        "Content-Type": "application/json",
-      },
+      ...context.init,
+      headers,
       body: JSON.stringify(body),
     })) as ClientResponse<"/api/auth", "post">;
 

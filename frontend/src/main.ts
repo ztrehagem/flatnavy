@@ -6,10 +6,12 @@ import devSwUrl from "./sw.js?url";
 
 const swUrl = import.meta.env.DEV ? devSwUrl : "/sw.js";
 
-await navigator.serviceWorker.register(swUrl, { scope: "/" }).catch((error) => {
-  // eslint-disable-next-line no-console
-  console.error(error);
-});
+await navigator.serviceWorker
+  .register(swUrl, { scope: "/", type: "module" })
+  .catch((error) => {
+    // eslint-disable-next-line no-console
+    console.error(error);
+  });
 
 const container = window.document.getElementById("app");
 const root = container && createRoot(container);
