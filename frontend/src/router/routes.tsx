@@ -4,6 +4,7 @@ import { MainView } from "../ui/MainView/MainView.jsx";
 import { GlobalLayout } from "../ui/GlobalLayout/GlobalLayout.jsx";
 import { UserIndexView } from "../ui/UserIndexView/UserIndexView.jsx";
 import { RegisterView } from "../ui/RegisterView/RegisterView.jsx";
+import { LoginView } from "../ui/LoginView/LoginView.jsx";
 
 export const routes = [
   {
@@ -17,6 +18,10 @@ export const routes = [
       {
         path: "register" as const,
         element: <RegisterView />,
+      },
+      {
+        path: "login" as const,
+        element: <LoginView />,
       },
       {
         path: "users" as const,

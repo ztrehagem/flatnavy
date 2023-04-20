@@ -1,14 +1,13 @@
 import React, { useState, type FormEvent } from "react";
-import * as css from "./RegisterForm.css.js";
-import { createUser } from "@flatnavy/api/client";
-import { apiClientContext } from "../../lib/api.js";
+import { createSession } from "@flatnavy/api/client";
+import * as css from "./LoginForm.css.js";
 import { Fieldset } from "../Input/Fieldset.jsx";
 import { TextInput } from "../Input/TextInput.jsx";
 import { Button } from "../Input/Button.jsx";
+import { apiClientContext } from "../../lib/api.js";
 
-export const RegisterForm: React.FC = () => {
+export const LoginForm: React.FC = () => {
   const [handle, setHandle] = useState("");
-  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -19,16 +18,12 @@ export const RegisterForm: React.FC = () => {
 
     setSubmitting(true);
 
-    void createUser(apiClientContext)({
-      handle,
-      name,
-      password,
-    })
+    void createSession(apiClientContext)({ handle, password })
       .then(([error, result]) => {
         if (error) {
           alert(`Error: ${error}`);
         } else {
-          alert(`Created: ${result.user.handle}`);
+          alert(`LoggedIn: ${result.user.handle}`);
         }
       })
       .finally(() => {
@@ -51,17 +46,6 @@ export const RegisterForm: React.FC = () => {
         />
       </Fieldset>
 
-      <Fieldset legend="Display Name">
-        <TextInput
-          name="name"
-          type="text"
-          autoComplete="name"
-          maxLength={64}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </Fieldset>
-
       <Fieldset legend="Password">
         <TextInput
           name="password"
@@ -73,8 +57,8 @@ export const RegisterForm: React.FC = () => {
         />
       </Fieldset>
 
-      <Button type="submit" preSymbol="done">
-        Register
+      <Button type="submit" preSymbol="login">
+        Login
       </Button>
     </form>
   );

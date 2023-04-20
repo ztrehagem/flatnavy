@@ -8,6 +8,7 @@ export const Navigation: React.FC = () => {
   const homeLocation = location("/", {});
   const usersLocation = location("/users", {});
   const registerLocation = location("/register", {});
+  const loginLocation = location("/login", {});
 
   return (
     <nav>
@@ -20,6 +21,9 @@ export const Navigation: React.FC = () => {
         </NavigationItem>
         <NavigationItem to={registerLocation}>
           <MaterialSymbol name="person_add" />
+        </NavigationItem>
+        <NavigationItem to={loginLocation}>
+          <MaterialSymbol name="login" />
         </NavigationItem>
       </ul>
     </nav>
