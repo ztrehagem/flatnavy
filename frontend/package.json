@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && vite -c vite.config.sw.ts build",
     "clean": "rm -r dist || true",
     "typecheck": "tsc --noEmit"
   },

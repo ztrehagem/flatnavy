@@ -15,5 +15,6 @@ export default defineConfig({
   build: {
     outDir: path.resolve("dist"),
     emptyOutDir: true,
+    target: ["es2022"],
   },
 });
