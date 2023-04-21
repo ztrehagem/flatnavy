@@ -34,7 +34,7 @@ export const RefreshToken = (
   params: Params
 ): Result<RefreshToken, InvalidParameterError> => {
   if (!params.scopes.includes(Scope.refresh)) {
-    return [new InvalidParameterError("RefreshToken", "invalid scope")];
+    return [new InvalidParameterError(RefreshToken, "invalid scope")];
   }
 
   const refreshToken = {

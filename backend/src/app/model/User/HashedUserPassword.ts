@@ -26,9 +26,7 @@ HashedUserPassword.hash = async (
   raw: string
 ): Promise<Result<HashedUserPassword, InvalidParameterError>> => {
   if (raw.length > MAX_LENGTH) {
-    return [
-      new InvalidParameterError("HashedUserPassword", "too long password"),
-    ];
+    return [new InvalidParameterError(HashedUserPassword, "too long password")];
   }
 
   const value = await hash(raw, ROUND);

@@ -1,26 +1,11 @@
-import { PrismaClient } from "@prisma/client";
+import { createContext } from "./createContext.js";
 import { createServer } from "./server.js";
-import type { PrismaRepositoryContext } from "./infra/PrismaRepository/PrismaRepositoryContext.js";
-import type { Context } from "./app/context.js";
-import { UserRepository } from "./infra/PrismaRepository/User/UserRepository.js";
-import { ServerKeyRepository } from "./infra/PrismaRepository/ServerKey/ServerKeyRepository.js";
-import { SessionRepository } from "./infra/PrismaRepository/SessionRepository/SessionRepository.js";
+import { logInfo } from "./utils/log.js";
 
 const host = process.env.HOST ?? "0.0.0.0";
 const port = Number(process.env.PORT ?? 3000);
 
-const prisma = new PrismaClient();
-await prisma.$connect();
-
-const repoCtx: PrismaRepositoryContext = {
-  prisma,
-};
-
-const context: Context = {
-  serverKeyRepository: new ServerKeyRepository(repoCtx),
-  sessionRepository: new SessionRepository(repoCtx),
-  userRepository: new UserRepository(repoCtx),
-};
+const context = await createContext();
 
 const server = await createServer({ context });
 
@@ -29,6 +14,5 @@ server.listen({ host, port }, (error, address) => {
     throw error;
   }
 
-  // eslint-disable-next-line no-console
-  console.log(`Server is now listening on ${address}`);
+  logInfo(`Server is now listening on ${address}`);
 });

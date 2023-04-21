@@ -3,6 +3,7 @@ import { fastify, type FastifyInstance } from "fastify";
 import { default as fastifyStatic } from "@fastify/static";
 import { router } from "./router.js";
 import type { Context } from "./app/context.js";
+import { logInfo } from "./utils/log.js";
 
 export type Params = {
   context: Context;
@@ -20,8 +21,7 @@ export const createServer = async ({
   });
 
   server.addHook("onRequest", async (req, reply) => {
-    // eslint-disable-next-line no-console
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    logInfo(`🌐 ${req.method} ${req.url}`);
   });
 
   return server;

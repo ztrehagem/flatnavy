@@ -1,32 +1,25 @@
 import type { RouteHandlerMethod } from "fastify";
 import type { RequestPayload, ResponsePayload } from "@flatnavy/api";
 import type { Context } from "../../context.js";
+import { logInfo } from "../../../utils/log.js";
 
 let id = 1;
 
 export const createPost =
-  ({ serverKeyRepository }: Context): RouteHandlerMethod =>
+  ({ httpAuthenticationService }: Context): RouteHandlerMethod =>
   async (req, reply) => {
     const { body } = req.body as RequestPayload<
       "/api/posts",
       "post"
     >["application/json"];
 
-    const [type = "", jwt = ""] =
-      req.headers.authorization?.split(" ", 2) ?? [];
+    const [authenticationError, _userHandle] =
+      await httpAuthenticationService.getAuthenticatedUserHandle(
+        req.headers.authorization ?? ""
+      );
 
-    if (type != "Bearer" || !jwt) {
-      return await reply.status(401).send();
-    }
-
-    const serverKey = await serverKeyRepository.get();
-    const [eAccessToken, accessToken] = await serverKey.verifyAccessToken(jwt);
-
-    if (eAccessToken) {
-      return await reply.status(401).send();
-    }
-
-    if (!accessToken.valid) {
+    if (authenticationError) {
+      logInfo(authenticationError);
       return await reply.status(401).send();
     }
 

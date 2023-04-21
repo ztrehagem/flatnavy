@@ -80,15 +80,11 @@ export const ServerKey = ({
       const { payload } = await jwtVerify(jwt, publicKey);
 
       if (payload.iss == null) {
-        return [
-          new InvalidParameterError("ServerKey", "no iss claim is given"),
-        ];
+        return [new InvalidParameterError(ServerKey, "no iss claim is given")];
       }
 
       if (payload.sub == null) {
-        return [
-          new InvalidParameterError("ServerKey", "no sub claim is given"),
-        ];
+        return [new InvalidParameterError(ServerKey, "no sub claim is given")];
       }
 
       const [eUserHandle, userHandle] = UserHandle(payload.sub);
@@ -98,27 +94,21 @@ export const ServerKey = ({
       }
 
       if (typeof payload.sid != "string") {
-        return [
-          new InvalidParameterError("ServerKey", "no sid claim is given"),
-        ];
+        return [new InvalidParameterError(ServerKey, "no sid claim is given")];
       }
 
       if (typeof payload.scope != "string") {
         return [
-          new InvalidParameterError("ServerKey", "no scope claim is given"),
+          new InvalidParameterError(ServerKey, "no scope claim is given"),
         ];
       }
 
       if (payload.iat == null) {
-        return [
-          new InvalidParameterError("ServerKey", "no iat claim is given"),
-        ];
+        return [new InvalidParameterError(ServerKey, "no iat claim is given")];
       }
 
       if (payload.exp == null) {
-        return [
-          new InvalidParameterError("ServerKey", "no exp claim is given"),
-        ];
+        return [new InvalidParameterError(ServerKey, "no exp claim is given")];
       }
 
       const accessToken = AccessToken({
@@ -139,15 +129,11 @@ export const ServerKey = ({
       const { payload } = await jwtVerify(jwt, publicKey);
 
       if (payload.iss == null) {
-        return [
-          new InvalidParameterError("ServerKey", "no iss claim is given"),
-        ];
+        return [new InvalidParameterError(ServerKey, "no iss claim is given")];
       }
 
       if (payload.sub == null) {
-        return [
-          new InvalidParameterError("ServerKey", "no sub claim is given"),
-        ];
+        return [new InvalidParameterError(ServerKey, "no sub claim is given")];
       }
 
       const [eUserHandle, userHandle] = UserHandle(payload.sub);
@@ -157,27 +143,21 @@ export const ServerKey = ({
       }
 
       if (typeof payload.sid != "string") {
-        return [
-          new InvalidParameterError("ServerKey", "no sid claim is given"),
-        ];
+        return [new InvalidParameterError(ServerKey, "no sid claim is given")];
       }
 
       if (typeof payload.scope != "string") {
         return [
-          new InvalidParameterError("ServerKey", "no scope claim is given"),
+          new InvalidParameterError(ServerKey, "no scope claim is given"),
         ];
       }
 
       if (payload.iat == null) {
-        return [
-          new InvalidParameterError("ServerKey", "no iat claim is given"),
-        ];
+        return [new InvalidParameterError(ServerKey, "no iat claim is given")];
       }
 
       if (payload.exp == null) {
-        return [
-          new InvalidParameterError("ServerKey", "no exp claim is given"),
-        ];
+        return [new InvalidParameterError(ServerKey, "no exp claim is given")];
       }
 
       const [eAccessToken, accessToken] = RefreshToken({
