@@ -1,4 +1,4 @@
-import type { Temporal } from "@js-temporal/polyfill";
+import { Temporal } from "@js-temporal/polyfill";
 import type { Brand } from "../../../utils/Brand.js";
 import type { UserHandle } from "../User/UserHandle.js";
 import type { SessionId } from "./SessionId.js";
@@ -13,6 +13,7 @@ type IAccessToken = {
   readonly scopes: readonly string[];
   readonly issuedAt: Temporal.Instant;
   readonly expiredAt: Temporal.Instant;
+  get valid(): boolean;
 };
 
 export type AccessToken = Brand<IAccessToken, typeof brand>;
@@ -27,14 +28,27 @@ export type Params = {
   readonly expiredAt: Temporal.Instant;
 };
 
-export const AccessToken = (params: Params): AccessToken => {
+export const AccessToken = ({
+  issuer,
+  audience,
+  userHandle,
+  sessionId,
+  scopes,
+  issuedAt,
+  expiredAt,
+}: Params): AccessToken => {
   return {
-    issuer: params.issuer,
-    audience: params.audience,
-    userHandle: params.userHandle,
-    sessionId: params.sessionId,
-    scopes: params.scopes,
-    issuedAt: params.issuedAt,
-    expiredAt: params.expiredAt,
+    issuer,
+    audience,
+    userHandle,
+    sessionId,
+    scopes,
+    issuedAt,
+    expiredAt,
+
+    get valid() {
+      const now = Temporal.Now.instant();
+      return Temporal.Instant.compare(now, expiredAt) <= 0;
+    },
   } satisfies IAccessToken as AccessToken;
 };

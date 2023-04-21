@@ -6,10 +6,11 @@ export const fetchAsRevokeTokens = async (
 ): Promise<Response> => {
   const headers = new Headers(request.headers);
 
-  headers.set(
-    "Authorization",
-    `Bearer ${TokenStore.instance.getAccessToken() ?? ""}`
-  );
+  const accessToken = TokenStore.instance.getAccessToken();
+
+  if (accessToken) {
+    headers.set("Authorization", `Bearer ${accessToken}`);
+  }
 
   const response = (await fetch(request, {
     headers,

@@ -25,6 +25,6 @@ export const router: FastifyPluginAsync<RouterOptions> = async (
   app.get("/api/users", indexUser(context));
   app.post("/api/users", createUser(context));
   app.get("/api/users/:userHandle", getUser(context));
-  app.post("/api/posts", createPost());
+  app.post("/api/posts", createPost(context));
   app.get("/api/sse", sse());
 };

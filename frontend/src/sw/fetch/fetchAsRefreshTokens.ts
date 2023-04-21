@@ -6,10 +6,11 @@ export const fetchAsRefreshTokens = async (
 ): Promise<Response> => {
   const headers = new Headers(request.headers);
 
-  headers.set(
-    "Authorization",
-    `Bearer ${TokenStore.instance.getRefreshToken() ?? ""}`
-  );
+  const refreshToken = TokenStore.instance.getRefreshToken();
+
+  if (refreshToken) {
+    headers.set("Authorization", `Bearer ${refreshToken}`);
+  }
 
   const response = (await fetch(request, {
     headers,
