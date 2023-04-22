@@ -30,7 +30,7 @@ export const User = ({
   name = name?.trim() ?? null;
 
   if (name && name.length > NAME_MAX_LENGTH) {
-    return [new InvalidParameterError("User#name", "too long name")];
+    return [new InvalidParameterError(User, "too long name")];
   }
 
   const user = {

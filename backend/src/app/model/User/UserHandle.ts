@@ -16,7 +16,7 @@ export const UserHandle = (
   value: string
 ): Result<UserHandle, InvalidParameterError> => {
   if (!PATTERN.test(value)) {
-    return [new InvalidParameterError("UserHandle", "invalid pattern")];
+    return [new InvalidParameterError(UserHandle, "invalid pattern")];
   }
 
   const userHandle = {

@@ -1,6 +1,6 @@
 import * as path from "path";
 import { defineConfig } from "vite";
-import vueTsx from "@vitejs/plugin-vue-jsx";
+import react from "@vitejs/plugin-react";
 import { vanillaExtractPlugin } from "@vanilla-extract/vite-plugin";
 
 export default defineConfig({
@@ -10,10 +10,11 @@ export default defineConfig({
 
   publicDir: path.resolve("public"),
 
-  plugins: [vueTsx(), vanillaExtractPlugin()],
+  plugins: [react(), vanillaExtractPlugin()],
 
   build: {
     outDir: path.resolve("dist"),
     emptyOutDir: true,
+    target: ["es2022"],
   },
 });

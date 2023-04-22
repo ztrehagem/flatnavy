@@ -6,3 +6,7 @@ export const list = style({
   justifyContent: "center",
   gap: "8px",
 });
+
+export const navIcon = style({
+  fontSize: "x-large",
+});

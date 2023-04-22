@@ -10,6 +10,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model ServerKey {
+  id Int @id @default(autoincrement())
+
+  privateKeyPem String
+  publicKeyPem String
+  publicKeyDer Bytes
+  publicKeyJWK Json
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model User {
   id Int @id @default(autoincrement())
 

@@ -1,8 +1,14 @@
-import { defineComponent } from "vue";
-import { RouterView } from "vue-router";
+import React from "react";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./router/router.js";
+import { Provider as JotaiProvider } from "jotai";
 
-export const Root = defineComponent({
-  setup: () => {
-    return () => <RouterView />;
-  },
-});
+export const Root: React.FC = () => {
+  return (
+    <React.StrictMode>
+      <JotaiProvider>
+        <RouterProvider router={router} />
+      </JotaiProvider>
+    </React.StrictMode>
+  );
+};

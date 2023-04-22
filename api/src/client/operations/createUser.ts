@@ -3,20 +3,26 @@ import type { ApiClientContext } from "../context.js";
 import type { ClientResponse, Result } from "../types.js";
 import { createRequestInit } from "../utils.js";
 
-type Params = {
+export type Params = {
   readonly handle: string;
   readonly name: string;
   readonly password: string;
 };
 
-type ErrorType =
+export type Return = {
+  user: schemas["User"];
+  accessToken: string;
+  refreshToken: string;
+};
+
+export type ErrorType =
   | "InvalidParameters"
   | "ConflictedUserHandle"
   | "UnexpectedResponse";
 
 export const createUser =
   (context: ApiClientContext) =>
-  async (params: Params): Promise<Result<schemas["User"], ErrorType>> => {
+  async (params: Params): Promise<Result<Return, ErrorType>> => {
     const request = createRequestInit(context, "/api/users", "post");
 
     const body: RequestPayload<"/api/users", "post">["application/json"] = {
@@ -25,17 +31,19 @@ export const createUser =
       password: params.password,
     };
 
+    const headers = new Headers(context.init?.headers);
+    headers.set("Content-Type", "application/json");
+
     const res = (await fetch(request, {
-      headers: {
-        "Content-Type": "application/json",
-      },
+      ...context.init,
+      headers,
       body: JSON.stringify(body),
     })) as ClientResponse<"/api/users", "post">;
 
     switch (res.status) {
       case 201: {
         const payload = await res.json();
-        return [null, payload.user];
+        return [null, payload];
       }
 
       case 400: {

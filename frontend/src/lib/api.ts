@@ -6,4 +6,9 @@ export const apiOrigin = import.meta.env.DEV
 
 export const apiClientContext: ApiClientContext = {
   origin: apiOrigin,
+  init: {
+    cache: "no-store",
+    credentials: "include",
+    mode: "cors",
+  },
 };

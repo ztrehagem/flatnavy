@@ -1,15 +1,18 @@
-import { defineComponent } from "vue";
+import React from "react";
 import * as css from "./MaterialSymbol.css.js";
+import type { CSSProperties } from "@vanilla-extract/css";
 
-export const MaterialSymbol = defineComponent({
-  props: {
-    name: {
-      type: String,
-      required: true,
-    },
-  },
+export type Props = {
+  name: string;
+  size?: CSSProperties["fontSize"];
+};
 
-  setup(props) {
-    return () => <span class={css.root}>{props.name}</span>;
-  },
-});
+export const MaterialSymbol: React.FC<Props> = ({ name, size }) => {
+  const fontSize = size as React.CSSProperties["fontSize"];
+
+  return (
+    <span className={css.root} style={{ fontSize }}>
+      {name}
+    </span>
+  );
+};

@@ -1,15 +1,13 @@
-import { defineComponent } from "vue";
+import React from "react";
 import * as css from "./GlobalNavigation.css.js";
 import { Navigation } from "./Navigation.jsx";
 
-export const GlobalNavigation = defineComponent({
-  setup() {
-    return () => (
-      <div class={css.root}>
-        <h1>FlatNavy</h1>
+export const GlobalNavigation: React.FC = () => {
+  return (
+    <div className={css.root}>
+      <h1>FlatNavy</h1>
 
-        <Navigation />
-      </div>
-    );
-  },
-});
+      <Navigation />
+    </div>
+  );
+};
