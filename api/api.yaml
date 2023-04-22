@@ -12,6 +12,27 @@ tags:
 
 paths:
   /api/auth:
+    get:
+      operationId: getAuthentication
+      summary: トークン有効確認
+      tags:
+        - Authentication
+      security:
+        - AccessToken: []
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+                required:
+                  - user
+        401:
+          description: Unauthorized
     post:
       operationId: createAuthentication
       summary: トークン発行

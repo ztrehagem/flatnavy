@@ -1,43 +1,34 @@
 import React, { useState, type FormEvent } from "react";
 import * as css from "./RegisterForm.css.js";
-import { createUser } from "@flatnavy/api/client";
-import { apiClientContext } from "../../lib/api.js";
 import { Fieldset } from "../Input/Fieldset.jsx";
 import { TextInput } from "../Input/TextInput.jsx";
 import { Button } from "../Input/Button.jsx";
+import { useRegister } from "../../model/Session/useRegister.js";
+import { useNavigate } from "react-router-dom";
+import { location } from "../../router/utils.js";
 
 export const RegisterForm: React.FC = () => {
   const [handle, setHandle] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [submitting, setSubmitting] = useState(false);
+  const { register, submitting, error } = useRegister();
+  const navigate = useNavigate();
+  const homeLocation = location("/", {});
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
 
     if (submitting) return;
 
-    setSubmitting(true);
-
-    void createUser(apiClientContext)({
-      handle,
-      name,
-      password,
-    })
-      .then(([error, result]) => {
-        if (error) {
-          alert(`Error: ${error}`);
-        } else {
-          alert(`Created: ${result.user.handle}`);
-        }
-      })
-      .finally(() => {
-        setSubmitting(false);
-      });
+    void register({ handle, name, password }).then(
+      ([error]) => !error && navigate(homeLocation)
+    );
   };
 
   return (
     <form onSubmit={onSubmit} className={css.form}>
+      {error && <p>{error}</p>}
+
       <Fieldset legend="Handle">
         <TextInput
           name="handle"

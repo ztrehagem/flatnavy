@@ -1,3 +1,4 @@
+import { logInfo } from "./lib/log.js";
 import { RequestType, detectRequestType } from "./sw/RequestType.js";
 import { fetchAsCreateTokens } from "./sw/fetch/fetchAsCreateTokens.js";
 import { fetchAsRefreshTokens } from "./sw/fetch/fetchAsRefreshTokens.js";
@@ -7,12 +8,12 @@ import { fetchWithAccessToken } from "./sw/fetch/fetchWithAccessToken.js";
 declare const self: ServiceWorkerGlobalScope;
 
 self.addEventListener("install", () => {
+  logInfo("ServiceWorker installing");
   void self.skipWaiting();
 });
 
 self.addEventListener("activate", () => {
-  // eslint-disable-next-line no-console
-  console.log("ServiceWorker activated");
+  logInfo("ServiceWorker activated");
 });
 
 self.addEventListener("fetch", (event) => {

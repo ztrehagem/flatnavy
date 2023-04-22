@@ -1,38 +1,33 @@
 import React, { useState, type FormEvent } from "react";
-import { createSession } from "@flatnavy/api/client";
 import * as css from "./LoginForm.css.js";
 import { Fieldset } from "../Input/Fieldset.jsx";
 import { TextInput } from "../Input/TextInput.jsx";
 import { Button } from "../Input/Button.jsx";
-import { apiClientContext } from "../../lib/api.js";
+import { useLogin } from "../../model/Session/useLogin.js";
+import { useNavigate } from "react-router-dom";
+import { location } from "../../router/utils.js";
 
 export const LoginForm: React.FC = () => {
   const [handle, setHandle] = useState("");
   const [password, setPassword] = useState("");
-  const [submitting, setSubmitting] = useState(false);
+  const { login, submitting, error } = useLogin();
+  const navigate = useNavigate();
+  const homeLocation = location("/", {});
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
 
     if (submitting) return;
 
-    setSubmitting(true);
-
-    void createSession(apiClientContext)({ handle, password })
-      .then(([error, result]) => {
-        if (error) {
-          alert(`Error: ${error}`);
-        } else {
-          alert(`LoggedIn: ${result.user.handle}`);
-        }
-      })
-      .finally(() => {
-        setSubmitting(false);
-      });
+    void login({ handle, password }).then(
+      ([error]) => !error && navigate(homeLocation)
+    );
   };
 
   return (
     <form onSubmit={onSubmit} className={css.form}>
+      {error && <p>{error}</p>}
+
       <Fieldset legend="Handle">
         <TextInput
           name="handle"
