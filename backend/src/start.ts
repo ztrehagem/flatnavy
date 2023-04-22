@@ -1,5 +1,5 @@
 import { createContext } from "./createContext.js";
-import { createServer } from "./server.js";
+import { createServer } from "./createServer.js";
 import { logInfo } from "./utils/log.js";
 
 const host = process.env.HOST ?? "0.0.0.0";
