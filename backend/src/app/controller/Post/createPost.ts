@@ -1,36 +1,49 @@
 import type { RouteHandlerMethod } from "fastify";
 import type { RequestPayload, ResponsePayload } from "@flatnavy/api";
 import type { Context } from "../../context.js";
-import { logInfo } from "../../../utils/log.js";
-
-let id = 1;
+import { NewPost } from "../../model/Post/NewPost.js";
+import { serializePost } from "../../serializer/Post.js";
 
 export const createPost =
-  ({ httpAuthenticationService }: Context): RouteHandlerMethod =>
+  ({
+    httpAuthenticationService,
+    userRepository,
+    postRepository,
+  }: Context): RouteHandlerMethod =>
   async (req, reply) => {
     const { body } = req.body as RequestPayload<
       "/api/posts",
       "post"
     >["application/json"];
 
-    const [authenticationError, _token] =
+    const [authenticationError, token] =
       await httpAuthenticationService.parseAuthenticationToken(
         req.headers.authorization ?? ""
       );
 
     if (authenticationError) {
-      logInfo(authenticationError);
       return await reply.status(401).send();
     }
+
+    const user = await userRepository.getByHandle(token.userHandle);
+
+    if (!user) {
+      return await reply.status(401).send();
+    }
+
+    const newPost = NewPost.create({ body, user });
+
+    if (!newPost) {
+      return await reply.status(400).send();
+    }
+
+    const post = await postRepository.create(newPost);
 
     const res: ResponsePayload<
       "/api/posts",
       "post"
     >["201"]["application/json"] = {
-      post: {
-        id: id++,
-        body,
-      },
+      post: serializePost(post),
     };
 
     await reply.status(201).type("application/json").send(res);

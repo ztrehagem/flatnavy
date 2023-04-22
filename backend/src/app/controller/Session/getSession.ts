@@ -2,7 +2,7 @@ import type { RouteHandlerMethod } from "fastify";
 import type { Context } from "../../context.js";
 import { logInfo } from "../../../utils/log.js";
 import type { ResponsePayload } from "@flatnavy/api";
-import { serializeUser } from "../../serializer/User/User.js";
+import { serializeUser } from "../../serializer/User.js";
 
 export const getSession =
   ({

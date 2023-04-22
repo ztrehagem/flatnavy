@@ -29,6 +29,7 @@ model User {
   name String?
 
   authentication UserAuthentication?
+  posts Post[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -50,6 +51,9 @@ model Post {
   id Int @id @default(autoincrement())
 
   body String
+
+  user User @relation(fields: [userId], references: [id])
+  userId Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
