@@ -1,7 +1,7 @@
 import type { Result } from "../../utils/Result.js";
 import { AuthenticationError } from "../error/AuthenticationError.js";
 import type { UserHandle } from "../model/User/UserHandle.js";
-import type { IServerKeyRepository } from "../repository/ServerKey/IServerKeyRepository.js";
+import type { IServerKeyRepository } from "../repository/Server/IServerKeyRepository.js";
 
 export class HttpAuthenticationService {
   readonly #serverKeyRepository: IServerKeyRepository;

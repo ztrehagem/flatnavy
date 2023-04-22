@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import type { PrismaRepositoryContext } from "./infra/PrismaRepository/PrismaRepositoryContext.js";
 import type { Context } from "./app/context.js";
 import { UserRepository } from "./infra/PrismaRepository/User/UserRepository.js";
-import { ServerKeyRepository } from "./infra/PrismaRepository/ServerKey/ServerKeyRepository.js";
+import { ServerKeyRepository } from "./infra/PrismaRepository/Server/ServerKeyRepository.js";
 import { SessionRepository } from "./infra/PrismaRepository/SessionRepository/SessionRepository.js";
 import { HttpAuthenticationService } from "./app/service/HttpAuthenticationService.js";
 
