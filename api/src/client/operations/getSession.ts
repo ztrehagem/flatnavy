@@ -1,9 +1,11 @@
 import type { schemas } from "../../types.js";
 import type { ApiClientContext } from "../context.js";
+import { UnauthenticatedError } from "../error/UnauthenticatedError.js";
+import { UnexpectedResponseError } from "../error/UnexpectedResponseError.js";
 import type { ClientResponse, Result } from "../types.js";
 import { createRequestInit } from "../utils.js";
 
-type ErrorType = "AuthenticationError" | "UnexpectedResponse";
+type ErrorType = UnauthenticatedError | UnexpectedResponseError;
 
 export const getSession =
   (context: ApiClientContext) =>
@@ -25,10 +27,10 @@ export const getSession =
       }
 
       case 401: {
-        return ["AuthenticationError"];
+        return [new UnauthenticatedError()];
       }
 
       default:
-        return ["UnexpectedResponse"];
+        return [new UnexpectedResponseError()];
     }
   };

@@ -1,5 +1,8 @@
 import type { RequestPayload, schemas } from "../../types.js";
 import type { ApiClientContext } from "../context.js";
+import { ConflictedError } from "../error/ConflictedError.js";
+import { InvalidParametersError } from "../error/InvalidParametersError.js";
+import { UnexpectedResponseError } from "../error/UnexpectedResponseError.js";
 import type { ClientResponse, Result } from "../types.js";
 import { createRequestInit } from "../utils.js";
 
@@ -16,9 +19,9 @@ export type Return = {
 };
 
 export type ErrorType =
-  | "InvalidParameters"
-  | "ConflictedUserHandle"
-  | "UnexpectedResponse";
+  | InvalidParametersError
+  | ConflictedError
+  | UnexpectedResponseError;
 
 export const createUser =
   (context: ApiClientContext) =>
@@ -47,14 +50,14 @@ export const createUser =
       }
 
       case 400: {
-        return ["InvalidParameters"];
+        return [new InvalidParametersError()];
       }
 
       case 409: {
-        return ["ConflictedUserHandle"];
+        return [new ConflictedError()];
       }
 
       default:
-        return ["UnexpectedResponse"];
+        return [new UnexpectedResponseError()];
     }
   };

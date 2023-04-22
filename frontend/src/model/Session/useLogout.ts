@@ -1,5 +1,9 @@
 import { useCallback, useState } from "react";
 import type { Result } from "../../lib/Result.js";
+import type {
+  InvalidParametersError,
+  UnexpectedResponseError,
+} from "@flatnavy/api/client";
 import { deleteSession } from "@flatnavy/api/client";
 import { apiClientContext } from "../../lib/api.js";
 import { useSetAtom } from "jotai";
@@ -9,7 +13,7 @@ export type LogoutParams = void;
 
 export type LogoutResult = null;
 
-export type LogoutError = "InvalidParameters" | "UnexpectedResponse";
+export type LogoutError = InvalidParametersError | UnexpectedResponseError;
 
 export type Logout = (
   params: LogoutParams

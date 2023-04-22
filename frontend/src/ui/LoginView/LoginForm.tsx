@@ -26,8 +26,6 @@ export const LoginForm: React.FC = () => {
 
   return (
     <form onSubmit={onSubmit} className={css.form}>
-      {error && <p>{error}</p>}
-
       <Fieldset legend="Handle">
         <TextInput
           name="handle"
@@ -55,6 +53,8 @@ export const LoginForm: React.FC = () => {
       <Button type="submit" preSymbol="login">
         Login
       </Button>
+
+      {error && <p>{error.name}</p>}
     </form>
   );
 };

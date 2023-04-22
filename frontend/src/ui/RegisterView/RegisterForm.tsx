@@ -27,8 +27,6 @@ export const RegisterForm: React.FC = () => {
 
   return (
     <form onSubmit={onSubmit} className={css.form}>
-      {error && <p>{error}</p>}
-
       <Fieldset legend="Handle">
         <TextInput
           name="handle"
@@ -67,6 +65,8 @@ export const RegisterForm: React.FC = () => {
       <Button type="submit" preSymbol="done">
         Register
       </Button>
+
+      {error && <p>{error.name}</p>}
     </form>
   );
 };

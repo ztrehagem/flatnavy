@@ -1,9 +1,10 @@
 import type { schemas } from "../../types.js";
 import type { ApiClientContext } from "../context.js";
+import { UnexpectedResponseError } from "../error/UnexpectedResponseError.js";
 import type { ClientResponse, Result } from "../types.js";
 import { createRequestInit } from "../utils.js";
 
-type ErrorType = "UnexpectedResponse";
+type ErrorType = UnexpectedResponseError;
 
 export const indexUser =
   (context: ApiClientContext) =>
@@ -25,6 +26,6 @@ export const indexUser =
       }
 
       default:
-        return ["UnexpectedResponse"];
+        return [new UnexpectedResponseError()];
     }
   };

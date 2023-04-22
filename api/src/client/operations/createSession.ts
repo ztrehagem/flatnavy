@@ -1,5 +1,7 @@
 import type { RequestPayload, schemas } from "../../types.js";
 import type { ApiClientContext } from "../context.js";
+import { InvalidParametersError } from "../error/InvalidParametersError.js";
+import { UnexpectedResponseError } from "../error/UnexpectedResponseError.js";
 import type { ClientResponse, Result } from "../types.js";
 import { createRequestInit } from "../utils.js";
 
@@ -14,7 +16,7 @@ export type Return = {
   refreshToken: string;
 };
 
-export type ErrorType = "InvalidParameters" | "UnexpectedResponse";
+export type ErrorType = InvalidParametersError | UnexpectedResponseError;
 
 export const createSession =
   (context: ApiClientContext) =>
@@ -42,11 +44,11 @@ export const createSession =
       }
 
       case 400: {
-        return ["InvalidParameters"];
+        return [new InvalidParametersError()];
       }
 
       default: {
-        return ["UnexpectedResponse"];
+        return [new UnexpectedResponseError()];
       }
     }
   };
