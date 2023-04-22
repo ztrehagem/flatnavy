@@ -3,26 +3,21 @@ import { generateKeyPair, type JsonWebKey } from "node:crypto";
 import { importPKCS8, importSPKI, jwtVerify, SignJWT } from "jose";
 import type { Brand } from "../../../utils/Brand.js";
 import type { Result } from "../../../utils/Result.js";
-import { AccessToken } from "../Session/AccessToken.js";
-import { RefreshToken } from "../Session/RefreshToken.js";
 import { InvalidParameterError } from "../../error/InvalidParameterError.js";
 import { UserHandle } from "../User/UserHandle.js";
 import { SessionId } from "../Session/SessionId.js";
 import { Temporal } from "@js-temporal/polyfill";
+import { AuthenticationToken } from "../Session/AuthenticationToken.js";
 
 declare const brand: unique symbol;
 
 type JWT = string;
 
 type IServerKey = {
-  signAccessToken: (accessToken: AccessToken) => Promise<JWT>;
-  signRefreshToken: (refreshToken: RefreshToken) => Promise<JWT>;
-  verifyAccessToken: (
-    accessTokenString: string
-  ) => Promise<Result<AccessToken, InvalidParameterError>>;
-  verifyRefreshToken: (
-    refreshTokenString: string
-  ) => Promise<Result<RefreshToken, InvalidParameterError>>;
+  signToken: (token: AuthenticationToken) => Promise<JWT>;
+  verifyToken: (
+    jwt: string
+  ) => Promise<Result<AuthenticationToken, InvalidParameterError>>;
 };
 
 export type ServerKey = Brand<IServerKey, typeof brand>;
@@ -43,7 +38,7 @@ export const ServerKey = ({
   publicKeyJwk,
 }: Params): ServerKey => {
   return {
-    signAccessToken: async (token) => {
+    signToken: async (token) => {
       const privateKey = await importPKCS8(privateKeyPem, ALG);
 
       return await new SignJWT({
@@ -59,23 +54,7 @@ export const ServerKey = ({
         .sign(privateKey);
     },
 
-    signRefreshToken: async (token) => {
-      const privateKey = await importPKCS8(privateKeyPem, ALG);
-
-      return await new SignJWT({
-        iss: token.issuer,
-        aud: [...token.audience],
-        sub: token.userHandle.value,
-        sid: token.sessionId.value,
-        scope: token.scopes.join(" "),
-        iat: token.issuedAt.epochMilliseconds,
-        exp: token.expiredAt.epochMilliseconds,
-      })
-        .setProtectedHeader({ alg: ALG })
-        .sign(privateKey);
-    },
-
-    verifyAccessToken: async (jwt) => {
+    verifyToken: async (jwt) => {
       const publicKey = await importSPKI(publicKeyPem, ALG);
       const { payload } = await jwtVerify(jwt, publicKey);
 
@@ -111,7 +90,7 @@ export const ServerKey = ({
         return [new InvalidParameterError(ServerKey, "no exp claim is given")];
       }
 
-      const accessToken = AccessToken({
+      const token = AuthenticationToken({
         issuer: payload.iss,
         audience: [payload.aud ?? []].flat(),
         userHandle,
@@ -121,60 +100,7 @@ export const ServerKey = ({
         expiredAt: Temporal.Instant.fromEpochMilliseconds(payload.exp),
       });
 
-      return [null, accessToken];
-    },
-
-    verifyRefreshToken: async (jwt) => {
-      const publicKey = await importSPKI(publicKeyPem, ALG);
-      const { payload } = await jwtVerify(jwt, publicKey);
-
-      if (payload.iss == null) {
-        return [new InvalidParameterError(ServerKey, "no iss claim is given")];
-      }
-
-      if (payload.sub == null) {
-        return [new InvalidParameterError(ServerKey, "no sub claim is given")];
-      }
-
-      const [eUserHandle, userHandle] = UserHandle(payload.sub);
-
-      if (eUserHandle) {
-        return [eUserHandle];
-      }
-
-      if (typeof payload.sid != "string") {
-        return [new InvalidParameterError(ServerKey, "no sid claim is given")];
-      }
-
-      if (typeof payload.scope != "string") {
-        return [
-          new InvalidParameterError(ServerKey, "no scope claim is given"),
-        ];
-      }
-
-      if (payload.iat == null) {
-        return [new InvalidParameterError(ServerKey, "no iat claim is given")];
-      }
-
-      if (payload.exp == null) {
-        return [new InvalidParameterError(ServerKey, "no exp claim is given")];
-      }
-
-      const [eAccessToken, accessToken] = RefreshToken({
-        issuer: payload.iss,
-        audience: [payload.aud ?? []].flat(),
-        userHandle,
-        sessionId: SessionId(payload.sid),
-        scopes: payload.scope.split(" "),
-        issuedAt: Temporal.Instant.fromEpochMilliseconds(payload.iat),
-        expiredAt: Temporal.Instant.fromEpochMilliseconds(payload.exp),
-      });
-
-      if (eAccessToken) {
-        return [eAccessToken];
-      }
-
-      return [null, accessToken];
+      return [null, token];
     },
   } satisfies IServerKey as ServerKey;
 };

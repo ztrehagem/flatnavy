@@ -10,7 +10,7 @@
     "dev:build": "tsc -w --preserveWatchOutput",
     "dev:start": "nodemon ./dist/start.js",
     "build": "tsc",
-    "start": "node ./dist/start.js",
+    "start": "NODE_ENV=production node ./dist/start.js",
     "clean": "rm -r dist || true"
   },
   "dependencies": {

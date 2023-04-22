@@ -10,8 +10,8 @@ export const getSession =
     userRepository,
   }: Context): RouteHandlerMethod =>
   async (req, reply) => {
-    const [authenticationError, userHandle] =
-      await httpAuthenticationService.getAuthenticatedUserHandle(
+    const [authenticationError, token] =
+      await httpAuthenticationService.parseAuthenticationToken(
         req.headers.authorization ?? ""
       );
 
@@ -20,7 +20,7 @@ export const getSession =
       return await reply.status(401).send();
     }
 
-    const user = await userRepository.getByHandle(userHandle);
+    const user = await userRepository.getByHandle(token.userHandle);
 
     if (!user) {
       return await reply.status(401).send();

@@ -1,6 +1,6 @@
 import type { Result } from "../../utils/Result.js";
 import { AuthenticationError } from "../error/AuthenticationError.js";
-import type { UserHandle } from "../model/User/UserHandle.js";
+import type { AuthenticationToken } from "../model/Session/AuthenticationToken.js";
 import type { IServerKeyRepository } from "../repository/Server/IServerKeyRepository.js";
 
 export class HttpAuthenticationService {
@@ -10,9 +10,9 @@ export class HttpAuthenticationService {
     this.#serverKeyRepository = serverKeyRepository;
   }
 
-  async getAuthenticatedUserHandle(
+  async parseAuthenticationToken(
     authorizationHeader: string
-  ): Promise<Result<UserHandle, AuthenticationError>> {
+  ): Promise<Result<AuthenticationToken, AuthenticationError>> {
     const [type = "", jwt = ""] = authorizationHeader.split(" ", 2) ?? [];
 
     if (type != "Bearer" || !jwt) {
@@ -25,7 +25,7 @@ export class HttpAuthenticationService {
     }
 
     const serverKey = await this.#serverKeyRepository.get();
-    const [eAccessToken, accessToken] = await serverKey.verifyAccessToken(jwt);
+    const [eAccessToken, accessToken] = await serverKey.verifyToken(jwt);
 
     if (eAccessToken) {
       return [
@@ -45,6 +45,6 @@ export class HttpAuthenticationService {
       ];
     }
 
-    return [null, accessToken.userHandle];
+    return [null, accessToken];
   }
 }

@@ -1,17 +1,13 @@
 import type * as prisma from "@prisma/client";
 import type {
   CreateSessionParams,
+  CreateSessionResult,
   ISessionRepository,
 } from "../../../app/repository/Session/ISessionRepository.js";
 import type { PrismaRepositoryContext } from "../PrismaRepositoryContext.js";
-import { AccessToken } from "../../../app/model/Session/AccessToken.js";
-import { RefreshToken } from "../../../app/model/Session/RefreshToken.js";
 import { SessionId } from "../../../app/model/Session/SessionId.js";
 import { Temporal } from "@js-temporal/polyfill";
-import { Scope } from "../../../app/model/Session/Scope.js";
-
-const ISSUER = "flatnavy.local";
-const AUDIENCE = "flatnavy.local";
+import { AuthenticationToken } from "../../../app/model/Session/AuthenticationToken.js";
 
 export class SessionRepository implements ISessionRepository {
   readonly #prisma: prisma.PrismaClient;
@@ -22,31 +18,33 @@ export class SessionRepository implements ISessionRepository {
 
   async createSession({
     user,
-  }: CreateSessionParams): Promise<[AccessToken, RefreshToken]> {
+    issuer,
+    audience,
+    accessTokenTtl,
+    refreshTokenTtl,
+  }: CreateSessionParams): Promise<CreateSessionResult> {
     const now = Temporal.Now.instant();
 
-    const accessToken = AccessToken({
-      issuer: ISSUER,
-      audience: [AUDIENCE],
+    const accessToken = AuthenticationToken.accessToken({
+      issuer,
+      audience,
       userHandle: user.handle,
       sessionId: SessionId("1"), // TODO: Rotation
-      scopes: [],
       issuedAt: now,
-      expiredAt: now.add({ minutes: 1 }),
+      expiredAt: now.add(accessTokenTtl),
     });
 
-    const [, refreshToken] = RefreshToken({
-      issuer: ISSUER,
-      audience: [AUDIENCE],
+    const refreshToken = AuthenticationToken.refreshToken({
+      issuer,
+      audience,
       userHandle: user.handle,
       sessionId: SessionId("1"), // TODO: Rotation
-      scopes: [Scope.refresh],
       issuedAt: now,
-      expiredAt: now.add({ minutes: 10 }),
+      expiredAt: now.add(refreshTokenTtl),
     });
 
     await Promise.resolve();
 
-    return [accessToken, refreshToken!];
+    return { accessToken, refreshToken };
   }
 }

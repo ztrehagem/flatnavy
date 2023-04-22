@@ -13,8 +13,8 @@ export const createPost =
       "post"
     >["application/json"];
 
-    const [authenticationError, _userHandle] =
-      await httpAuthenticationService.getAuthenticatedUserHandle(
+    const [authenticationError, _token] =
+      await httpAuthenticationService.parseAuthenticationToken(
         req.headers.authorization ?? ""
       );
 

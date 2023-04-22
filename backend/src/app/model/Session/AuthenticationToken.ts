@@ -2,10 +2,11 @@ import { Temporal } from "@js-temporal/polyfill";
 import type { Brand } from "../../../utils/Brand.js";
 import type { UserHandle } from "../User/UserHandle.js";
 import type { SessionId } from "./SessionId.js";
+import { Scope } from "./Scope.js";
 
 declare const brand: unique symbol;
 
-type IAccessToken = {
+type IAuthenticationToken = {
   readonly issuer: string;
   readonly audience: readonly string[];
   readonly userHandle: UserHandle;
@@ -16,7 +17,7 @@ type IAccessToken = {
   get valid(): boolean;
 };
 
-export type AccessToken = Brand<IAccessToken, typeof brand>;
+export type AuthenticationToken = Brand<IAuthenticationToken, typeof brand>;
 
 export type Params = {
   readonly issuer: string;
@@ -28,7 +29,7 @@ export type Params = {
   readonly expiredAt: Temporal.Instant;
 };
 
-export const AccessToken = ({
+export const AuthenticationToken = ({
   issuer,
   audience,
   userHandle,
@@ -36,7 +37,7 @@ export const AccessToken = ({
   scopes,
   issuedAt,
   expiredAt,
-}: Params): AccessToken => {
+}: Params): AuthenticationToken => {
   return {
     issuer,
     audience,
@@ -50,5 +51,31 @@ export const AccessToken = ({
       const now = Temporal.Now.instant();
       return Temporal.Instant.compare(now, expiredAt) <= 0;
     },
-  } satisfies IAccessToken as AccessToken;
+  } satisfies IAuthenticationToken as AuthenticationToken;
 };
+
+AuthenticationToken.accessToken = (params: {
+  readonly issuer: string;
+  readonly audience: readonly string[];
+  readonly userHandle: UserHandle;
+  readonly sessionId: SessionId;
+  readonly issuedAt: Temporal.Instant;
+  readonly expiredAt: Temporal.Instant;
+}) =>
+  AuthenticationToken({
+    ...params,
+    scopes: [],
+  });
+
+AuthenticationToken.refreshToken = (params: {
+  readonly issuer: string;
+  readonly audience: readonly string[];
+  readonly userHandle: UserHandle;
+  readonly sessionId: SessionId;
+  readonly issuedAt: Temporal.Instant;
+  readonly expiredAt: Temporal.Instant;
+}) =>
+  AuthenticationToken({
+    ...params,
+    scopes: [Scope.refresh],
+  });

@@ -5,9 +5,10 @@ import { UserHandle } from "../../model/User/UserHandle.js";
 
 export const createSession =
   ({
+    env,
     userRepository,
-    sessionRepository,
     serverKeyRepository,
+    sessionService,
   }: Context): RouteHandlerMethod =>
   async (req, reply) => {
     const body = req.body as RequestPayload<
@@ -33,12 +34,12 @@ export const createSession =
       return await reply.status(400).send();
     }
 
-    const [accessToken, refreshToken] = await sessionRepository.createSession({
+    const { accessToken, refreshToken } = await sessionService.createSession({
       user: registration.user,
     });
     const serverKey = await serverKeyRepository.get();
-    const accessTokenJwt = await serverKey.signAccessToken(accessToken);
-    const refreshTokenJwt = await serverKey.signRefreshToken(refreshToken);
+    const accessTokenJwt = await serverKey.signToken(accessToken);
+    const refreshTokenJwt = await serverKey.signToken(refreshToken);
 
     const res: ResponsePayload<"/api/auth", "post">["201"]["application/json"] =
       {

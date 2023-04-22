@@ -9,9 +9,10 @@ import { UserId } from "../../model/User/UserId.js";
 
 export const createUser =
   ({
+    env,
     userRepository,
-    sessionRepository,
     serverKeyRepository,
+    sessionService,
   }: Context): RouteHandlerMethod =>
   async (req, reply) => {
     const body = req.body as RequestPayload<
@@ -49,11 +50,11 @@ export const createUser =
     }
 
     const serverKey = await serverKeyRepository.get();
-    const [accessToken, refreshToken] = await sessionRepository.createSession({
+    const { accessToken, refreshToken } = await sessionService.createSession({
       user,
     });
-    const accessTokenJwt = await serverKey.signAccessToken(accessToken);
-    const refreshTokenJwt = await serverKey.signRefreshToken(refreshToken);
+    const accessTokenJwt = await serverKey.signToken(accessToken);
+    const refreshTokenJwt = await serverKey.signToken(refreshToken);
 
     const res: ResponsePayload<
       "/api/users",
