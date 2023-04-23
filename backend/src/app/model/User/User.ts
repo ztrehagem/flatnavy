@@ -1,43 +1,27 @@
-import type { Brand } from "../../../utils/Brand.js";
-import type { Result } from "../../../utils/Result.js";
-import { InvalidParameterError } from "../../error/InvalidParameterError.js";
 import type { UserHandle } from "./UserHandle.js";
 import type { UserId } from "./UserId.js";
-
-declare const brand: unique symbol;
-
-type IUser = {
-  readonly id: UserId;
-  readonly handle: UserHandle;
-  readonly name: string | null;
-};
-
-export type User = Brand<IUser, typeof brand>;
+import type { UserName } from "./UserName.js";
 
 export type Params = {
   readonly id: UserId;
   readonly handle: UserHandle;
-  readonly name: string | null;
+  readonly name: UserName | null;
 };
 
-const NAME_MAX_LENGTH = 64;
+export class User {
+  #_brand!: never;
 
-export const User = ({
-  id,
-  handle,
-  name,
-}: Params): Result<User, InvalidParameterError> => {
-  name = name?.trim() ?? null;
+  readonly id: UserId;
+  readonly handle: UserHandle;
+  readonly name: UserName | null;
 
-  if (name && name.length > NAME_MAX_LENGTH) {
-    return [new InvalidParameterError(User, "too long name")];
+  static create(params: Params): User {
+    return new User(params);
   }
 
-  const user = {
-    id,
-    handle,
-    name,
-  } satisfies IUser as User;
-
-  return [null, user];
-};
+  private constructor(params: Params) {
+    this.id = params.id;
+    this.handle = params.handle;
+    this.name = params.name;
+  }
+}

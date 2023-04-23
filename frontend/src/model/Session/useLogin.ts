@@ -1,5 +1,9 @@
 import { useCallback, useState } from "react";
 import type { Result } from "../../lib/Result.js";
+import type {
+  InvalidParametersError,
+  UnexpectedResponseError,
+} from "@flatnavy/api/client";
 import { createSession } from "@flatnavy/api/client";
 import { apiClientContext } from "../../lib/api.js";
 import { Session } from "./Session.type.js";
@@ -14,7 +18,7 @@ export type LoginParams = {
 
 export type LoginResult = Session;
 
-export type LoginError = "InvalidParameters" | "UnexpectedResponse";
+export type LoginError = InvalidParametersError | UnexpectedResponseError;
 
 export type Login = (
   params: LoginParams

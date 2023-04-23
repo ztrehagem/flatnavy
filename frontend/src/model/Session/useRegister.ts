@@ -1,5 +1,10 @@
 import { useCallback, useState } from "react";
 import type { Result } from "../../lib/Result.js";
+import type {
+  ConflictedError,
+  InvalidParametersError,
+  UnexpectedResponseError,
+} from "@flatnavy/api/client";
 import { createUser } from "@flatnavy/api/client";
 import { apiClientContext } from "../../lib/api.js";
 import { useSetAtom } from "jotai";
@@ -16,9 +21,9 @@ export type RegisterParams = {
 export type RegisterResult = Session;
 
 export type RegisterError =
-  | "InvalidParameters"
-  | "ConflictedUserHandle"
-  | "UnexpectedResponse";
+  | InvalidParametersError
+  | ConflictedError
+  | UnexpectedResponseError;
 
 export type Register = (
   params: RegisterParams

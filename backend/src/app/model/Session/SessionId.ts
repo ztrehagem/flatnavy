@@ -1,20 +1,19 @@
 import { randomUUID } from "crypto";
-import type { Brand } from "../../../utils/Brand.js";
 
-declare const brand: unique symbol;
+export class SessionId {
+  #_brand!: never;
 
-type ISessionId = {
   readonly value: string;
-};
 
-export type SessionId = Brand<ISessionId, typeof brand>;
+  static generate(): SessionId {
+    return this.create(randomUUID());
+  }
 
-export const SessionId = (raw: string): SessionId => {
-  return {
-    value: raw,
-  } satisfies ISessionId as SessionId;
-};
+  static create(value: string): SessionId {
+    return new SessionId(value);
+  }
 
-SessionId.generate = (): SessionId => {
-  return SessionId(randomUUID());
-};
+  private constructor(value: string) {
+    this.value = value;
+  }
+}

@@ -1,7 +1,7 @@
 import type { RouteHandlerMethod } from "fastify";
 import type { Context } from "../../context.js";
 import type { PathParameters, ResponsePayload } from "@flatnavy/api";
-import { serializeUser } from "../../serializer/User/User.js";
+import { serializeUser } from "../../serializer/User.js";
 import { UserHandle } from "../../model/User/UserHandle.js";
 
 export const getUser =
@@ -12,9 +12,9 @@ export const getUser =
       "get"
     >;
 
-    const [, userHandle] = UserHandle(params.userHandle);
+    const [eUserHandle, userHandle] = UserHandle.create(params.userHandle);
 
-    if (!userHandle) {
+    if (eUserHandle) {
       return await reply.status(400).send();
     }
 

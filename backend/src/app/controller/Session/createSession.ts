@@ -2,12 +2,14 @@ import type { RouteHandlerMethod } from "fastify";
 import type { Context } from "../../context.js";
 import type { RequestPayload, ResponsePayload } from "@flatnavy/api";
 import { UserHandle } from "../../model/User/UserHandle.js";
+import { serializeUser } from "../../serializer/User.js";
 
 export const createSession =
   ({
+    env,
     userRepository,
-    sessionRepository,
     serverKeyRepository,
+    sessionService,
   }: Context): RouteHandlerMethod =>
   async (req, reply) => {
     const body = req.body as RequestPayload<
@@ -15,37 +17,36 @@ export const createSession =
       "post"
     >["application/json"];
 
-    const [eHandle, handle] = UserHandle(body.handle);
+    const [eHandle, handle] = UserHandle.create(body.handle);
 
     if (eHandle) {
       return await reply.status(400).send();
     }
 
-    const registration = await userRepository.getRegistrationByHandle(handle);
+    const authentication = await userRepository.getUserAuthenticationByHandle(
+      handle
+    );
 
-    if (!registration) {
+    if (!authentication) {
       return await reply.status(400).send();
     }
 
-    const isMatched = await registration.password.compare(body.password);
+    const isMatched = await authentication.password.compare(body.password);
 
     if (!isMatched) {
       return await reply.status(400).send();
     }
 
-    const [accessToken, refreshToken] = await sessionRepository.createSession({
-      user: registration.user,
+    const { accessToken, refreshToken } = await sessionService.createSession({
+      user: authentication.user,
     });
     const serverKey = await serverKeyRepository.get();
-    const accessTokenJwt = await serverKey.signAccessToken(accessToken);
-    const refreshTokenJwt = await serverKey.signRefreshToken(refreshToken);
+    const accessTokenJwt = await serverKey.signToken(accessToken);
+    const refreshTokenJwt = await serverKey.signToken(refreshToken);
 
     const res: ResponsePayload<"/api/auth", "post">["201"]["application/json"] =
       {
-        user: {
-          handle: registration.user.handle.value,
-          name: registration.user.name,
-        },
+        user: serializeUser(authentication.user),
         accessToken: accessTokenJwt,
         refreshToken: refreshTokenJwt,
       };

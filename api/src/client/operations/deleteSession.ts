@@ -1,8 +1,9 @@
 import type { ApiClientContext } from "../context.js";
+import { UnexpectedResponseError } from "../error/UnexpectedResponseError.js";
 import type { ClientResponse, Result } from "../types.js";
 import { createRequestInit } from "../utils.js";
 
-type ErrorType = "UnexpectedResponse";
+type ErrorType = UnexpectedResponseError;
 
 export const deleteSession =
   (context: ApiClientContext) => async (): Promise<Result<null, ErrorType>> => {
@@ -22,6 +23,6 @@ export const deleteSession =
       }
 
       default:
-        return ["UnexpectedResponse"];
+        return [new UnexpectedResponseError()];
     }
   };

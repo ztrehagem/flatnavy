@@ -1,17 +1,21 @@
 import React, { useState, type FormEvent } from "react";
 import * as css from "./PostForm.css.js";
-import { apiClientContext } from "../../lib/api.js";
 import { MaterialSymbol } from "../Symbol/MaterialSymbol.jsx";
-import { createPost } from "@flatnavy/api/client";
+import { useSendPost } from "../../model/Post/useSendPost.js";
 
 export const PostForm: React.FC = () => {
   const [text, setText] = useState("");
+  const { sendPost, submitting, error } = useSendPost();
 
   const onPost = (e: FormEvent) => {
     e.preventDefault();
 
-    void createPost(apiClientContext)({ body: text }).then(() => {
-      setText("");
+    if (submitting) return;
+
+    void sendPost({ body: text }).then(([error]) => {
+      if (!error) {
+        setText("");
+      }
     });
   };
 
@@ -32,6 +36,8 @@ export const PostForm: React.FC = () => {
         placeholder="what you say"
         className={css.textarea}
       ></textarea>
+
+      {error && <p>{error.name}</p>}
     </form>
   );
 };

@@ -6,3 +6,7 @@ export { deleteSession } from "./operations/deleteSession.js";
 export { createUser } from "./operations/createUser.js";
 export { indexUser } from "./operations/indexUser.js";
 export { createPost } from "./operations/createPost.js";
+export { ConflictedError } from "./error/ConflictedError.js";
+export { InvalidParametersError } from "./error/InvalidParametersError.js";
+export { UnauthenticatedError } from "./error/UnauthenticatedError.js";
+export { UnexpectedResponseError } from "./error/UnexpectedResponseError.js";

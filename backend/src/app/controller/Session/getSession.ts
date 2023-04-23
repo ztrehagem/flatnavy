@@ -2,7 +2,7 @@ import type { RouteHandlerMethod } from "fastify";
 import type { Context } from "../../context.js";
 import { logInfo } from "../../../utils/log.js";
 import type { ResponsePayload } from "@flatnavy/api";
-import { serializeUser } from "../../serializer/User/User.js";
+import { serializeUser } from "../../serializer/User.js";
 
 export const getSession =
   ({
@@ -10,8 +10,8 @@ export const getSession =
     userRepository,
   }: Context): RouteHandlerMethod =>
   async (req, reply) => {
-    const [authenticationError, userHandle] =
-      await httpAuthenticationService.getAuthenticatedUserHandle(
+    const [authenticationError, token] =
+      await httpAuthenticationService.parseAuthenticationToken(
         req.headers.authorization ?? ""
       );
 
@@ -20,7 +20,7 @@ export const getSession =
       return await reply.status(401).send();
     }
 
-    const user = await userRepository.getByHandle(userHandle);
+    const user = await userRepository.getByHandle(token.userHandle);
 
     if (!user) {
       return await reply.status(401).send();
