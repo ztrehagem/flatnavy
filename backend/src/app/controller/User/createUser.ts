@@ -2,14 +2,13 @@ import type { RouteHandlerMethod } from "fastify";
 import type { RequestPayload, ResponsePayload } from "@flatnavy/api";
 import type { Context } from "../../context.js";
 import { UserHandle } from "../../model/User/UserHandle.js";
-import { User } from "../../model/User/User.js";
-import { UserRegistration } from "../../model/User/UserRegistration.js";
 import { HashedUserPassword } from "../../model/User/HashedUserPassword.js";
-import { UserId } from "../../model/User/UserId.js";
+import { NewUser } from "../../model/User/NewUser.js";
+import { UserName } from "../../model/User/UserName.js";
+import { serializeUser } from "../../serializer/User.js";
 
 export const createUser =
   ({
-    env,
     userRepository,
     serverKeyRepository,
     sessionService,
@@ -26,13 +25,9 @@ export const createUser =
       return await reply.status(400).send();
     }
 
-    const [eUser, user] = User({
-      id: UserId.placeholder(),
-      handle,
-      name: body.name,
-    });
+    const [eUserName, userName] = UserName.create(body.name);
 
-    if (eUser) {
+    if (eUserName) {
       return await reply.status(400).send();
     }
 
@@ -42,8 +37,13 @@ export const createUser =
       return await reply.status(400).send();
     }
 
-    const registration = UserRegistration({ user, password });
-    const [error, createdUser] = await userRepository.create(registration);
+    const newUser = NewUser.create({
+      handle,
+      name: userName,
+      password,
+    });
+
+    const [error, createdUser] = await userRepository.create(newUser);
 
     if (error) {
       return await reply.status(409).send();
@@ -51,7 +51,7 @@ export const createUser =
 
     const serverKey = await serverKeyRepository.get();
     const { accessToken, refreshToken } = await sessionService.createSession({
-      user,
+      user: createdUser,
     });
     const accessTokenJwt = await serverKey.signToken(accessToken);
     const refreshTokenJwt = await serverKey.signToken(refreshToken);
@@ -60,10 +60,7 @@ export const createUser =
       "/api/users",
       "post"
     >["201"]["application/json"] = {
-      user: {
-        handle: createdUser.handle.value,
-        name: createdUser.name,
-      },
+      user: serializeUser(createdUser),
       accessToken: accessTokenJwt,
       refreshToken: refreshTokenJwt,
     };

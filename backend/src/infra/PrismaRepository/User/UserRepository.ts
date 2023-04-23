@@ -1,13 +1,14 @@
 import * as prisma from "@prisma/client";
-import { User } from "../../../app/model/User/User.js";
-import { UserHandle } from "../../../app/model/User/UserHandle.js";
-import { UserId } from "../../../app/model/User/UserId.js";
-import { UserRegistration } from "../../../app/model/User/UserRegistration.js";
+import type { User } from "../../../app/model/User/User.js";
+import type { UserHandle } from "../../../app/model/User/UserHandle.js";
 import type { IUserRepository } from "../../../app/repository/User/IUserRepository.js";
 import { UsedUserHandleError } from "../../../app/error/UsedUserHandleError.js";
 import type { Result } from "../../../utils/Result.js";
 import type { PrismaRepositoryContext } from "../PrismaRepositoryContext.js";
 import { HashedUserPassword } from "../../../app/model/User/HashedUserPassword.js";
+import type { NewUser } from "../../../app/model/User/NewUser.js";
+import { UserAuthentication } from "../../../app/model/User/UserAuthentication.js";
+import { mapUser } from "../../../app/mapper/User/User.js";
 
 export class UserRepository implements IUserRepository {
   readonly #prisma: prisma.PrismaClient;
@@ -39,17 +40,15 @@ export class UserRepository implements IUserRepository {
     return userRecords.map(mapUser);
   }
 
-  async create(
-    registration: UserRegistration
-  ): Promise<Result<User, UsedUserHandleError>> {
+  async create(user: NewUser): Promise<Result<User, UsedUserHandleError>> {
     try {
       const userRecord = await this.#prisma.user.create({
         data: {
-          handle: registration.user.handle.value,
-          name: registration.user.name,
+          handle: user.handle.value,
+          name: user.name.value,
           authentication: {
             create: {
-              hashedPassword: registration.password.value,
+              hashedPassword: user.password.value,
             },
           },
         },
@@ -59,7 +58,7 @@ export class UserRepository implements IUserRepository {
     } catch (error) {
       if (error instanceof prisma.Prisma.PrismaClientKnownRequestError) {
         if (error.code == "P2002") {
-          return [new UsedUserHandleError(registration.user.handle, error)];
+          return [new UsedUserHandleError(user.handle, error)];
         }
       }
 
@@ -67,9 +66,9 @@ export class UserRepository implements IUserRepository {
     }
   }
 
-  async getRegistrationByHandle(
+  async getUserAuthenticationByHandle(
     handle: UserHandle
-  ): Promise<UserRegistration | null> {
+  ): Promise<UserAuthentication | null> {
     const record = await this.#prisma.user.findUnique({
       where: {
         handle: handle.value,
@@ -86,18 +85,6 @@ export class UserRepository implements IUserRepository {
     const user = mapUser(record);
     const password = HashedUserPassword(record.authentication.hashedPassword);
 
-    return UserRegistration({ user, password });
+    return UserAuthentication.create({ user, password });
   }
 }
-
-const mapUser = (record: prisma.User): User => {
-  const [, handle] = UserHandle(record.handle);
-
-  const [, user] = User({
-    id: UserId(record.id)!,
-    handle: handle!,
-    name: record.name,
-  });
-
-  return user!;
-};

@@ -2,6 +2,7 @@ import type { RouteHandlerMethod } from "fastify";
 import type { Context } from "../../context.js";
 import type { RequestPayload, ResponsePayload } from "@flatnavy/api";
 import { UserHandle } from "../../model/User/UserHandle.js";
+import { serializeUser } from "../../serializer/User.js";
 
 export const createSession =
   ({
@@ -22,20 +23,22 @@ export const createSession =
       return await reply.status(400).send();
     }
 
-    const registration = await userRepository.getRegistrationByHandle(handle);
+    const authentication = await userRepository.getUserAuthenticationByHandle(
+      handle
+    );
 
-    if (!registration) {
+    if (!authentication) {
       return await reply.status(400).send();
     }
 
-    const isMatched = await registration.password.compare(body.password);
+    const isMatched = await authentication.password.compare(body.password);
 
     if (!isMatched) {
       return await reply.status(400).send();
     }
 
     const { accessToken, refreshToken } = await sessionService.createSession({
-      user: registration.user,
+      user: authentication.user,
     });
     const serverKey = await serverKeyRepository.get();
     const accessTokenJwt = await serverKey.signToken(accessToken);
@@ -43,10 +46,7 @@ export const createSession =
 
     const res: ResponsePayload<"/api/auth", "post">["201"]["application/json"] =
       {
-        user: {
-          handle: registration.user.handle.value,
-          name: registration.user.name,
-        },
+        user: serializeUser(authentication.user),
         accessToken: accessTokenJwt,
         refreshToken: refreshTokenJwt,
       };
