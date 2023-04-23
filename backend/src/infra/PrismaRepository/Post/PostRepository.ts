@@ -42,8 +42,9 @@ export class PostRepository implements IPostRepository {
       {
         id: post.postId.value.toString(),
         body: post.body,
-        author: post.user.handle.value,
-        authorName: post.user.name?.value ?? "",
+        uid: post.user.id.value.toString(),
+        handle: post.user.handle.value,
+        name: post.user.name?.value ?? "",
         at: post.dateTime.toString(),
       },
       {

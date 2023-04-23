@@ -9,6 +9,7 @@ import { HttpAuthenticationService } from "./app/service/HttpAuthenticationServi
 import { Env } from "./app/model/Server/Env.js";
 import { SessionService } from "./app/service/SessionService.js";
 import { PostRepository } from "./infra/PrismaRepository/Post/PostRepository.js";
+import { TimelineRepository } from "./infra/PrismaRepository/Timeline/TimelineRepository.js";
 
 export const createContext = async (): Promise<Context> => {
   const [eEnv, env] = Env.create({
@@ -34,6 +35,7 @@ export const createContext = async (): Promise<Context> => {
   const sessionRepository = new SessionRepository(repoCtx);
   const userRepository = new UserRepository(repoCtx);
   const postRepository = new PostRepository(repoCtx);
+  const timelineRepository = new TimelineRepository(repoCtx);
 
   const httpAuthenticationService = new HttpAuthenticationService(
     serverKeyRepository
@@ -46,6 +48,7 @@ export const createContext = async (): Promise<Context> => {
     sessionRepository,
     userRepository,
     postRepository,
+    timelineRepository,
     httpAuthenticationService,
     sessionService,
   };
