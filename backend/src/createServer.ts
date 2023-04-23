@@ -4,7 +4,7 @@ import { default as fastifyStatic } from "@fastify/static";
 import fastifyCors from "@fastify/cors";
 import { router } from "./router.js";
 import type { Context } from "./app/context.js";
-import { logInfo } from "./utils/log.js";
+import { logError, logInfo } from "./utils/log.js";
 
 export type Params = {
   context: Context;
@@ -30,6 +30,10 @@ export const createServer = async ({
 
   server.addHook("onRequest", async (req, reply) => {
     logInfo(`🌐 ${req.method} ${req.url}`);
+  });
+
+  server.addHook("onError", async (req, reply, error) => {
+    logError(error);
   });
 
   return server;

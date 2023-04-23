@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { createClient as createRedisClient, type RedisClientType } from "redis";
 import type { PrismaRepositoryContext } from "./infra/PrismaRepository/PrismaRepositoryContext.js";
 import type { Context } from "./app/context.js";
 import { UserRepository } from "./infra/PrismaRepository/User/UserRepository.js";
@@ -17,10 +18,16 @@ export const createContext = async (): Promise<Context> => {
   if (eEnv) throw eEnv;
 
   const prisma = new PrismaClient();
-  await prisma.$connect();
+
+  const redis: RedisClientType = createRedisClient({
+    url: process.env.REDIS_URL,
+  });
+
+  await Promise.all([prisma.$connect(), redis.connect()]);
 
   const repoCtx: PrismaRepositoryContext = {
     prisma,
+    redis,
   };
 
   const serverKeyRepository = new ServerKeyRepository(repoCtx);
