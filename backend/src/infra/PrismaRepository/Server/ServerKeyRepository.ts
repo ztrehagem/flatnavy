@@ -14,7 +14,7 @@ export class ServerKeyRepository implements IServerKeyRepository {
   async get(): Promise<ServerKey> {
     const record = await this.#prepare();
 
-    return ServerKey({
+    return ServerKey.create({
       privateKeyPem: record.privateKeyPem,
       publicKeyPem: record.publicKeyPem,
       publicKeyDer: record.publicKeyDer,

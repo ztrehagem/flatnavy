@@ -10,7 +10,7 @@ import { SessionService } from "./app/service/SessionService.js";
 import { PostRepository } from "./infra/PrismaRepository/Post/PostRepository.js";
 
 export const createContext = async (): Promise<Context> => {
-  const [eEnv, env] = Env({
+  const [eEnv, env] = Env.create({
     domain: process.env.SERVER_DOMAIN ?? "flatnavy.example",
   });
 

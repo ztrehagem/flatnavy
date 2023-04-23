@@ -1,23 +1,13 @@
-import type { Brand } from "../../../utils/Brand.js";
+export class UserId {
+  #_brand!: never;
 
-declare const brand: unique symbol;
-
-type IUserId = {
   readonly value: number;
-};
 
-export type UserId = Brand<IUserId, typeof brand>;
+  static create(value: number): UserId {
+    return new UserId(value);
+  }
 
-export const UserId = (value: number): UserId => {
-  return {
-    value,
-  } satisfies IUserId as UserId;
-};
-
-UserId.placeholder = (): UserId => {
-  return {
-    get value(): number {
-      throw new Error("UserId: read placeholder");
-    },
-  } satisfies IUserId as UserId;
-};
+  private constructor(value: number) {
+    this.value = value;
+  }
+}

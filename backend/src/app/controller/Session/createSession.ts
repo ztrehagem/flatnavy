@@ -17,7 +17,7 @@ export const createSession =
       "post"
     >["application/json"];
 
-    const [eHandle, handle] = UserHandle(body.handle);
+    const [eHandle, handle] = UserHandle.create(body.handle);
 
     if (eHandle) {
       return await reply.status(400).send();

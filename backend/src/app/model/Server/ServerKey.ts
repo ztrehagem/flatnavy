@@ -1,7 +1,6 @@
 import type { KeyObject } from "node:crypto";
 import { generateKeyPair, type JsonWebKey } from "node:crypto";
 import { importPKCS8, importSPKI, jwtVerify, SignJWT } from "jose";
-import type { Brand } from "../../../utils/Brand.js";
 import type { Result } from "../../../utils/Result.js";
 import { InvalidParameterError } from "../../error/InvalidParameterError.js";
 import { UserHandle } from "../User/UserHandle.js";
@@ -9,18 +8,7 @@ import { SessionId } from "../Session/SessionId.js";
 import { Temporal } from "@js-temporal/polyfill";
 import { AuthenticationToken } from "../Session/AuthenticationToken.js";
 
-declare const brand: unique symbol;
-
 type JWT = string;
-
-type IServerKey = {
-  signToken: (token: AuthenticationToken) => Promise<JWT>;
-  verifyToken: (
-    jwt: string
-  ) => Promise<Result<AuthenticationToken, InvalidParameterError>>;
-};
-
-export type ServerKey = Brand<IServerKey, typeof brand>;
 
 export type Params = {
   readonly privateKeyPem: string;
@@ -31,103 +19,114 @@ export type Params = {
 
 const ALG = "EdDSA";
 
-export const ServerKey = ({
-  privateKeyPem,
-  publicKeyPem,
-  publicKeyDer,
-  publicKeyJwk,
-}: Params): ServerKey => {
-  return {
-    signToken: async (token) => {
-      const privateKey = await importPKCS8(privateKeyPem, ALG);
+export class ServerKey {
+  #_brand!: never;
 
-      return await new SignJWT({
-        iss: token.issuer,
-        aud: [...token.audience],
-        sub: token.userHandle.value,
-        sid: token.sessionId.value,
-        scope: token.scopes.join(" "),
-        iat: token.issuedAt.epochMilliseconds,
-        exp: token.expiredAt.epochMilliseconds,
-      })
-        .setProtectedHeader({ alg: ALG })
-        .sign(privateKey);
-    },
+  readonly #privateKeyPem: string;
+  readonly #publicKeyPem: string;
+  readonly #publicKeyDer: Buffer;
+  readonly #publicKeyJwk: JsonWebKey;
 
-    verifyToken: async (jwt) => {
-      const publicKey = await importSPKI(publicKeyPem, ALG);
-      const { payload } = await jwtVerify(jwt, publicKey);
+  static async generateParams(): Promise<Params> {
+    const { privateKey, publicKey } = await new Promise<{
+      privateKey: KeyObject;
+      publicKey: KeyObject;
+    }>((resolve, reject) => {
+      generateKeyPair("ed25519", {}, (error, publicKey, privateKey) =>
+        error ? reject(error) : resolve({ publicKey, privateKey })
+      );
+    });
 
-      if (payload.iss == null) {
-        return [new InvalidParameterError(ServerKey, "no iss claim is given")];
-      }
+    const privateKeyPem = privateKey
+      .export({ format: "pem", type: "pkcs8" })
+      .toString();
+    const publicKeyPem = publicKey
+      .export({ format: "pem", type: "spki" })
+      .toString();
+    const publicKeyDer = publicKey.export({ format: "der", type: "spki" });
+    const publicKeyJwk = publicKey.export({ format: "jwk" });
 
-      if (payload.sub == null) {
-        return [new InvalidParameterError(ServerKey, "no sub claim is given")];
-      }
+    return {
+      privateKeyPem,
+      publicKeyPem,
+      publicKeyDer,
+      publicKeyJwk,
+    };
+  }
 
-      const [eUserHandle, userHandle] = UserHandle(payload.sub);
+  static create(params: Params): ServerKey {
+    return new ServerKey(params);
+  }
 
-      if (eUserHandle) {
-        return [eUserHandle];
-      }
+  private constructor(params: Params) {
+    this.#privateKeyPem = params.privateKeyPem;
+    this.#publicKeyPem = params.publicKeyPem;
+    this.#publicKeyDer = params.publicKeyDer;
+    this.#publicKeyJwk = params.publicKeyJwk;
+  }
 
-      if (typeof payload.sid != "string") {
-        return [new InvalidParameterError(ServerKey, "no sid claim is given")];
-      }
+  async signToken(token: AuthenticationToken): Promise<JWT> {
+    const privateKey = await importPKCS8(this.#privateKeyPem, ALG);
 
-      if (typeof payload.scope != "string") {
-        return [
-          new InvalidParameterError(ServerKey, "no scope claim is given"),
-        ];
-      }
+    return await new SignJWT({
+      iss: token.issuer,
+      aud: [...token.audience],
+      sub: token.userHandle.value,
+      sid: token.sessionId.value,
+      scope: token.scopes.join(" "),
+      iat: token.issuedAt.epochMilliseconds,
+      exp: token.expiredAt.epochMilliseconds,
+    })
+      .setProtectedHeader({ alg: ALG })
+      .sign(privateKey);
+  }
 
-      if (payload.iat == null) {
-        return [new InvalidParameterError(ServerKey, "no iat claim is given")];
-      }
+  async verifyToken(
+    jwt: JWT
+  ): Promise<Result<AuthenticationToken, InvalidParameterError>> {
+    const publicKey = await importSPKI(this.#publicKeyPem, ALG);
+    const { payload } = await jwtVerify(jwt, publicKey);
 
-      if (payload.exp == null) {
-        return [new InvalidParameterError(ServerKey, "no exp claim is given")];
-      }
+    if (payload.iss == null) {
+      return [new InvalidParameterError(ServerKey, "no iss claim is given")];
+    }
 
-      const token = AuthenticationToken({
-        issuer: payload.iss,
-        audience: [payload.aud ?? []].flat(),
-        userHandle,
-        sessionId: SessionId(payload.sid),
-        scopes: payload.scope.split(" "),
-        issuedAt: Temporal.Instant.fromEpochMilliseconds(payload.iat),
-        expiredAt: Temporal.Instant.fromEpochMilliseconds(payload.exp),
-      });
+    if (payload.sub == null) {
+      return [new InvalidParameterError(ServerKey, "no sub claim is given")];
+    }
 
-      return [null, token];
-    },
-  } satisfies IServerKey as ServerKey;
-};
+    const [eUserHandle, userHandle] = UserHandle.create(payload.sub);
 
-ServerKey.generateParams = async (): Promise<Params> => {
-  const { privateKey, publicKey } = await new Promise<{
-    privateKey: KeyObject;
-    publicKey: KeyObject;
-  }>((resolve, reject) => {
-    generateKeyPair("ed25519", {}, (error, publicKey, privateKey) =>
-      error ? reject(error) : resolve({ publicKey, privateKey })
-    );
-  });
+    if (eUserHandle) {
+      return [eUserHandle];
+    }
 
-  const privateKeyPem = privateKey
-    .export({ format: "pem", type: "pkcs8" })
-    .toString();
-  const publicKeyPem = publicKey
-    .export({ format: "pem", type: "spki" })
-    .toString();
-  const publicKeyDer = publicKey.export({ format: "der", type: "spki" });
-  const publicKeyJwk = publicKey.export({ format: "jwk" });
+    if (typeof payload.sid != "string") {
+      return [new InvalidParameterError(ServerKey, "no sid claim is given")];
+    }
 
-  return {
-    privateKeyPem,
-    publicKeyPem,
-    publicKeyDer,
-    publicKeyJwk,
-  };
-};
+    if (typeof payload.scope != "string") {
+      return [new InvalidParameterError(ServerKey, "no scope claim is given")];
+    }
+
+    if (payload.iat == null) {
+      return [new InvalidParameterError(ServerKey, "no iat claim is given")];
+    }
+
+    if (payload.exp == null) {
+      return [new InvalidParameterError(ServerKey, "no exp claim is given")];
+    }
+
+    const token = AuthenticationToken.create({
+      issuer: payload.iss,
+      audience: [payload.aud ?? []].flat(),
+      userHandle,
+      sessionId: SessionId.create(payload.sid),
+      scopes: payload.scope.split(" "),
+      issuedAt: Temporal.Instant.fromEpochMilliseconds(payload.iat),
+      expiredAt: Temporal.Instant.fromEpochMilliseconds(payload.exp),
+    });
+
+    return [null, token];
+  }
+}

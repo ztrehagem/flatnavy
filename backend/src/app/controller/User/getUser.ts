@@ -12,9 +12,9 @@ export const getUser =
       "get"
     >;
 
-    const [, userHandle] = UserHandle(params.userHandle);
+    const [eUserHandle, userHandle] = UserHandle.create(params.userHandle);
 
-    if (!userHandle) {
+    if (eUserHandle) {
       return await reply.status(400).send();
     }
 

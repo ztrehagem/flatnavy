@@ -83,7 +83,9 @@ export class UserRepository implements IUserRepository {
     }
 
     const user = mapUser(record);
-    const password = HashedUserPassword(record.authentication.hashedPassword);
+    const password = HashedUserPassword.create(
+      record.authentication.hashedPassword
+    );
 
     return UserAuthentication.create({ user, password });
   }

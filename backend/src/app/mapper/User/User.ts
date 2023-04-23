@@ -6,8 +6,8 @@ import { UserId } from "../../model/User/UserId.js";
 
 export const mapUser = (record: prisma.User): User => {
   return User.create({
-    id: UserId(record.id),
-    handle: UserHandle(record.handle)[1]!,
+    id: UserId.create(record.id),
+    handle: UserHandle.create(record.handle)[1]!,
     name: record.name ? UserName.create(record.name)[1]! : null,
   });
 };

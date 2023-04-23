@@ -1,23 +1,7 @@
 import { Temporal } from "@js-temporal/polyfill";
-import type { Brand } from "../../../utils/Brand.js";
 import type { UserHandle } from "../User/UserHandle.js";
 import type { SessionId } from "./SessionId.js";
 import { Scope } from "./Scope.js";
-
-declare const brand: unique symbol;
-
-type IAuthenticationToken = {
-  readonly issuer: string;
-  readonly audience: readonly string[];
-  readonly userHandle: UserHandle;
-  readonly sessionId: SessionId;
-  readonly scopes: readonly string[];
-  readonly issuedAt: Temporal.Instant;
-  readonly expiredAt: Temporal.Instant;
-  get valid(): boolean;
-};
-
-export type AuthenticationToken = Brand<IAuthenticationToken, typeof brand>;
 
 export type Params = {
   readonly issuer: string;
@@ -29,53 +13,55 @@ export type Params = {
   readonly expiredAt: Temporal.Instant;
 };
 
-export const AuthenticationToken = ({
-  issuer,
-  audience,
-  userHandle,
-  sessionId,
-  scopes,
-  issuedAt,
-  expiredAt,
-}: Params): AuthenticationToken => {
-  return {
-    issuer,
-    audience,
-    userHandle,
-    sessionId,
-    scopes,
-    issuedAt,
-    expiredAt,
+export class AuthenticationToken {
+  #_brand!: never;
 
-    get valid() {
-      const now = Temporal.Now.instant();
-      return Temporal.Instant.compare(now, expiredAt) <= 0;
-    },
-  } satisfies IAuthenticationToken as AuthenticationToken;
-};
-
-AuthenticationToken.accessToken = (params: {
   readonly issuer: string;
   readonly audience: readonly string[];
   readonly userHandle: UserHandle;
   readonly sessionId: SessionId;
+  readonly scopes: readonly string[];
   readonly issuedAt: Temporal.Instant;
   readonly expiredAt: Temporal.Instant;
-}) =>
-  AuthenticationToken({
-    ...params,
-    scopes: [],
-  });
 
-AuthenticationToken.refreshToken = (params: {
-  readonly issuer: string;
-  readonly audience: readonly string[];
-  readonly userHandle: UserHandle;
-  readonly sessionId: SessionId;
-  readonly issuedAt: Temporal.Instant;
-  readonly expiredAt: Temporal.Instant;
-}) =>
-  AuthenticationToken({
-    ...params,
-    scopes: [Scope.refresh],
-  });
+  static accessToken(params: {
+    readonly issuer: string;
+    readonly audience: readonly string[];
+    readonly userHandle: UserHandle;
+    readonly sessionId: SessionId;
+    readonly issuedAt: Temporal.Instant;
+    readonly expiredAt: Temporal.Instant;
+  }): AuthenticationToken {
+    return this.create({ ...params, scopes: [] });
+  }
+
+  static refreshToken(params: {
+    readonly issuer: string;
+    readonly audience: readonly string[];
+    readonly userHandle: UserHandle;
+    readonly sessionId: SessionId;
+    readonly issuedAt: Temporal.Instant;
+    readonly expiredAt: Temporal.Instant;
+  }): AuthenticationToken {
+    return this.create({ ...params, scopes: [Scope.refresh] });
+  }
+
+  static create(params: Params): AuthenticationToken {
+    return new AuthenticationToken(params);
+  }
+
+  private constructor(params: Params) {
+    this.issuer = params.issuer;
+    this.audience = params.audience;
+    this.userHandle = params.userHandle;
+    this.sessionId = params.sessionId;
+    this.scopes = params.scopes;
+    this.issuedAt = params.issuedAt;
+    this.expiredAt = params.expiredAt;
+  }
+
+  get valid(): boolean {
+    const now = Temporal.Now.instant();
+    return Temporal.Instant.compare(now, this.expiredAt) <= 0;
+  }
+}

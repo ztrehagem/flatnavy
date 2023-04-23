@@ -29,7 +29,7 @@ export class SessionRepository implements ISessionRepository {
       issuer,
       audience,
       userHandle: user.handle,
-      sessionId: SessionId("1"), // TODO: Rotation
+      sessionId: SessionId.generate(), // TODO: Rotation
       issuedAt: now,
       expiredAt: now.add(accessTokenTtl),
     });
@@ -38,7 +38,7 @@ export class SessionRepository implements ISessionRepository {
       issuer,
       audience,
       userHandle: user.handle,
-      sessionId: SessionId("1"), // TODO: Rotation
+      sessionId: SessionId.generate(), // TODO: Rotation
       issuedAt: now,
       expiredAt: now.add(refreshTokenTtl),
     });
