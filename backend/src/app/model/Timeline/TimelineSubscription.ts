@@ -1,13 +1,17 @@
 export class TimelineSubscription {
   #_brand!: never;
 
-  readonly unsubscribe: () => void;
+  readonly #abortController: AbortController;
 
-  static create(unsubscribe: () => void): TimelineSubscription {
-    return new TimelineSubscription(unsubscribe);
+  static create(abortController: AbortController): TimelineSubscription {
+    return new TimelineSubscription(abortController);
   }
 
-  private constructor(unsubscribe: () => void) {
-    this.unsubscribe = unsubscribe;
+  private constructor(abortController: AbortController) {
+    this.#abortController = abortController;
+  }
+
+  unsubscribe(): void {
+    this.#abortController.abort();
   }
 }

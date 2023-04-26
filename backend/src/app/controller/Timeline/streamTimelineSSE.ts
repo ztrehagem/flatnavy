@@ -1,6 +1,9 @@
 import type { RouteHandlerMethod } from "fastify";
 import type { Context } from "../../context.js";
-import { TimelineScope } from "../../model/Timeline/TimelineScope.js";
+import {
+  TimelineScope,
+  TimelineScopeKind,
+} from "../../model/Timeline/TimelineScope.js";
 import { serializeTimelineEntry } from "../../serializer/Timeline.js";
 
 export const streamTimelineSSE =
@@ -22,12 +25,12 @@ export const streamTimelineSSE =
       sendEvent([]);
     }, 5000);
 
-    const subscription = await timelineRepository.subscribe({
-      scope: TimelineScope.local,
-      listener: (entries) => {
+    const subscription = await timelineRepository.subscribe(
+      TimelineScope.create({ kind: TimelineScopeKind.local }),
+      (entries) => {
         sendEvent(entries.map(serializeTimelineEntry));
-      },
-    });
+      }
+    );
 
     req.socket.on("close", () => {
       subscription.unsubscribe();

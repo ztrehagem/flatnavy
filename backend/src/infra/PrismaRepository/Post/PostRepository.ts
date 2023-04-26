@@ -4,15 +4,12 @@ import type { PrismaRepositoryContext } from "../PrismaRepositoryContext.js";
 import type { NewPost } from "../../../app/model/Post/NewPost.js";
 import { Post } from "../../../app/model/Post/Post.js";
 import { PostId } from "../../../app/model/Post/PostId.js";
-import type { RedisClientType } from "redis";
 
 export class PostRepository implements IPostRepository {
   readonly #prisma: prisma.PrismaClient;
-  readonly #redis: RedisClientType;
 
-  constructor({ prisma, redis }: PrismaRepositoryContext) {
+  constructor({ prisma }: PrismaRepositoryContext) {
     this.#prisma = prisma;
-    this.#redis = redis;
   }
 
   async create(newPost: NewPost): Promise<Post> {
@@ -28,34 +25,11 @@ export class PostRepository implements IPostRepository {
       },
     });
 
-    const post = Post.create({
+    return Post.create({
       postId: PostId.create(record.id),
       body: record.body,
       user: newPost.user,
       dateTime: record.createdAt,
     });
-
-    // TODO: encapsulation
-    await this.#redis.xAdd(
-      "timeline:local",
-      "*",
-      {
-        id: post.postId.value.toString(),
-        body: post.body,
-        uid: post.user.id.value.toString(),
-        handle: post.user.handle.value,
-        name: post.user.name?.value ?? "",
-        at: post.dateTime.toString(),
-      },
-      {
-        TRIM: {
-          strategy: "MAXLEN",
-          strategyModifier: "~",
-          threshold: 1000,
-        },
-      }
-    );
-
-    return post;
   }
 }
