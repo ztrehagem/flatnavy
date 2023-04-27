@@ -30,7 +30,7 @@ export class SessionService {
         process.env.NODE_ENV == "production" ? { hours: 1 } : { minutes: 30 }
       ),
       refreshTokenTtl: Temporal.Duration.from(
-        process.env.NODE_ENV == "production" ? { days: 3 } : { minutes: 5 }
+        process.env.NODE_ENV == "production" ? { hours: 72 } : { minutes: 5 }
       ),
     });
   }
