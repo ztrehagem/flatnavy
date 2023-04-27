@@ -24,4 +24,4 @@ ENV SERVER_DOMAIN localhost
 ENV DATABASE_URL postgresql://flatnavy:password@localhost:5432/flatnavy
 ENV REDIS_URL redis://localhost:6379
 
-CMD ["pnpm", "run", "migrate_and_start"]
+CMD ["pnpm", "start"]
