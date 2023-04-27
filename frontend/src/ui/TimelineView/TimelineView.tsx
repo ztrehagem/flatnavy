@@ -1,25 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as css from "./TimelineView.css.js";
 import type { schemas } from "@flatnavy/api";
 import { apiOrigin } from "../../lib/api.js";
 
 export const TimelineView: React.FC = () => {
-  const [entries, setEntries] = useState<
-    { id: string; post: schemas["Post"] }[]
-  >([]);
+  const [entries, setEntries] = useState<Array<schemas["TimelineEntry"]>>([]);
 
-  useState(() => {
-    const source = new EventSource(
+  useEffect(() => {
+    const eventSource = new EventSource(
       new URL("/api/stream/sse/timeline", apiOrigin)
     );
-    source.addEventListener("message", (event: MessageEvent<string>) => {
-      const entries = JSON.parse(event.data) as Array<{
-        id: string;
-        post: schemas["Post"];
-      }>;
-      setEntries((prev) => [...prev, ...entries]);
+
+    eventSource.addEventListener("message", (event: MessageEvent<string>) => {
+      const entries = JSON.parse(event.data) as Array<schemas["TimelineEntry"]>;
+      setEntries((prev) => [...entries.reverse(), ...prev].slice(0, 100));
     });
-  });
+
+    return () => {
+      eventSource.close();
+      setEntries([]);
+    };
+  }, []);
 
   return (
     <ul className={css.list}>
@@ -29,6 +30,7 @@ export const TimelineView: React.FC = () => {
             {post.user.name} @{post.user.handle}
           </div>
           <p>{post.body}</p>
+          <time dateTime={post.dateTime}>{post.dateTime}</time>
         </li>
       ))}
     </ul>

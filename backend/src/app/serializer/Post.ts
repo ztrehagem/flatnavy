@@ -6,6 +6,7 @@ export const serializePost = (post: Post): schemas["Post"] => {
   return {
     id: post.postId.value,
     body: post.body,
+    dateTime: post.dateTime.toString(),
     user: serializeUser(post.user),
   };
 };

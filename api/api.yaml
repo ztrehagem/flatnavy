@@ -359,16 +359,30 @@ components:
           type: integer
         body:
           type: string
+        dateTime:
+          type: string
+          format: date-time
         user:
           $ref: "#/components/schemas/User"
       required:
         - id
         - body
+        - dateTime
         - user
     TimelineScope:
       type: string
       enum:
         - local
+    TimelineEntry:
+      type: object
+      properties:
+        id:
+          type: string
+        post:
+          $ref: "#/components/schemas/Post"
+      required:
+        - id
+        - post
 
   securitySchemes:
     AccessToken:

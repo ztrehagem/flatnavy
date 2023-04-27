@@ -21,15 +21,12 @@ export const streamTimelineSSE =
       reply.raw.write(`data: ${message}\n\n`);
     };
 
-    const heartbeatIntervalId = setInterval(() => {
-      sendEvent([]);
-    }, 5000);
+    const heartbeatIntervalId = setInterval(() => sendEvent([]), 5000);
 
-    const subscription = await timelineRepository.subscribe(
-      TimelineScope.create({ kind: TimelineScopeKind.local }),
-      (entries) => {
-        sendEvent(entries.map(serializeTimelineEntry));
-      }
+    const scope = TimelineScope.create({ kind: TimelineScopeKind.local });
+
+    const subscription = await timelineRepository.subscribe(scope, (entries) =>
+      sendEvent(entries.map(serializeTimelineEntry))
     );
 
     req.socket.on("close", () => {
