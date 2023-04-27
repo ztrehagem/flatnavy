@@ -10,7 +10,9 @@
     "dev:build": "tsc -w --preserveWatchOutput",
     "dev:start": "nodemon ./dist/start.js",
     "build": "tsc",
+    "migrate": "prisma migrate deploy",
     "start": "NODE_ENV=production node ./dist/start.js",
+    "migrate_and_start": "pnpm run migrate && pnpm run start",
     "clean": "rm -r dist || true"
   },
   "dependencies": {
