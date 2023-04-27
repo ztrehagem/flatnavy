@@ -9,6 +9,7 @@ export const createPost =
     httpAuthenticationService,
     userRepository,
     postRepository,
+    timelineRepository,
   }: Context): RouteHandlerMethod =>
   async (req, reply) => {
     const { body } = req.body as RequestPayload<
@@ -38,6 +39,8 @@ export const createPost =
     }
 
     const post = await postRepository.create(newPost);
+
+    await timelineRepository.publish(post);
 
     const res: ResponsePayload<
       "/api/posts",

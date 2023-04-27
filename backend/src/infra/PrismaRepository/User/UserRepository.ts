@@ -8,7 +8,7 @@ import type { PrismaRepositoryContext } from "../PrismaRepositoryContext.js";
 import { HashedUserPassword } from "../../../app/model/User/HashedUserPassword.js";
 import type { NewUser } from "../../../app/model/User/NewUser.js";
 import { UserAuthentication } from "../../../app/model/User/UserAuthentication.js";
-import { mapUser } from "../../../app/mapper/User/User.js";
+import { mapUser } from "../../../app/mapper/User.js";
 
 export class UserRepository implements IUserRepository {
   readonly #prisma: prisma.PrismaClient;

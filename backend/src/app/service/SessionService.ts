@@ -27,7 +27,7 @@ export class SessionService {
       issuer: this.#env.domain,
       audience: [this.#env.domain],
       accessTokenTtl: Temporal.Duration.from(
-        process.env.NODE_ENV == "production" ? { hours: 1 } : { minutes: 1 }
+        process.env.NODE_ENV == "production" ? { hours: 1 } : { minutes: 30 }
       ),
       refreshTokenTtl: Temporal.Duration.from(
         process.env.NODE_ENV == "production" ? { days: 3 } : { minutes: 5 }

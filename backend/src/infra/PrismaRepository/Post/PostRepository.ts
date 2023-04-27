@@ -13,7 +13,7 @@ export class PostRepository implements IPostRepository {
   }
 
   async create(newPost: NewPost): Promise<Post> {
-    const post = await this.#prisma.post.create({
+    const record = await this.#prisma.post.create({
       data: {
         body: newPost.body,
         userId: newPost.user.id.value,
@@ -21,13 +21,15 @@ export class PostRepository implements IPostRepository {
       select: {
         id: true,
         body: true,
+        createdAt: true,
       },
     });
 
     return Post.create({
-      postId: PostId.create(post.id),
-      body: post.body,
+      postId: PostId.create(record.id),
+      body: record.body,
       user: newPost.user,
+      dateTime: record.createdAt,
     });
   }
 }
