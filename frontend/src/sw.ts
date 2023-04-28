@@ -7,13 +7,14 @@ import { fetchWithAccessToken } from "./sw/fetch/fetchWithAccessToken.js";
 
 declare const self: ServiceWorkerGlobalScope;
 
-self.addEventListener("install", () => {
-  logInfo("ServiceWorker installing");
-  void self.skipWaiting();
+self.addEventListener("install", (e) => {
+  logInfo("ServiceWorker installing 1");
+  e.waitUntil(self.skipWaiting());
 });
 
-self.addEventListener("activate", () => {
-  logInfo("ServiceWorker activated");
+self.addEventListener("activate", (e) => {
+  logInfo("ServiceWorker activating");
+  e.waitUntil(self.clients.claim());
 });
 
 self.addEventListener("fetch", (event) => {

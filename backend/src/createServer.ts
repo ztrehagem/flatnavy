@@ -24,8 +24,20 @@ export const createServer = async ({
 
   await server.register(router, { context });
 
+  const staticDir = path.resolve("../frontend/dist");
+
   await server.register(fastifyStatic, {
-    root: path.resolve("../frontend/dist"),
+    root: staticDir,
+  });
+
+  server.setNotFoundHandler(async (req, reply) => {
+    const [pathname] = req.url.split("?", 2);
+
+    if (/\/[^/.]*\/?$/i.exec(pathname)) {
+      await reply.sendFile("index.html", staticDir);
+    } else {
+      reply.callNotFound();
+    }
   });
 
   server.addHook("onRequest", async (req, reply) => {
