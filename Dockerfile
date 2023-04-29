@@ -18,10 +18,4 @@ RUN pnpm run build
 
 EXPOSE 3000
 
-ENV HOST 0.0.0.0
-ENV PORT 3000
-ENV SERVER_DOMAIN localhost
-ENV DATABASE_URL postgresql://flatnavy:password@localhost:5432/flatnavy
-ENV REDIS_URL redis://localhost:6379
-
 CMD ["pnpm", "start"]
