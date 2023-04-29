@@ -5,6 +5,7 @@ import fastifyCors from "@fastify/cors";
 import { router } from "./router.js";
 import type { Context } from "./app/context.js";
 import { logError, logInfo } from "./utils/log.js";
+import { ProcessEnv } from "./ProcessEnv.js";
 
 export type Params = {
   context: Context;
@@ -15,7 +16,7 @@ export const createServer = async ({
 }: Params): Promise<FastifyInstance> => {
   const server = fastify();
 
-  if (process.env.NODE_ENV != "production") {
+  if (!ProcessEnv.current.production) {
     await server.register(fastifyCors, {
       origin: true,
       credentials: true,

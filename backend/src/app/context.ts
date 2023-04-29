@@ -1,4 +1,4 @@
-import type { Env } from "./model/Server/Env.js";
+import type { ServerEnv } from "./model/Server/ServerEnv.js";
 import type { IPostRepository } from "./repository/Post/IPostRepository.js";
 import type { IServerKeyRepository } from "./repository/Server/IServerKeyRepository.js";
 import type { ISessionRepository } from "./repository/Session/ISessionRepository.js";
@@ -8,7 +8,7 @@ import type { HttpAuthenticationService } from "./service/HttpAuthenticationServ
 import type { SessionService } from "./service/SessionService.js";
 
 export interface Context {
-  readonly env: Env;
+  readonly serverEnv: ServerEnv;
 
   readonly serverKeyRepository: IServerKeyRepository;
   readonly sessionRepository: ISessionRepository;

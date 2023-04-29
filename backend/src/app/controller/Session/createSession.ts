@@ -6,7 +6,7 @@ import { serializeUser } from "../../serializer/User.js";
 
 export const createSession =
   ({
-    env,
+    serverEnv: env,
     userRepository,
     serverKeyRepository,
     sessionService,

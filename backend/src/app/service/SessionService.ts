@@ -1,20 +1,20 @@
 import { Temporal } from "@js-temporal/polyfill";
-import type { Env } from "../model/Server/Env.js";
+import type { ServerEnv } from "../model/Server/ServerEnv.js";
 import type { AuthenticationToken } from "../model/Session/AuthenticationToken.js";
 import type { User } from "../model/User/User.js";
 import type { ISessionRepository } from "../repository/Session/ISessionRepository.js";
 
 export type Params = {
-  env: Env;
+  serverEnv: ServerEnv;
   sessionRepository: ISessionRepository;
 };
 
 export class SessionService {
-  readonly #env: Env;
+  readonly #serverEnv: ServerEnv;
   readonly #sessionRepository: ISessionRepository;
 
-  constructor({ env, sessionRepository }: Params) {
-    this.#env = env;
+  constructor({ serverEnv, sessionRepository }: Params) {
+    this.#serverEnv = serverEnv;
     this.#sessionRepository = sessionRepository;
   }
 
@@ -24,14 +24,10 @@ export class SessionService {
   }> {
     return await this.#sessionRepository.createSession({
       user,
-      issuer: this.#env.domain,
-      audience: [this.#env.domain],
-      accessTokenTtl: Temporal.Duration.from(
-        process.env.NODE_ENV == "production" ? { hours: 1 } : { minutes: 30 }
-      ),
-      refreshTokenTtl: Temporal.Duration.from(
-        process.env.NODE_ENV == "production" ? { hours: 72 } : { minutes: 5 }
-      ),
+      issuer: this.#serverEnv.tokenIssuer,
+      audience: [this.#serverEnv.tokenAudienceWeb],
+      accessTokenTtl: Temporal.Duration.from(this.#serverEnv.accessTokenTtl),
+      refreshTokenTtl: Temporal.Duration.from(this.#serverEnv.refreshTokenTtl),
     });
   }
 }
