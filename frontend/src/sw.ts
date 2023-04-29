@@ -8,7 +8,7 @@ import { fetchWithAccessToken } from "./sw/fetch/fetchWithAccessToken.js";
 declare const self: ServiceWorkerGlobalScope;
 
 self.addEventListener("install", (e) => {
-  logInfo("ServiceWorker installing 1");
+  logInfo("ServiceWorker installing");
   e.waitUntil(self.skipWaiting());
 });
 
