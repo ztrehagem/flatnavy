@@ -6,22 +6,25 @@ import { UserRepository } from "./infra/PrismaRepository/User/UserRepository.js"
 import { ServerKeyRepository } from "./infra/PrismaRepository/Server/ServerKeyRepository.js";
 import { SessionRepository } from "./infra/PrismaRepository/SessionRepository/SessionRepository.js";
 import { HttpAuthenticationService } from "./app/service/HttpAuthenticationService.js";
-import { Env } from "./app/model/Server/Env.js";
+import { ServerEnv } from "./app/model/Server/ServerEnv.js";
 import { SessionService } from "./app/service/SessionService.js";
 import { PostRepository } from "./infra/PrismaRepository/Post/PostRepository.js";
 import { TimelineRepository } from "./infra/PrismaRepository/Timeline/TimelineRepository.js";
+import { ProcessEnv } from "./ProcessEnv.js";
 
 export const createContext = async (): Promise<Context> => {
-  const [eEnv, env] = Env.create({
-    domain: process.env.SERVER_DOMAIN ?? "flatnavy.example",
+  const [eServerEnv, serverEnv] = ServerEnv.create({
+    domain: ProcessEnv.current.serverDomain,
+    accessTokenTtl: ProcessEnv.current.serverAccessTokenTtl,
+    refreshTokenTtl: ProcessEnv.current.serverRefreshTokenTtl,
   });
 
-  if (eEnv) throw eEnv;
+  if (eServerEnv) throw eServerEnv;
 
   const prisma = new PrismaClient();
 
   const redis: RedisClientType = createRedisClient({
-    url: process.env.REDIS_URL,
+    url: ProcessEnv.current.redisUrl,
   });
 
   await Promise.all([prisma.$connect(), redis.connect()]);
@@ -40,10 +43,13 @@ export const createContext = async (): Promise<Context> => {
   const httpAuthenticationService = new HttpAuthenticationService(
     serverKeyRepository
   );
-  const sessionService = new SessionService({ env, sessionRepository });
+  const sessionService = new SessionService({
+    serverEnv: serverEnv,
+    sessionRepository,
+  });
 
   return {
-    env,
+    serverEnv,
     serverKeyRepository,
     sessionRepository,
     userRepository,
