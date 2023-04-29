@@ -6,7 +6,7 @@
     "dev": "turbo run dev",
     "clean": "turbo run clean",
     "build": "turbo run build",
-    "start": "pnpm -C backend run migrate_and_start",
+    "start": "pnpm -C backend run migrate && pnpm -C backend run start",
     "prisma": "pnpm -C backend exec prisma",
     "typecheck": "turbo run typecheck",
     "eslint": "eslint --cache --ignore-path .gitignore --max-warnings 0 .",

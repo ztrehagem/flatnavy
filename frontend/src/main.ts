@@ -9,7 +9,10 @@ const swUrl = import.meta.env.DEV ? devSwUrl : "/sw.js";
 
 await navigator.serviceWorker
   .register(swUrl, { scope: "/", type: "module" })
+  .then((registration) => registration.update())
   .catch((error) => logError(error));
+
+await navigator.serviceWorker.ready;
 
 const container = window.document.getElementById("app");
 const root = container && createRoot(container);
