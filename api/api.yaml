@@ -205,6 +205,8 @@ paths:
                 properties:
                   user:
                     $ref: "#/components/schemas/User"
+                required:
+                  - user
         400:
           description: Bad Request
         404:
@@ -318,6 +320,7 @@ paths:
 
   /api/stream/sse/timeline:
     get:
+      operationId: streamTimelineSSE
       tags:
         - Streaming
       parameters:
