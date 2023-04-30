@@ -1,35 +1,36 @@
-import type { RouteHandlerMethod } from "fastify";
-import type { Context } from "../../context.js";
+import { defineController } from "@flatnavy/api/server";
 import { logInfo } from "../../../utils/log.js";
-import type { ResponsePayload } from "@flatnavy/api";
+import type { Context } from "../../context.js";
 import { serializeUser } from "../../serializer/User.js";
 
-export const getSession =
-  ({
-    httpAuthenticationService,
-    userRepository,
-  }: Context): RouteHandlerMethod =>
-  async (req, reply) => {
-    const [authenticationError, token] =
-      await httpAuthenticationService.parseAuthenticationToken(
-        req.headers.authorization ?? ""
-      );
+export const getSession = defineController(
+  ({ httpAuthenticationService, userRepository }: Context) => ({
+    method: "get",
+    path: "/api/auth",
+    handler: async ({ defineResponse }, req) => {
+      const [authenticationError, token] =
+        await httpAuthenticationService.parseAuthenticationToken(
+          req.headers.authorization ?? ""
+        );
 
-    if (authenticationError) {
-      logInfo(authenticationError);
-      return await reply.status(401).send();
-    }
+      if (authenticationError) {
+        logInfo(authenticationError);
+        return defineResponse({ status: 401 });
+      }
 
-    const user = await userRepository.getByHandle(token.userHandle);
+      const user = await userRepository.getByHandle(token.userHandle);
 
-    if (!user) {
-      return await reply.status(401).send();
-    }
+      if (!user) {
+        return defineResponse({ status: 401 });
+      }
 
-    const res: ResponsePayload<"/api/auth", "get">["200"]["application/json"] =
-      {
-        user: serializeUser(user),
-      };
-
-    await reply.status(200).type("application/json").send(res);
-  };
+      return defineResponse({
+        status: 200,
+        mime: "application/json",
+        body: {
+          user: serializeUser(user),
+        },
+      });
+    },
+  })
+);

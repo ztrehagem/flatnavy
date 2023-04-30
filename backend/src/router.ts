@@ -1,27 +1,53 @@
+import { defineResponse, type AbstractController } from "@flatnavy/api/server";
 import type { FastifyPluginAsync } from "fastify";
-import type { Context } from "./app/context.js";
-import { createPost } from "./app/controller/Post/createPost.js";
-import { createUser } from "./app/controller/User/createUser.js";
-import { indexUser } from "./app/controller/User/indexUser.js";
-import { getUser } from "./app/controller/User/getUser.js";
-import { createSession } from "./app/controller/Session/createSession.js";
-import { getSession } from "./app/controller/Session/getSession.js";
-import { deleteSession } from "./app/controller/Session/deleteSession.js";
-import { streamTimelineSSE } from "./app/controller/Timeline/streamTimelineSSE.js";
 
 export type RouterOptions = {
-  context: Context;
+  controllers: readonly AbstractController[];
 };
 
-export const router: FastifyPluginAsync<RouterOptions> = (app, { context }) => {
-  app.get("/api/auth", getSession(context));
-  app.post("/api/auth", createSession(context));
-  app.delete("/api/auth", deleteSession(context));
-  app.get("/api/users", indexUser(context));
-  app.post("/api/users", createUser(context));
-  app.get("/api/users/:userHandle", getUser(context));
-  app.post("/api/posts", createPost(context));
-  app.get("/api/stream/sse/timeline", streamTimelineSSE(context));
+/**
+ * create fastify routings from abstracted controllers
+ */
+export const router: FastifyPluginAsync<RouterOptions> = (
+  app,
+  { controllers }
+) => {
+  for (const { method, path, handler } of controllers) {
+    const pathPattern = path.replaceAll(
+      /{([^}])}/g,
+      (_, name: string) => `:${name}`
+    );
+
+    app[method](pathPattern, async (req, reply) => {
+      for (const [k, v] of Object.entries(reply.getHeaders())) {
+        if (v != null) {
+          reply.raw.setHeader(k, v);
+        }
+      }
+
+      const resp = await handler(
+        {
+          pathParams: req.params,
+          queryParams: req.query,
+          body: req.body,
+          defineResponse,
+        },
+        req.raw,
+        reply.raw
+      );
+
+      if (resp) {
+        if (resp.mime) {
+          return await reply
+            .status(resp.status)
+            .type(resp.mime)
+            .send(resp.body);
+        } else {
+          return await reply.status(resp.status).send(resp.body);
+        }
+      }
+    });
+  }
 
   return Promise.resolve();
 };

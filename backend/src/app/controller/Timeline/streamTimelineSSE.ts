@@ -1,4 +1,4 @@
-import type { RouteHandlerMethod } from "fastify";
+import { defineController } from "@flatnavy/api/server";
 import type { Context } from "../../context.js";
 import {
   TimelineScope,
@@ -6,32 +6,35 @@ import {
 } from "../../model/Timeline/TimelineScope.js";
 import { serializeTimelineEntry } from "../../serializer/Timeline.js";
 
-export const streamTimelineSSE =
-  ({ timelineRepository }: Context): RouteHandlerMethod =>
-  async (req, reply) => {
-    reply.raw.writeHead(200, {
-      ...reply.getHeaders(),
-      "Content-Type": "text/event-stream",
-      Connection: "keep-alive",
-      "Cache-Control": "no-store",
-    });
+export const streamTimelineSSE = defineController(
+  ({ timelineRepository }: Context) => ({
+    method: "get",
+    path: "/api/stream/sse/timeline",
+    handler: async ({ queryParams }, req, res) => {
+      res.writeHead(200, {
+        ...res.getHeaders(),
+        "Content-Type": "text/event-stream",
+      });
 
-    const sendEvent = (obj: object) => {
-      const message = JSON.stringify(obj);
-      reply.raw.write(`data: ${message}\n\n`);
-    };
+      const sendEvent = (obj: object) => {
+        const message = JSON.stringify(obj);
+        res.write(`data: ${message}\n\n`);
+      };
 
-    const heartbeatIntervalId = setInterval(() => sendEvent([]), 5000);
+      const heartbeatIntervalId = setInterval(() => sendEvent([]), 5000);
 
-    const scope = TimelineScope.create({ kind: TimelineScopeKind.local });
+      const scope = TimelineScope.create({ kind: TimelineScopeKind.local });
 
-    const subscription = await timelineRepository.subscribe(scope, (entries) =>
-      sendEvent(entries.map(serializeTimelineEntry))
-    );
+      const subscription = await timelineRepository.subscribe(
+        scope,
+        (entries) => sendEvent(entries.map(serializeTimelineEntry))
+      );
 
-    req.socket.on("close", () => {
-      subscription.unsubscribe();
-      clearInterval(heartbeatIntervalId);
-      reply.raw.end();
-    });
-  };
+      req.socket.on("close", () => {
+        subscription.unsubscribe();
+        clearInterval(heartbeatIntervalId);
+        res.end();
+      });
+    },
+  })
+);

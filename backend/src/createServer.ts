@@ -1,15 +1,25 @@
-import * as path from "node:path";
-import { fastify, type FastifyInstance } from "fastify";
-import { default as fastifyStatic } from "@fastify/static";
 import fastifyCors from "@fastify/cors";
-import { router } from "./router.js";
+import { default as fastifyStatic } from "@fastify/static";
+import { fastify, type FastifyInstance } from "fastify";
+import * as path from "node:path";
 import type { Context } from "./app/context.js";
-import { logError, logInfo } from "./utils/log.js";
+import { createPost } from "./app/controller/Post/createPost.js";
+import { createSession } from "./app/controller/Session/createSession.js";
+import { deleteSession } from "./app/controller/Session/deleteSession.js";
+import { getSession } from "./app/controller/Session/getSession.js";
+import { streamTimelineSSE } from "./app/controller/Timeline/streamTimelineSSE.js";
+import { createUser } from "./app/controller/User/createUser.js";
+import { getUser } from "./app/controller/User/getUser.js";
+import { indexUser } from "./app/controller/User/indexUser.js";
 import { ProcessEnv } from "./ProcessEnv.js";
+import { router } from "./router.js";
+import { logError, logInfo } from "./utils/log.js";
 
 export type Params = {
   context: Context;
 };
+
+const STATIC_DIR = path.resolve("../frontend/dist");
 
 export const createServer = async ({
   context,
@@ -20,22 +30,30 @@ export const createServer = async ({
     await server.register(fastifyCors, {
       origin: true,
       credentials: true,
+      prefix: "/api/",
     });
   }
 
-  await server.register(router, { context });
+  const controllers = [
+    getSession(context),
+    createSession(context),
+    deleteSession(context),
+    indexUser(context),
+    createUser(context),
+    getUser(context),
+    createPost(context),
+    streamTimelineSSE(context),
+  ];
 
-  const staticDir = path.resolve("../frontend/dist");
+  await server.register(router, { controllers });
 
-  await server.register(fastifyStatic, {
-    root: staticDir,
-  });
+  await server.register(fastifyStatic, { root: STATIC_DIR });
 
   server.setNotFoundHandler(async (req, reply) => {
     const [pathname] = req.url.split("?", 2);
 
     if (/\/[^/.]*\/?$/i.exec(pathname)) {
-      await reply.sendFile("index.html", staticDir);
+      await reply.sendFile("index.html", STATIC_DIR);
     } else {
       reply.callNotFound();
     }

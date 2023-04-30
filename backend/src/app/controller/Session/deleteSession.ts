@@ -1,8 +1,9 @@
-import type { RouteHandlerMethod } from "fastify";
-import type { Context } from "../../context.js";
+import { defineController } from "@flatnavy/api/server";
 
-export const deleteSession =
-  (_: Context): RouteHandlerMethod =>
-  async (req, reply) => {
-    await reply.status(204).type("application/json").send();
-  };
+export const deleteSession = defineController(() => ({
+  method: "delete",
+  path: "/api/auth",
+  handler: ({ defineResponse }) => {
+    return defineResponse({ status: 204 });
+  },
+}));

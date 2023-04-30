@@ -1,53 +1,50 @@
-import type { RouteHandlerMethod } from "fastify";
-import type { RequestPayload, ResponsePayload } from "@flatnavy/api";
+import { defineController } from "@flatnavy/api/server";
 import type { Context } from "../../context.js";
 import { NewPost } from "../../model/Post/NewPost.js";
 import { serializePost } from "../../serializer/Post.js";
 
-export const createPost =
+export const createPost = defineController(
   ({
     httpAuthenticationService,
     userRepository,
     postRepository,
     timelineRepository,
-  }: Context): RouteHandlerMethod =>
-  async (req, reply) => {
-    const { body } = req.body as RequestPayload<
-      "/api/posts",
-      "post"
-    >["application/json"];
+  }: Context) => ({
+    method: "post",
+    path: "/api/posts",
+    handler: async ({ body, defineResponse }, req) => {
+      const [authenticationError, token] =
+        await httpAuthenticationService.parseAuthenticationToken(
+          req.headers.authorization ?? ""
+        );
 
-    const [authenticationError, token] =
-      await httpAuthenticationService.parseAuthenticationToken(
-        req.headers.authorization ?? ""
-      );
+      if (authenticationError) {
+        return defineResponse({ status: 401 });
+      }
 
-    if (authenticationError) {
-      return await reply.status(401).send();
-    }
+      const user = await userRepository.getByHandle(token.userHandle);
 
-    const user = await userRepository.getByHandle(token.userHandle);
+      if (!user) {
+        return defineResponse({ status: 401 });
+      }
 
-    if (!user) {
-      return await reply.status(401).send();
-    }
+      const newPost = NewPost.create({ body: body.body, user });
 
-    const newPost = NewPost.create({ body, user });
+      if (!newPost) {
+        return defineResponse({ status: 400 });
+      }
 
-    if (!newPost) {
-      return await reply.status(400).send();
-    }
+      const post = await postRepository.create(newPost);
 
-    const post = await postRepository.create(newPost);
+      await timelineRepository.publish(post);
 
-    await timelineRepository.publish(post);
-
-    const res: ResponsePayload<
-      "/api/posts",
-      "post"
-    >["201"]["application/json"] = {
-      post: serializePost(post),
-    };
-
-    await reply.status(201).type("application/json").send(res);
-  };
+      return defineResponse({
+        status: 201,
+        mime: "application/json",
+        body: {
+          post: serializePost(post),
+        },
+      });
+    },
+  })
+);

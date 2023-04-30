@@ -1,55 +1,49 @@
-import type { RouteHandlerMethod } from "fastify";
+import { defineController } from "@flatnavy/api/server";
 import type { Context } from "../../context.js";
-import type { RequestPayload, ResponsePayload } from "@flatnavy/api";
 import { UserHandle } from "../../model/User/UserHandle.js";
 import { serializeUser } from "../../serializer/User.js";
 
-export const createSession =
-  ({
-    serverEnv: env,
-    userRepository,
-    serverKeyRepository,
-    sessionService,
-  }: Context): RouteHandlerMethod =>
-  async (req, reply) => {
-    const body = req.body as RequestPayload<
-      "/api/auth",
-      "post"
-    >["application/json"];
+export const createSession = defineController(
+  ({ userRepository, serverKeyRepository, sessionService }: Context) => ({
+    method: "post",
+    path: "/api/auth",
+    handler: async ({ body, defineResponse }) => {
+      const [eHandle, handle] = UserHandle.create(body.handle);
 
-    const [eHandle, handle] = UserHandle.create(body.handle);
+      if (eHandle) {
+        return defineResponse({ status: 400 });
+      }
 
-    if (eHandle) {
-      return await reply.status(400).send();
-    }
+      const authentication = await userRepository.getUserAuthenticationByHandle(
+        handle
+      );
 
-    const authentication = await userRepository.getUserAuthenticationByHandle(
-      handle
-    );
+      if (!authentication) {
+        return defineResponse({ status: 400 });
+      }
 
-    if (!authentication) {
-      return await reply.status(400).send();
-    }
+      const isMatched = await authentication.password.compare(body.password);
 
-    const isMatched = await authentication.password.compare(body.password);
+      if (!isMatched) {
+        return defineResponse({ status: 400 });
+      }
 
-    if (!isMatched) {
-      return await reply.status(400).send();
-    }
+      const { accessToken, refreshToken } = await sessionService.createSession({
+        user: authentication.user,
+      });
+      const serverKey = await serverKeyRepository.get();
+      const accessTokenJwt = await serverKey.signToken(accessToken);
+      const refreshTokenJwt = await serverKey.signToken(refreshToken);
 
-    const { accessToken, refreshToken } = await sessionService.createSession({
-      user: authentication.user,
-    });
-    const serverKey = await serverKeyRepository.get();
-    const accessTokenJwt = await serverKey.signToken(accessToken);
-    const refreshTokenJwt = await serverKey.signToken(refreshToken);
-
-    const res: ResponsePayload<"/api/auth", "post">["201"]["application/json"] =
-      {
-        user: serializeUser(authentication.user),
-        accessToken: accessTokenJwt,
-        refreshToken: refreshTokenJwt,
-      };
-
-    await reply.status(201).type("application/json").send(res);
-  };
+      return defineResponse({
+        status: 201,
+        mime: "application/json",
+        body: {
+          user: serializeUser(authentication.user),
+          accessToken: accessTokenJwt,
+          refreshToken: refreshTokenJwt,
+        },
+      });
+    },
+  })
+);

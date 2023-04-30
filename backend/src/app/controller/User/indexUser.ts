@@ -1,17 +1,19 @@
-import type { RouteHandlerMethod } from "fastify";
+import { defineController } from "@flatnavy/api/server";
 import type { Context } from "../../context.js";
-import type { ResponsePayload } from "@flatnavy/api";
 import { serializeUser } from "../../serializer/User.js";
 
-export const indexUser =
-  ({ userRepository }: Context): RouteHandlerMethod =>
-  async (req, reply) => {
+export const indexUser = defineController(({ userRepository }: Context) => ({
+  method: "get",
+  path: "/api/users",
+  handler: async ({ defineResponse }) => {
     const users = await userRepository.index();
 
-    const res: ResponsePayload<"/api/users", "get">["200"]["application/json"] =
-      {
+    return defineResponse({
+      status: 200,
+      mime: "application/json",
+      body: {
         users: users.map(serializeUser),
-      };
-
-    await reply.status(200).type("application/json").send(res);
-  };
+      },
+    });
+  },
+}));

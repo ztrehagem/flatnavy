@@ -1,35 +1,30 @@
-import type { RouteHandlerMethod } from "fastify";
+import { defineController } from "@flatnavy/api/server";
 import type { Context } from "../../context.js";
-import type { PathParameters, ResponsePayload } from "@flatnavy/api";
-import { serializeUser } from "../../serializer/User.js";
 import { UserHandle } from "../../model/User/UserHandle.js";
+import { serializeUser } from "../../serializer/User.js";
 
-export const getUser =
-  ({ userRepository }: Context): RouteHandlerMethod =>
-  async (req, reply) => {
-    const params = req.params as PathParameters<
-      "/api/users/{userHandle}",
-      "get"
-    >;
-
-    const [eUserHandle, userHandle] = UserHandle.create(params.userHandle);
+export const getUser = defineController(({ userRepository }: Context) => ({
+  method: "get",
+  path: "/api/users/{userHandle}",
+  handler: async ({ pathParams, defineResponse }) => {
+    const [eUserHandle, userHandle] = UserHandle.create(pathParams.userHandle);
 
     if (eUserHandle) {
-      return await reply.status(400).send();
+      return defineResponse({ status: 400 });
     }
 
     const user = await userRepository.getByHandle(userHandle);
 
     if (!user) {
-      return await reply.status(404).send();
+      return defineResponse({ status: 404 });
     }
 
-    const res: ResponsePayload<
-      "/api/users/{userHandle}",
-      "get"
-    >["200"]["application/json"] = {
-      user: serializeUser(user),
-    };
-
-    await reply.status(200).type("application/json").send(res);
-  };
+    return defineResponse({
+      status: 200,
+      mime: "application/json",
+      body: {
+        user: serializeUser(user),
+      },
+    });
+  },
+}));
