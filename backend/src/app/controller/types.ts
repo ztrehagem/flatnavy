@@ -30,6 +30,27 @@ export type RequestContext<
   DefineResponse<Path, Method>
 >;
 
+export type ValidationObject = {
+  pathParams: unknown;
+  queryParams: unknown;
+  body: unknown;
+};
+
+export type Validator<
+  Path extends keyof paths,
+  Method extends keyof paths[Path]
+> = (
+  raw: ValidationObject
+) => (keyof PathParameters<Path, Method> extends never
+  ? object
+  : { pathParams: PathParameters<Path, Method> }) &
+  (keyof QueryParameters<Path, Method> extends never
+    ? object
+    : { queryParams: QueryParameters<Path, Method> }) &
+  (AnyRequestPayload<Path, Method> extends never
+    ? object
+    : { body: AnyRequestPayload<Path, Method> });
+
 export type AbstractResponse = {
   status: number;
   mime: string;
@@ -74,14 +95,22 @@ export type Handler<
 export type AbstractController<
   P = string,
   M = HttpMethod,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  V extends (obj: any) => any = (obj: ValidationObject) => ValidationObject,
   H = AbstractHandler
 > = {
   path: P;
   method: M;
+  validate: V;
   handler: H;
 };
 
 export type Controller<
   Path extends keyof paths,
   Method extends keyof paths[Path]
-> = AbstractController<Path, Method, Handler<Path, Method>>;
+> = AbstractController<
+  Path,
+  Method,
+  Validator<Path, Method>,
+  Handler<Path, Method>
+>;

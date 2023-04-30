@@ -5,6 +5,7 @@ import { defineController } from "../defineController.js";
 export const indexUser = defineController(({ userRepository }: Context) => ({
   method: "get",
   path: "/api/users",
+  validate: () => ({}),
   handler: async ({ defineResponse }) => {
     const users = await userRepository.index();
 

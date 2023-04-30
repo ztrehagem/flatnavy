@@ -26,22 +26,14 @@ export type Operation<
 export type PathParameters<
   Path extends keyof paths,
   Method extends keyof paths[Path]
-> = (paths[Path] extends { parameters: { path: infer U } }
-  ? U
-  : Record<string, never>) &
-  (paths[Path][Method] extends { parameters: { path: infer U } }
-    ? U
-    : Record<string, never>);
+> = (paths[Path] extends { parameters: { path: infer U } } ? U : object) &
+  (paths[Path][Method] extends { parameters: { path: infer U } } ? U : object);
 
 export type QueryParameters<
   Path extends keyof paths,
   Method extends keyof paths[Path]
-> = (paths[Path] extends { parameters: { query: infer U } }
-  ? U
-  : Record<string, never>) &
-  (paths[Path][Method] extends { parameters: { query: infer U } }
-    ? U
-    : Record<string, never>);
+> = (paths[Path] extends { parameters: { query: infer U } } ? U : object) &
+  (paths[Path][Method] extends { parameters: { query: infer U } } ? U : object);
 
 export type RequestPayload<
   Path extends keyof paths,
@@ -50,7 +42,7 @@ export type RequestPayload<
   requestBody?: { content: infer U };
 }
   ? U
-  : never;
+  : void;
 
 export type AnyRequestPayload<
   Path extends keyof paths,

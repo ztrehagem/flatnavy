@@ -2,6 +2,7 @@ import type { FastifyPluginAsync } from "fastify";
 import type { Context } from "./app/context.js";
 import { instantiateControllers } from "./app/controller/controllers.js";
 import type { AbstractDefineResponse } from "./app/controller/types.js";
+import { logInfo } from "./utils/log.js";
 
 /**
  * create fastify routings from abstracted controllers
@@ -11,7 +12,7 @@ export const createRouter =
   (app) => {
     const controllers = instantiateControllers(context);
 
-    for (const { method, path, handler } of controllers) {
+    for (const { method, path, validate, handler } of controllers) {
       const pathPattern = path.replaceAll(
         /{([^}])}/g,
         (_, name: string) => `:${name}`
@@ -24,13 +25,21 @@ export const createRouter =
           }
         }
 
-        const resp = await handler(
-          {
+        let validated;
+
+        try {
+          validated = validate({
             pathParams: req.params,
             queryParams: req.query,
             body: req.body,
-            defineResponse,
-          },
+          });
+        } catch (error) {
+          logInfo(error);
+          return await reply.status(400).send();
+        }
+
+        const resp = await handler(
+          { ...validated, defineResponse },
           req.raw,
           reply.raw
         );

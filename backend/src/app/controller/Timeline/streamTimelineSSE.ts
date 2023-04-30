@@ -1,3 +1,4 @@
+import { z } from "zod";
 import type { Context } from "../../context.js";
 import {
   TimelineScope,
@@ -10,6 +11,13 @@ export const streamTimelineSSE = defineController(
   ({ timelineRepository }: Context) => ({
     method: "get",
     path: "/api/stream/sse/timeline",
+    validate: ({ queryParams }) => ({
+      queryParams: z
+        .object({
+          scope: z.enum(["local"]),
+        })
+        .parse(queryParams),
+    }),
     handler: async ({ queryParams }, req, res) => {
       res.writeHead(200, {
         ...res.getHeaders(),

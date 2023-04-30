@@ -1,3 +1,4 @@
+import { z } from "zod";
 import type { Context } from "../../context.js";
 import { UserHandle } from "../../model/User/UserHandle.js";
 import { serializeUser } from "../../serializer/User.js";
@@ -7,6 +8,14 @@ export const createSession = defineController(
   ({ userRepository, serverKeyRepository, sessionService }: Context) => ({
     method: "post",
     path: "/api/auth",
+    validate: ({ body }) => ({
+      body: z
+        .object({
+          handle: z.string(),
+          password: z.string(),
+        })
+        .parse(body),
+    }),
     handler: async ({ body, defineResponse }) => {
       const [eHandle, handle] = UserHandle.create(body.handle);
 

@@ -1,3 +1,4 @@
+import { z } from "zod";
 import type { Context } from "../../context.js";
 import { HashedUserPassword } from "../../model/User/HashedUserPassword.js";
 import { NewUser } from "../../model/User/NewUser.js";
@@ -10,6 +11,15 @@ export const createUser = defineController(
   ({ userRepository, serverKeyRepository, sessionService }: Context) => ({
     method: "post",
     path: "/api/users",
+    validate: ({ body }) => ({
+      body: z
+        .object({
+          handle: z.string(),
+          name: z.string(),
+          password: z.string(),
+        })
+        .parse(body),
+    }),
     handler: async ({ body, defineResponse }) => {
       const [eHandle, handle] = UserHandle.create(body.handle);
 

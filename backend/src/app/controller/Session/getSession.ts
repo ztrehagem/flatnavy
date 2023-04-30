@@ -7,6 +7,7 @@ export const getSession = defineController(
   ({ httpAuthenticationService, userRepository }: Context) => ({
     method: "get",
     path: "/api/auth",
+    validate: () => ({}),
     handler: async ({ defineResponse }, req) => {
       const [authenticationError, token] =
         await httpAuthenticationService.parseAuthenticationToken(

@@ -1,3 +1,4 @@
+import { z } from "zod";
 import type { Context } from "../../context.js";
 import { NewPost } from "../../model/Post/NewPost.js";
 import { serializePost } from "../../serializer/Post.js";
@@ -12,6 +13,13 @@ export const createPost = defineController(
   }: Context) => ({
     method: "post",
     path: "/api/posts",
+    validate: ({ body }) => ({
+      body: z
+        .object({
+          body: z.string(),
+        })
+        .parse(body),
+    }),
     handler: async ({ body, defineResponse }, req) => {
       const [authenticationError, token] =
         await httpAuthenticationService.parseAuthenticationToken(
