@@ -1,12 +1,12 @@
-import type { IncomingMessage, ServerResponse } from "http";
-import type { paths } from "../spec.generated.js";
 import type {
   AnyRequestPayload,
   HttpMethod,
   PathParameters,
   QueryParameters,
   ResponsePayload,
-} from "../types.js";
+  paths,
+} from "@flatnavy/api";
+import type { IncomingMessage, ServerResponse } from "http";
 
 export type AbstractRequestContext<
   P = unknown,
@@ -85,12 +85,3 @@ export type Controller<
   Path extends keyof paths,
   Method extends keyof paths[Path]
 > = AbstractController<Path, Method, Handler<Path, Method>>;
-
-export const defineController =
-  <T, Path extends keyof paths, Method extends keyof paths[Path]>(
-    factory: (arg: T) => Controller<Path, Method>
-  ) =>
-  (arg: T): AbstractController =>
-    factory(arg) as AbstractController;
-
-export const defineResponse: AbstractDefineResponse = (r) => r;

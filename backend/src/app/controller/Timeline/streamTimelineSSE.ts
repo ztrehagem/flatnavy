@@ -1,10 +1,10 @@
-import { defineController } from "@flatnavy/api/server";
 import type { Context } from "../../context.js";
 import {
   TimelineScope,
   TimelineScopeKind,
 } from "../../model/Timeline/TimelineScope.js";
 import { serializeTimelineEntry } from "../../serializer/Timeline.js";
+import { defineController } from "../defineController.js";
 
 export const streamTimelineSSE = defineController(
   ({ timelineRepository }: Context) => ({

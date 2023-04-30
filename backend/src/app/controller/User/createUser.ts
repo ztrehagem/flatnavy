@@ -1,10 +1,10 @@
-import { defineController } from "@flatnavy/api/server";
 import type { Context } from "../../context.js";
 import { HashedUserPassword } from "../../model/User/HashedUserPassword.js";
 import { NewUser } from "../../model/User/NewUser.js";
 import { UserHandle } from "../../model/User/UserHandle.js";
 import { UserName } from "../../model/User/UserName.js";
 import { serializeUser } from "../../serializer/User.js";
+import { defineController } from "../defineController.js";
 
 export const createUser = defineController(
   ({ userRepository, serverKeyRepository, sessionService }: Context) => ({

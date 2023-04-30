@@ -1,7 +1,7 @@
-import { defineController } from "@flatnavy/api/server";
 import type { Context } from "../../context.js";
 import { UserHandle } from "../../model/User/UserHandle.js";
 import { serializeUser } from "../../serializer/User.js";
+import { defineController } from "../defineController.js";
 
 export const getUser = defineController(({ userRepository }: Context) => ({
   method: "get",

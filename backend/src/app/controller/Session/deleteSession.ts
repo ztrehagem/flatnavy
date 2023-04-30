@@ -1,4 +1,4 @@
-import { defineController } from "@flatnavy/api/server";
+import { defineController } from "../defineController.js";
 
 export const deleteSession = defineController(() => ({
   method: "delete",

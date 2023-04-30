@@ -1,7 +1,7 @@
-import { defineResponse } from "@flatnavy/api/server";
 import type { FastifyPluginAsync } from "fastify";
 import type { Context } from "./app/context.js";
 import { instantiateControllers } from "./app/controller/controllers.js";
+import type { AbstractDefineResponse } from "./app/controller/types.js";
 
 /**
  * create fastify routings from abstracted controllers
@@ -46,3 +46,5 @@ export const createRouter =
 
     return Promise.resolve();
   };
+
+const defineResponse: AbstractDefineResponse = (r) => r;

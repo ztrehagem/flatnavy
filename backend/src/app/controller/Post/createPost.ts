@@ -1,7 +1,7 @@
-import { defineController } from "@flatnavy/api/server";
 import type { Context } from "../../context.js";
 import { NewPost } from "../../model/Post/NewPost.js";
 import { serializePost } from "../../serializer/Post.js";
+import { defineController } from "../defineController.js";
 
 export const createPost = defineController(
   ({
