@@ -3,16 +3,8 @@ import { default as fastifyStatic } from "@fastify/static";
 import { fastify, type FastifyInstance } from "fastify";
 import * as path from "node:path";
 import type { Context } from "./app/context.js";
-import { createPost } from "./app/controller/Post/createPost.js";
-import { createSession } from "./app/controller/Session/createSession.js";
-import { deleteSession } from "./app/controller/Session/deleteSession.js";
-import { getSession } from "./app/controller/Session/getSession.js";
-import { streamTimelineSSE } from "./app/controller/Timeline/streamTimelineSSE.js";
-import { createUser } from "./app/controller/User/createUser.js";
-import { getUser } from "./app/controller/User/getUser.js";
-import { indexUser } from "./app/controller/User/indexUser.js";
+import { createRouter } from "./createRouter.js";
 import { ProcessEnv } from "./ProcessEnv.js";
-import { router } from "./router.js";
 import { logError, logInfo } from "./utils/log.js";
 
 export type Params = {
@@ -34,18 +26,7 @@ export const createServer = async ({
     });
   }
 
-  const controllers = [
-    getSession(context),
-    createSession(context),
-    deleteSession(context),
-    indexUser(context),
-    createUser(context),
-    getUser(context),
-    createPost(context),
-    streamTimelineSSE(context),
-  ];
-
-  await server.register(router, { controllers });
+  await server.register(createRouter(context));
 
   await server.register(fastifyStatic, { root: STATIC_DIR });
 
