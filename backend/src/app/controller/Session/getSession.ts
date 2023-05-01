@@ -1,14 +1,24 @@
+import { Type } from "@fastify/type-provider-typebox";
 import { logInfo } from "../../../utils/log.js";
 import type { Context } from "../../context.js";
 import { serializeUser } from "../../serializer/User.js";
-import { defineController } from "../defineController.js";
+import { defineRoute } from "../defineController.js";
+import { schema } from "../../schema.js";
 
-export const getSession = defineController(
+export const getSession = defineRoute(
   ({ httpAuthenticationService, userRepository }: Context) => ({
-    method: "get",
-    path: "/api/auth",
-    validate: () => ({}),
-    handler: async ({ defineResponse }, req) => {
+    method: "GET",
+    url: "/api/auth",
+    schema: {
+      security: [{ AccessToken: [] }],
+      response: {
+        200: Type.Object({
+          user: Type.Ref(schema.User),
+        }),
+        401: Type.Void(),
+      },
+    },
+    handler: async (req, reply) => {
       const [authenticationError, token] =
         await httpAuthenticationService.parseAuthenticationToken(
           req.headers.authorization ?? ""
@@ -16,21 +26,17 @@ export const getSession = defineController(
 
       if (authenticationError) {
         logInfo(authenticationError);
-        return defineResponse({ status: 401 });
+        return await reply.status(401).send();
       }
 
       const user = await userRepository.getByHandle(token.userHandle);
 
       if (!user) {
-        return defineResponse({ status: 401 });
+        return await reply.status(401).send();
       }
 
-      return defineResponse({
-        status: 200,
-        mime: "application/json",
-        body: {
-          user: serializeUser(user),
-        },
+      return await reply.status(200).send({
+        user: serializeUser(user),
       });
     },
   })

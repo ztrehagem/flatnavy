@@ -1,44 +1,52 @@
-import { z } from "zod";
 import type { Context } from "../../context.js";
 import { HashedUserPassword } from "../../model/User/HashedUserPassword.js";
 import { NewUser } from "../../model/User/NewUser.js";
 import { UserHandle } from "../../model/User/UserHandle.js";
 import { UserName } from "../../model/User/UserName.js";
 import { serializeUser } from "../../serializer/User.js";
-import { defineController } from "../defineController.js";
+import { defineRoute } from "../defineController.js";
+import { Type } from "@fastify/type-provider-typebox";
+import { schema } from "../../schema.js";
 
-export const createUser = defineController(
+export const createUser = defineRoute(
   ({ userRepository, serverKeyRepository, sessionService }: Context) => ({
-    method: "post",
-    path: "/api/users",
-    validate: ({ body }) => ({
-      body: z
-        .object({
-          handle: z.string(),
-          name: z.string(),
-          password: z.string(),
-        })
-        .parse(body),
-    }),
-    handler: async ({ body, defineResponse }) => {
-      const [eHandle, handle] = UserHandle.create(body.handle);
+    method: "POST",
+    url: "/api/users",
+    schema: {
+      body: Type.Object({
+        handle: Type.String(),
+        name: Type.String(),
+        password: Type.String(),
+      }),
+      response: {
+        201: Type.Object({
+          user: Type.Ref(schema.User),
+          accessToken: Type.String(),
+          refreshToken: Type.String(),
+        }),
+        400: Type.Void(),
+        409: Type.Void(),
+      },
+    },
+    handler: async (req, reply) => {
+      const [eHandle, handle] = UserHandle.create(req.body.handle);
 
       if (eHandle) {
-        return defineResponse({ status: 400 });
+        return await reply.status(400);
       }
 
-      const [eUserName, userName] = UserName.create(body.name);
+      const [eUserName, userName] = UserName.create(req.body.name);
 
       if (eUserName) {
-        return defineResponse({ status: 400 });
+        return await reply.status(400);
       }
 
       const [ePassword, password] = await HashedUserPassword.hash(
-        body.password
+        req.body.password
       );
 
       if (ePassword) {
-        return defineResponse({ status: 400 });
+        return await reply.status(400);
       }
 
       const newUser = NewUser.create({
@@ -50,7 +58,7 @@ export const createUser = defineController(
       const [error, createdUser] = await userRepository.create(newUser);
 
       if (error) {
-        return defineResponse({ status: 409 });
+        return await reply.status(409);
       }
 
       const serverKey = await serverKeyRepository.get();
@@ -60,14 +68,10 @@ export const createUser = defineController(
       const accessTokenJwt = await serverKey.signToken(accessToken);
       const refreshTokenJwt = await serverKey.signToken(refreshToken);
 
-      return defineResponse({
-        status: 201,
-        mime: "application/json",
-        body: {
-          user: serializeUser(createdUser),
-          accessToken: accessTokenJwt,
-          refreshToken: refreshTokenJwt,
-        },
+      return await reply.status(201).send({
+        user: serializeUser(createdUser),
+        accessToken: accessTokenJwt,
+        refreshToken: refreshTokenJwt,
       });
     },
   })

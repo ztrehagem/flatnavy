@@ -1,9 +1,28 @@
-import type { paths } from "@flatnavy/api";
-import type { AbstractController, Controller } from "./types.js";
+import type { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
+import type {
+  ContextConfigDefault,
+  FastifySchema,
+  RawReplyDefaultExpression,
+  RawRequestDefaultExpression,
+  RawServerDefault,
+  RouteGenericInterface,
+  RouteOptions,
+} from "fastify";
 
-export const defineController =
-  <T, Path extends keyof paths, Method extends keyof paths[Path]>(
-    factory: (arg: T) => Controller<Path, Method>
-  ) =>
-  (arg: T): AbstractController =>
-    factory(arg) as AbstractController;
+export type RouteTypebox<Schema extends FastifySchema> = RouteOptions<
+  RawServerDefault,
+  RawRequestDefaultExpression<RawServerDefault>,
+  RawReplyDefaultExpression<RawServerDefault>,
+  RouteGenericInterface,
+  ContextConfigDefault,
+  Schema,
+  TypeBoxTypeProvider
+>;
+
+export type RouteFactory<T, Schema extends FastifySchema> = (
+  context: T
+) => RouteTypebox<Schema>;
+
+export const defineRoute = <T, Schema extends FastifySchema>(
+  factory: RouteFactory<T, Schema>
+): RouteFactory<T, Schema> => factory;

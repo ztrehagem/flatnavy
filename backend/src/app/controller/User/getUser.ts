@@ -1,38 +1,40 @@
-import { z } from "zod";
 import type { Context } from "../../context.js";
 import { UserHandle } from "../../model/User/UserHandle.js";
 import { serializeUser } from "../../serializer/User.js";
-import { defineController } from "../defineController.js";
+import { defineRoute } from "../defineController.js";
+import { Type } from "@fastify/type-provider-typebox";
+import { schema } from "../../schema.js";
 
-export const getUser = defineController(({ userRepository }: Context) => ({
-  method: "get",
-  path: "/api/users/{userHandle}",
-  validate: ({ pathParams }) => ({
-    pathParams: z
-      .object({
-        userHandle: z.string(),
-      })
-      .parse(pathParams),
-  }),
-  handler: async ({ pathParams, defineResponse }) => {
-    const [eUserHandle, userHandle] = UserHandle.create(pathParams.userHandle);
+export const getUser = defineRoute(({ userRepository }: Context) => ({
+  method: "GET",
+  url: "/api/users/:userHandle",
+  schema: {
+    params: Type.Object({
+      userHandle: Type.Ref(schema.UserHandle),
+    }),
+    response: {
+      200: Type.Object({
+        user: Type.Ref(schema.User),
+      }),
+      400: Type.Void(),
+      404: Type.Void(),
+    },
+  },
+  handler: async (req, reply) => {
+    const [eUserHandle, userHandle] = UserHandle.create(req.params.userHandle);
 
     if (eUserHandle) {
-      return defineResponse({ status: 400 });
+      return await reply.status(400);
     }
 
     const user = await userRepository.getByHandle(userHandle);
 
     if (!user) {
-      return defineResponse({ status: 404 });
+      return await reply.status(404);
     }
 
-    return defineResponse({
-      status: 200,
-      mime: "application/json",
-      body: {
-        user: serializeUser(user),
-      },
+    return await reply.status(200).send({
+      user: serializeUser(user),
     });
   },
 }));

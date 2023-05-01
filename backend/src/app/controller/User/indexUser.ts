@@ -1,20 +1,24 @@
+import { Type } from "@fastify/type-provider-typebox";
 import type { Context } from "../../context.js";
 import { serializeUser } from "../../serializer/User.js";
-import { defineController } from "../defineController.js";
+import { defineRoute } from "../defineController.js";
+import { schema } from "../../schema.js";
 
-export const indexUser = defineController(({ userRepository }: Context) => ({
-  method: "get",
-  path: "/api/users",
-  validate: () => ({}),
-  handler: async ({ defineResponse }) => {
+export const indexUser = defineRoute(({ userRepository }: Context) => ({
+  method: "GET",
+  url: "/api/users",
+  schema: {
+    response: {
+      200: Type.Object({
+        users: Type.Array(Type.Ref(schema.User)),
+      }),
+    },
+  },
+  handler: async (req, reply) => {
     const users = await userRepository.index();
 
-    return defineResponse({
-      status: 200,
-      mime: "application/json",
-      body: {
-        users: users.map(serializeUser),
-      },
+    return await reply.status(200).send({
+      users: users.map(serializeUser),
     });
   },
 }));
