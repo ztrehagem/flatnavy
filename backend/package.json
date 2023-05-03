@@ -3,8 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "prepare": "pnpm run prisma:generate",
-    "prisma:generate": "prisma generate",
+    "prepare": "pnpm run /^prepare:/",
+    "prepare:fastify-schema": "openapi-to-fastify-schema ../api/api.yaml",
+    "prepare:prisma-types": "prisma generate",
     "dev": "pnpm run '/^dev:/'",
     "dev:prisma": "prisma generate --watch",
     "dev:build": "tsc -w --preserveWatchOutput",
@@ -17,6 +18,7 @@
   "dependencies": {
     "@fastify/cors": "^8.2.1",
     "@fastify/static": "^6.10.1",
+    "@fastify/type-provider-json-schema-to-ts": "^2.2.2",
     "@flatnavy/api": "*",
     "@js-temporal/polyfill": "^0.4.3",
     "@prisma/client": "^4.13.0",
@@ -27,6 +29,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
+    "@ztrehagem/openapi-to-fastify-schema": "^0.1.0",
     "prisma": "^4.13.0"
   }
 }

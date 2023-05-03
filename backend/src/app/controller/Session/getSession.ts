@@ -1,35 +1,32 @@
-import type { RouteHandlerMethod } from "fastify";
-import type { Context } from "../../context.js";
+import operations from "@ztrehagem/openapi-to-fastify-schema/generated";
 import { logInfo } from "../../../utils/log.js";
-import type { ResponsePayload } from "@flatnavy/api";
+import type { Context } from "../../context.js";
 import { serializeUser } from "../../serializer/User.js";
+import { defineRoute } from "../defineRoute.js";
 
-export const getSession =
-  ({
-    httpAuthenticationService,
-    userRepository,
-  }: Context): RouteHandlerMethod =>
-  async (req, reply) => {
-    const [authenticationError, token] =
-      await httpAuthenticationService.parseAuthenticationToken(
-        req.headers.authorization ?? ""
-      );
+export const getSession = defineRoute(
+  ({ httpAuthenticationService, userRepository }: Context) => ({
+    ...operations.getAuthentication,
+    handler: async (req, reply) => {
+      const [authenticationError, token] =
+        await httpAuthenticationService.parseAuthenticationToken(
+          req.headers.authorization ?? ""
+        );
 
-    if (authenticationError) {
-      logInfo(authenticationError);
-      return await reply.status(401).send();
-    }
+      if (authenticationError) {
+        logInfo(authenticationError);
+        return await reply.status(401).send();
+      }
 
-    const user = await userRepository.getByHandle(token.userHandle);
+      const user = await userRepository.getByHandle(token.userHandle);
 
-    if (!user) {
-      return await reply.status(401).send();
-    }
+      if (!user) {
+        return await reply.status(401).send();
+      }
 
-    const res: ResponsePayload<"/api/auth", "get">["200"]["application/json"] =
-      {
+      return await reply.status(200).send({
         user: serializeUser(user),
-      };
-
-    await reply.status(200).type("application/json").send(res);
-  };
+      });
+    },
+  })
+);

@@ -1,5 +1,4 @@
 import type { paths } from "../spec.generated.js";
-import type { Operation } from "../types.js";
 
 export type Result<Data, Error extends NonNullable<unknown>> =
   | [Error]
@@ -13,7 +12,7 @@ export interface TypedResponse<Status extends number, Body> extends Response {
 export type ClientResponse<
   Path extends keyof paths,
   Method extends keyof paths[Path]
-> = Operation<Method, Path> extends { responses: infer Responses }
+> = paths[Path][Method] extends { responses: infer Responses }
   ? {
       [Status in keyof Responses]: Status extends number
         ? TypedResponse<

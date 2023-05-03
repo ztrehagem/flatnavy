@@ -1,17 +1,15 @@
-import type { RouteHandlerMethod } from "fastify";
+import operations from "@ztrehagem/openapi-to-fastify-schema/generated";
 import type { Context } from "../../context.js";
-import type { ResponsePayload } from "@flatnavy/api";
 import { serializeUser } from "../../serializer/User.js";
+import { defineRoute } from "../defineRoute.js";
 
-export const indexUser =
-  ({ userRepository }: Context): RouteHandlerMethod =>
-  async (req, reply) => {
+export const indexUser = defineRoute(({ userRepository }: Context) => ({
+  ...operations.indexUser,
+  handler: async (req, reply) => {
     const users = await userRepository.index();
 
-    const res: ResponsePayload<"/api/users", "get">["200"]["application/json"] =
-      {
-        users: users.map(serializeUser),
-      };
-
-    await reply.status(200).type("application/json").send(res);
-  };
+    return await reply.status(200).send({
+      users: users.map(serializeUser),
+    });
+  },
+}));

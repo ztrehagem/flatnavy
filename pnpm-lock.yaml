@@ -48,6 +48,9 @@ importers:
       '@fastify/static':
         specifier: ^6.10.1
         version: 6.10.1
+      '@fastify/type-provider-json-schema-to-ts':
+        specifier: ^2.2.2
+        version: 2.2.2(fastify@4.17.0)(json-schema-to-ts@2.8.0)
       '@flatnavy/api':
         specifier: '*'
         version: link:../api
@@ -73,6 +76,9 @@ importers:
       '@types/bcrypt':
         specifier: ^5.0.0
         version: 5.0.0
+      '@ztrehagem/openapi-to-fastify-schema':
+        specifier: ^0.1.0
+        version: 0.1.0
       prisma:
         specifier: ^4.13.0
         version: 4.13.0
@@ -854,6 +860,16 @@ packages:
       readable-stream: 4.3.0
     dev: false
 
+  /@fastify/type-provider-json-schema-to-ts@2.2.2(fastify@4.17.0)(json-schema-to-ts@2.8.0):
+    resolution: {integrity: sha512-RMnlf5JxojQt/LqgsQLDyNfQmuO/L+0GwHxsVGRBBSlYC4K45q7e2x1Rh6o8/VgvuwCK+cohQAvbrU0q3ixdbw==}
+    peerDependencies:
+      fastify: ^4.0.0
+      json-schema-to-ts: ^2.0.0
+    dependencies:
+      fastify: 4.17.0
+      json-schema-to-ts: 2.8.0
+    dev: false
+
   /@humanwhocodes/config-array@0.11.8:
     resolution: {integrity: sha512-UybHIJzJnR5Qc/MsD9Kr+RpO2h+/P1GhOwdiLPXK5TWk5sgTdu88bTD9UP+CKbPPh5Rni1u0GjAdYQLemG8g+g==}
     engines: {node: '>=10.10.0'}
@@ -1044,7 +1060,6 @@ packages:
 
   /@types/json-schema@7.0.11:
     resolution: {integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==}
-    dev: true
 
   /@types/node@18.16.3:
     resolution: {integrity: sha512-OPs5WnnT1xkCBiuQrZA4+YAV4HEJejmHneyraIaxsbev5yCEr6KMwINNFP9wQeFIw8FWcoTqF3vQsa5CDaI+8Q==}
@@ -1294,6 +1309,13 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: false
+
+  /@ztrehagem/openapi-to-fastify-schema@0.1.0:
+    resolution: {integrity: sha512-/QkmHtRJPk3uUn6EJjimrTJrWJlGMsqlbHjw3ClDkS2QD1Of1ZeKl1D8aRlAKXGFXmM8NaBvWFg/gJFzZDxbvg==}
+    hasBin: true
+    dependencies:
+      yaml: 2.2.2
+    dev: true
 
   /abbrev@1.1.1:
     resolution: {integrity: sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==}
@@ -2657,6 +2679,15 @@ packages:
     hasBin: true
     dev: false
 
+  /json-schema-to-ts@2.8.0:
+    resolution: {integrity: sha512-fNAnQ6N0a/0rJlqkzKBdb+5EnMgcKTlrAwMLg3adlKRTT1uNNT4ziqwBzMhj4vp768pO9PoQzZcUyv3QWmD0pQ==}
+    engines: {node: '>=16'}
+    dependencies:
+      '@babel/runtime': 7.21.5
+      '@types/json-schema': 7.0.11
+      ts-algebra: 1.2.0
+    dev: false
+
   /json-schema-traverse@0.4.1:
     resolution: {integrity: sha512-xbbCH5dCYU5T8LcEhhuh7HJ88HXuW3qsI3Y0zOZFKfZEHcpWiHU/Jxzk629Brsab/mMiHQti9wMP+845RPe3Vg==}
     dev: true
@@ -3627,6 +3658,10 @@ packages:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
     dev: false
 
+  /ts-algebra@1.2.0:
+    resolution: {integrity: sha512-kMuJJd8B2N/swCvIvn1hIFcIOrLGbWl9m/J6O3kHx9VRaevh00nvgjPiEGaRee7DRaAczMYR2uwWvXU22VFltw==}
+    dev: false
+
   /tslib@1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
     dev: true
@@ -3898,6 +3933,11 @@ packages:
     resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
     engines: {node: '>= 6'}
     dev: false
+
+  /yaml@2.2.2:
+    resolution: {integrity: sha512-CBKFWExMn46Foo4cldiChEzn7S7SRV+wqiluAb6xmueD/fGyRHIhX8m14vVGgeFWjN540nKCNVj6P21eQjgTuA==}
+    engines: {node: '>= 14'}
+    dev: true
 
   /yargs-parser@21.1.1:
     resolution: {integrity: sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw==}

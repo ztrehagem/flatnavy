@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
-import * as css from "./TimelineView.css.js";
 import type { schemas } from "@flatnavy/api";
+import React, { useEffect, useState } from "react";
 import { apiOrigin } from "../../lib/api.js";
+import * as css from "./TimelineView.css.js";
 
 export const TimelineView: React.FC = () => {
   const [entries, setEntries] = useState<Array<schemas["TimelineEntry"]>>([]);
 
   useEffect(() => {
     const eventSource = new EventSource(
-      new URL("/api/stream/sse/timeline", apiOrigin)
+      new URL("/api/stream/sse/timeline?scope=local", apiOrigin)
     );
 
     eventSource.addEventListener("message", (event: MessageEvent<string>) => {

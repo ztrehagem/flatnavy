@@ -1,8 +1,9 @@
-import type { RouteHandlerMethod } from "fastify";
-import type { Context } from "../../context.js";
+import operations from "@ztrehagem/openapi-to-fastify-schema/generated";
+import { defineRoute } from "../defineRoute.js";
 
-export const deleteSession =
-  (_: Context): RouteHandlerMethod =>
-  async (req, reply) => {
-    await reply.status(204).type("application/json").send();
-  };
+export const deleteSession = defineRoute(() => ({
+  ...operations.deleteAuthentication,
+  handler: async (req, reply) => {
+    return await reply.status(204).send();
+  },
+}));

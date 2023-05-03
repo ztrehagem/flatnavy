@@ -348,13 +348,15 @@ components:
           type:
             - string
             - "null"
-          example: "John Doe ✌"
+          examples:
+            - "John Doe ✌"
       required:
         - handle
         - name
     UserHandle:
       type: string
-      example: "JohnDoe123"
+      examples:
+        - "JohnDoe123"
     Post:
       type: object
       properties:
