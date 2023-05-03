@@ -1,25 +1,11 @@
+import operations from "@ztrehagem/openapi-to-fastify-schema/generated";
 import type { Context } from "../../context.js";
 import { UserHandle } from "../../model/User/UserHandle.js";
 import { serializeUser } from "../../serializer/User.js";
-import { defineRoute } from "../defineController.js";
-import { Type } from "@fastify/type-provider-typebox";
-import { schema } from "../../schema.js";
+import { defineRoute } from "../defineRoute.js";
 
 export const getUser = defineRoute(({ userRepository }: Context) => ({
-  method: "GET",
-  url: "/api/users/:userHandle",
-  schema: {
-    params: Type.Object({
-      userHandle: Type.Ref(schema.UserHandle),
-    }),
-    response: {
-      200: Type.Object({
-        user: Type.Ref(schema.User),
-      }),
-      400: Type.Void(),
-      404: Type.Void(),
-    },
-  },
+  ...operations.getUser,
   handler: async (req, reply) => {
     const [eUserHandle, userHandle] = UserHandle.create(req.params.userHandle);
 

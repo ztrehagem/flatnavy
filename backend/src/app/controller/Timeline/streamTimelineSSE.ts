@@ -1,22 +1,15 @@
+import operations from "@ztrehagem/openapi-to-fastify-schema/generated";
 import type { Context } from "../../context.js";
 import {
   TimelineScope,
   TimelineScopeKind,
 } from "../../model/Timeline/TimelineScope.js";
 import { serializeTimelineEntry } from "../../serializer/Timeline.js";
-import { defineRoute } from "../defineController.js";
-import { Type } from "@fastify/type-provider-typebox";
-import { schema } from "../../schema.js";
+import { defineRoute } from "../defineRoute.js";
 
 export const streamTimelineSSE = defineRoute(
   ({ timelineRepository }: Context) => ({
-    method: "GET",
-    url: "/api/stream/sse/timeline",
-    schema: {
-      querystring: Type.Object({
-        scope: Type.Ref(schema.TimelineScope),
-      }),
-    },
+    ...operations.streamTimelineSSE,
     handler: async (req, reply) => {
       reply.raw.writeHead(200, {
         ...reply.getHeaders(),

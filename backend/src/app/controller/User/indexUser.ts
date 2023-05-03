@@ -1,19 +1,10 @@
-import { Type } from "@fastify/type-provider-typebox";
+import operations from "@ztrehagem/openapi-to-fastify-schema/generated";
 import type { Context } from "../../context.js";
 import { serializeUser } from "../../serializer/User.js";
-import { defineRoute } from "../defineController.js";
-import { schema } from "../../schema.js";
+import { defineRoute } from "../defineRoute.js";
 
 export const indexUser = defineRoute(({ userRepository }: Context) => ({
-  method: "GET",
-  url: "/api/users",
-  schema: {
-    response: {
-      200: Type.Object({
-        users: Type.Array(Type.Ref(schema.User)),
-      }),
-    },
-  },
+  ...operations.indexUser,
   handler: async (req, reply) => {
     const users = await userRepository.index();
 

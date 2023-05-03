@@ -1,33 +1,15 @@
+import operations from "@ztrehagem/openapi-to-fastify-schema/generated";
 import type { Context } from "../../context.js";
 import { HashedUserPassword } from "../../model/User/HashedUserPassword.js";
 import { NewUser } from "../../model/User/NewUser.js";
 import { UserHandle } from "../../model/User/UserHandle.js";
 import { UserName } from "../../model/User/UserName.js";
 import { serializeUser } from "../../serializer/User.js";
-import { defineRoute } from "../defineController.js";
-import { Type } from "@fastify/type-provider-typebox";
-import { schema } from "../../schema.js";
+import { defineRoute } from "../defineRoute.js";
 
 export const createUser = defineRoute(
   ({ userRepository, serverKeyRepository, sessionService }: Context) => ({
-    method: "POST",
-    url: "/api/users",
-    schema: {
-      body: Type.Object({
-        handle: Type.String(),
-        name: Type.String(),
-        password: Type.String(),
-      }),
-      response: {
-        201: Type.Object({
-          user: Type.Ref(schema.User),
-          accessToken: Type.String(),
-          refreshToken: Type.String(),
-        }),
-        400: Type.Void(),
-        409: Type.Void(),
-      },
-    },
+    ...operations.createUser,
     handler: async (req, reply) => {
       const [eHandle, handle] = UserHandle.create(req.body.handle);
 

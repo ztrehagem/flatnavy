@@ -1,15 +1,8 @@
-import { Type } from "@fastify/type-provider-typebox";
-import { defineRoute } from "../defineController.js";
+import operations from "@ztrehagem/openapi-to-fastify-schema/generated";
+import { defineRoute } from "../defineRoute.js";
 
 export const deleteSession = defineRoute(() => ({
-  method: "DELETE",
-  url: "/api/auth",
-  schema: {
-    security: [{ AccessToken: [] }],
-    response: {
-      204: Type.Void(),
-    },
-  },
+  ...operations.deleteAuthentication,
   handler: async (req, reply) => {
     return await reply.status(204).send();
   },

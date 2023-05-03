@@ -1,13 +1,11 @@
 import fastifyCors from "@fastify/cors";
 import { default as fastifyStatic } from "@fastify/static";
-import { fastifySwagger } from "@fastify/swagger";
 import { fastify, type FastifyInstance } from "fastify";
 import * as path from "node:path";
 import type { Context } from "./app/context.js";
 import { createRouter } from "./createRouter.js";
 import { ProcessEnv } from "./ProcessEnv.js";
 import { logError, logInfo } from "./utils/log.js";
-import { schema } from "./app/schema.js";
 
 export type Params = {
   context: Context;
@@ -28,49 +26,7 @@ export const createServer = async ({
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  await server.register(fastifySwagger, {
-    openapi: {
-      info: {
-        title: "FlatNavy API",
-        version: "0.1.1",
-      },
-      components: {
-        securitySchemes: {
-          AccessToken: {
-            name: "AccessToken",
-            type: "http",
-            scheme: "bearer",
-            bearerFormat: "JWT",
-          },
-          RefreshToken: {
-            name: "RefreshToken",
-            type: "http",
-            scheme: "bearer",
-            bearerFormat: "JWT",
-          },
-        },
-      },
-    },
-  });
-
   await server.register(createRouter(context));
-
-  for (const [, s] of Object.entries(schema)) {
-    server.addSchema(s);
-  }
-
-  server.get("/api/schema.json", async (req, reply) => {
-    await reply.status(200).type("application/json").send(server.swagger());
-  });
-
-  server.get("/api/schema.yaml", async (req, reply) => {
-    await reply
-      .status(200)
-      .type("text/yaml")
-      .send(server.swagger({ yaml: true }));
-  });
 
   await server.register(fastifyStatic, { root: STATIC_DIR });
 

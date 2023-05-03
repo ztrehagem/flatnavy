@@ -1,9 +1,8 @@
-import { Type } from "@fastify/type-provider-typebox";
-import { schema } from "../../schema.js";
+import operations from "@ztrehagem/openapi-to-fastify-schema/generated";
 import type { Context } from "../../context.js";
 import { NewPost } from "../../model/Post/NewPost.js";
 import { serializePost } from "../../serializer/Post.js";
-import { defineRoute } from "../defineController.js";
+import { defineRoute } from "../defineRoute.js";
 
 export const createPostTyped = defineRoute(
   ({
@@ -12,21 +11,7 @@ export const createPostTyped = defineRoute(
     postRepository,
     timelineRepository,
   }: Context) => ({
-    method: "POST",
-    url: "/api/posts",
-    schema: {
-      security: [{ AccessToken: [] }],
-      body: Type.Object({
-        body: Type.String(),
-      }),
-      response: {
-        201: Type.Object({
-          post: Type.Ref(schema.Post),
-        }),
-        400: Type.Void(),
-        401: Type.Void(),
-      },
-    },
+    ...operations.createPost,
     handler: async (req, reply) => {
       const [authenticationError, token] =
         await httpAuthenticationService.parseAuthenticationToken(

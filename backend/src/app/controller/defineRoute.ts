@@ -1,4 +1,4 @@
-import type { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
+import type { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
 import type {
   ContextConfigDefault,
   FastifySchema,
@@ -9,19 +9,19 @@ import type {
   RouteOptions,
 } from "fastify";
 
-export type RouteTypebox<Schema extends FastifySchema> = RouteOptions<
+export type TypedRoute<Schema extends FastifySchema> = RouteOptions<
   RawServerDefault,
   RawRequestDefaultExpression<RawServerDefault>,
   RawReplyDefaultExpression<RawServerDefault>,
   RouteGenericInterface,
   ContextConfigDefault,
   Schema,
-  TypeBoxTypeProvider
+  JsonSchemaToTsProvider
 >;
 
 export type RouteFactory<T, Schema extends FastifySchema> = (
   context: T
-) => RouteTypebox<Schema>;
+) => TypedRoute<Schema>;
 
 export const defineRoute = <T, Schema extends FastifySchema>(
   factory: RouteFactory<T, Schema>

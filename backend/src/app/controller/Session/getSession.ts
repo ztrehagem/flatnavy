@@ -1,23 +1,12 @@
-import { Type } from "@fastify/type-provider-typebox";
+import operations from "@ztrehagem/openapi-to-fastify-schema/generated";
 import { logInfo } from "../../../utils/log.js";
 import type { Context } from "../../context.js";
 import { serializeUser } from "../../serializer/User.js";
-import { defineRoute } from "../defineController.js";
-import { schema } from "../../schema.js";
+import { defineRoute } from "../defineRoute.js";
 
 export const getSession = defineRoute(
   ({ httpAuthenticationService, userRepository }: Context) => ({
-    method: "GET",
-    url: "/api/auth",
-    schema: {
-      security: [{ AccessToken: [] }],
-      response: {
-        200: Type.Object({
-          user: Type.Ref(schema.User),
-        }),
-        401: Type.Void(),
-      },
-    },
+    ...operations.getAuthentication,
     handler: async (req, reply) => {
       const [authenticationError, token] =
         await httpAuthenticationService.parseAuthenticationToken(
