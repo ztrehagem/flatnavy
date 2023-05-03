@@ -14,13 +14,13 @@ export const createUser = defineRoute(
       const [eHandle, handle] = UserHandle.create(req.body.handle);
 
       if (eHandle) {
-        return await reply.status(400);
+        return await reply.status(400).send();
       }
 
       const [eUserName, userName] = UserName.create(req.body.name);
 
       if (eUserName) {
-        return await reply.status(400);
+        return await reply.status(400).send();
       }
 
       const [ePassword, password] = await HashedUserPassword.hash(
@@ -28,7 +28,7 @@ export const createUser = defineRoute(
       );
 
       if (ePassword) {
-        return await reply.status(400);
+        return await reply.status(400).send();
       }
 
       const newUser = NewUser.create({
@@ -40,7 +40,7 @@ export const createUser = defineRoute(
       const [error, createdUser] = await userRepository.create(newUser);
 
       if (error) {
-        return await reply.status(409);
+        return await reply.status(409).send();
       }
 
       const serverKey = await serverKeyRepository.get();
