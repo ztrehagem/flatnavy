@@ -20,9 +20,14 @@ export const createServer = async ({
 
   if (!ProcessEnv.current.production) {
     await server.register(fastifyCors, {
+      prefix: "/api/",
       origin: true,
       credentials: true,
-      prefix: "/api/",
+      exposedHeaders: [
+        "X-Session-Operation",
+        "X-Access-Token",
+        "X-Refresh-Token",
+      ],
     });
   }
 

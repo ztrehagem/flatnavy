@@ -9,5 +9,5 @@ export { createUser } from "./operations/createUser.js";
 export { deleteSession } from "./operations/deleteSession.js";
 export { getSession } from "./operations/getSession.js";
 export { indexUser } from "./operations/indexUser.js";
+export * from "./store/TokenStore.js";
 export { TimelineStream } from "./streams/TimelineStream.js";
-export type * from "./types.js";

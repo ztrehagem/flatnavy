@@ -3,6 +3,7 @@ import type { ApiClientContext } from "../context.js";
 import { InvalidParametersError } from "../error/InvalidParametersError.js";
 import { UnexpectedResponseError } from "../error/UnexpectedResponseError.js";
 import { createDetailedRequest } from "../request.js";
+import { LocalStorageTokenStore } from "../store/TokenStore.js";
 import type { Result } from "../types.js";
 
 export type Params = {
@@ -12,8 +13,6 @@ export type Params = {
 
 export type Return = {
   user: schemas["User"];
-  accessToken: string;
-  refreshToken: string;
 };
 
 export type ErrorType = InvalidParametersError | UnexpectedResponseError;
@@ -21,6 +20,8 @@ export type ErrorType = InvalidParametersError | UnexpectedResponseError;
 export const createSession =
   (context: ApiClientContext) =>
   async (params: Params): Promise<Result<Return, ErrorType>> => {
+    const tokenStore = context.tokenStore ?? LocalStorageTokenStore.shared;
+
     const { fetch } = createDetailedRequest(context, "/api/auth", "post", {
       body: {
         "application/json": params,
@@ -31,6 +32,10 @@ export const createSession =
 
     switch (res.status) {
       case 201: {
+        tokenStore.setTokens({
+          accessToken: res.headers.get("X-Access-Token") ?? "",
+          refreshToken: res.headers.get("X-Refresh-Token") ?? "",
+        });
         const payload = await res.json();
         return [null, payload];
       }

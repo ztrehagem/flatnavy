@@ -50,11 +50,16 @@ export const createUser = defineRoute(
       const accessTokenJwt = await serverKey.signToken(accessToken);
       const refreshTokenJwt = await serverKey.signToken(refreshToken);
 
-      return await reply.status(201).send({
-        user: serializeUser(createdUser),
-        accessToken: accessTokenJwt,
-        refreshToken: refreshTokenJwt,
-      });
+      return await reply
+        .status(201)
+        .headers({
+          "X-Session-Operation": "create",
+          "X-Access-Token": accessTokenJwt,
+          "X-Refresh-Token": refreshTokenJwt,
+        })
+        .send({
+          user: serializeUser(createdUser),
+        });
     },
   })
 );

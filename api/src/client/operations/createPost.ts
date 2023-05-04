@@ -4,6 +4,7 @@ import { InvalidParametersError } from "../error/InvalidParametersError.js";
 import { UnauthenticatedError } from "../error/UnauthenticatedError.js";
 import { UnexpectedResponseError } from "../error/UnexpectedResponseError.js";
 import { createDetailedRequest } from "../request.js";
+import { LocalStorageTokenStore } from "../store/TokenStore.js";
 import type { Result } from "../types.js";
 
 type Params = {
@@ -18,13 +19,23 @@ type ErrorType =
 export const createPost =
   (context: ApiClientContext) =>
   async (params: Params): Promise<Result<schemas["Post"], ErrorType>> => {
-    const { fetch } = createDetailedRequest(context, "/api/posts", "post", {
-      body: {
-        "application/json": {
-          body: params.body,
+    const tokenStore = context.tokenStore ?? LocalStorageTokenStore.shared;
+
+    const { fetch } = createDetailedRequest(
+      context,
+      "/api/posts",
+      "post",
+      {
+        body: {
+          "application/json": {
+            body: params.body,
+          },
         },
       },
-    });
+      {
+        accessToken: tokenStore.getAccessToken(),
+      }
+    );
 
     const res = await fetch();
 

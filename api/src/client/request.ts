@@ -44,7 +44,7 @@ export const createDetailedRequest = <
     }
   }
 
-  const headers = new Headers();
+  const headers = new Headers(context.init?.headers);
   let bodyInit: BodyInit | undefined;
 
   if ("body" in data) {
@@ -56,10 +56,17 @@ export const createDetailedRequest = <
     bodyInit = serialize(body);
   }
 
-  const init: RequestInit = {
+  const token = options?.accessToken ?? options?.refreshToken;
+
+  if (token) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
+
+  const init: RequestInitWithHeaders = {
+    ...context.init,
     method: String(method).toUpperCase(),
-    headers,
     body: bodyInit,
+    headers,
   };
 
   const request = new Request(url, init);
@@ -81,6 +88,8 @@ type RequestOptions<
   Method extends Exclude<keyof paths[Path], "parameters">
 > = {
   serializeBody?: BodySerializer<Path, Method>;
+  accessToken?: string | null;
+  refreshToken?: string | null;
 };
 
 type BodySerializer<
@@ -93,7 +102,11 @@ type DetailedRequest<
   Method extends Exclude<keyof paths[Path], "parameters">
 > = {
   fetch: BoundFetch<Path, Method>;
-  init: RequestInit;
+  init: RequestInitWithHeaders;
+};
+
+type RequestInitWithHeaders = Omit<RequestInit, "headers"> & {
+  headers: Headers;
 };
 
 type BoundFetch<
