@@ -77,8 +77,8 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
       '@ztrehagem/openapi-to-fastify-schema':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.1.1
+        version: 0.1.1
       prisma:
         specifier: ^4.13.0
         version: 4.13.0
@@ -1310,8 +1310,8 @@ packages:
       - supports-color
     dev: false
 
-  /@ztrehagem/openapi-to-fastify-schema@0.1.0:
-    resolution: {integrity: sha512-/QkmHtRJPk3uUn6EJjimrTJrWJlGMsqlbHjw3ClDkS2QD1Of1ZeKl1D8aRlAKXGFXmM8NaBvWFg/gJFzZDxbvg==}
+  /@ztrehagem/openapi-to-fastify-schema@0.1.1:
+    resolution: {integrity: sha512-UReyWJOFgaSjtVmd5ZHo41CUvD4CTi5Fup5fdH7ZDpRN3I7yB3yolL8c+RbPVCc63b231Juo2sJWaKdc7mc7fQ==}
     hasBin: true
     dependencies:
       yaml: 2.2.2
