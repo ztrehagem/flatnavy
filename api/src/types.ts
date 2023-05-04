@@ -1,4 +1,4 @@
-import type { components, paths } from "./spec.generated.js";
+import type { components, operations, paths } from "./spec.generated.js";
 
 export type { paths };
 
@@ -12,6 +12,14 @@ export type HttpMethod =
   | "delete"
   | "head"
   | "options";
+
+export type OperationPathMethod<OpId extends keyof operations> = {
+  [Path in keyof paths]: {
+    [Method in keyof paths[Path]]: paths[Path][Method] extends operations[OpId]
+      ? { path: Path; method: Method }
+      : never;
+  }[keyof paths[Path]];
+}[keyof paths];
 
 export type PathParameters<
   Path extends keyof paths,
