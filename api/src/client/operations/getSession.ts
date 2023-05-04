@@ -2,23 +2,17 @@ import type { schemas } from "../../types.js";
 import type { ApiClientContext } from "../context.js";
 import { UnauthenticatedError } from "../error/UnauthenticatedError.js";
 import { UnexpectedResponseError } from "../error/UnexpectedResponseError.js";
-import type { ClientResponse, Result } from "../types.js";
-import { createRequestInit } from "../utils.js";
+import { createDetailedRequest } from "../request.js";
+import type { Result } from "../types.js";
 
 type ErrorType = UnauthenticatedError | UnexpectedResponseError;
 
 export const getSession =
   (context: ApiClientContext) =>
   async (): Promise<Result<schemas["User"], ErrorType>> => {
-    const request = createRequestInit(context, "/api/auth", "get");
+    const { fetch } = createDetailedRequest(context, "/api/auth", "get", {});
 
-    const headers = new Headers(context.init?.headers);
-    headers.set("Content-Type", "application/json");
-
-    const res = (await fetch(request, {
-      ...context.init,
-      headers,
-    })) as ClientResponse<"/api/auth", "get">;
+    const res = await fetch();
 
     switch (res.status) {
       case 200: {

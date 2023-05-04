@@ -1,10 +1,10 @@
-import type { RequestPayload, schemas } from "../../types.js";
+import type { schemas } from "../../types.js";
 import type { ApiClientContext } from "../context.js";
 import { InvalidParametersError } from "../error/InvalidParametersError.js";
 import { UnauthenticatedError } from "../error/UnauthenticatedError.js";
 import { UnexpectedResponseError } from "../error/UnexpectedResponseError.js";
-import type { ClientResponse, Result } from "../types.js";
-import { createRequestInit } from "../utils.js";
+import { createDetailedRequest } from "../request.js";
+import type { Result } from "../types.js";
 
 type Params = {
   readonly body: string;
@@ -18,20 +18,15 @@ type ErrorType =
 export const createPost =
   (context: ApiClientContext) =>
   async (params: Params): Promise<Result<schemas["Post"], ErrorType>> => {
-    const request = createRequestInit(context, "/api/posts", "post");
+    const { fetch } = createDetailedRequest(context, "/api/posts", "post", {
+      body: {
+        "application/json": {
+          body: params.body,
+        },
+      },
+    });
 
-    const body: RequestPayload<"/api/posts", "post">["application/json"] = {
-      body: params.body,
-    };
-
-    const headers = new Headers(context.init?.headers);
-    headers.set("Content-Type", "application/json");
-
-    const res = (await fetch(request, {
-      ...context.init,
-      headers,
-      body: JSON.stringify(body),
-    })) as ClientResponse<"/api/posts", "post">;
+    const res = await fetch();
 
     switch (res.status) {
       case 201: {
