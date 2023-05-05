@@ -1,24 +1,22 @@
 import type { ApiClientContext } from "../context.js";
 import { UnexpectedResponseError } from "../error/UnexpectedResponseError.js";
-import type { ClientResponse, Result } from "../types.js";
-import { createRequestInit } from "../utils.js";
+import { createDetailedRequest } from "../request.js";
+import { LocalStorageTokenStore } from "../store/TokenStore.js";
+import type { Result } from "../types.js";
 
 type ErrorType = UnexpectedResponseError;
 
 export const deleteSession =
   (context: ApiClientContext) => async (): Promise<Result<null, ErrorType>> => {
-    const request = createRequestInit(context, "/api/auth", "delete");
+    const tokenStore = context.tokenStore ?? LocalStorageTokenStore.shared;
 
-    const headers = new Headers(context.init?.headers);
-    headers.set("Content-Type", "application/json");
+    const { fetch } = createDetailedRequest(context, "/api/auth", "delete", {});
 
-    const res = (await fetch(request, {
-      ...context.init,
-      headers,
-    })) as ClientResponse<"/api/auth", "delete">;
+    const res = await fetch();
 
     switch (res.status) {
       case 204: {
+        tokenStore.clear();
         return [null, null];
       }
 

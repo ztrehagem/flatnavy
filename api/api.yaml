@@ -55,6 +55,11 @@ paths:
       responses:
         201:
           description: Created
+          headers:
+            X-FlatNavy-Access-Token:
+              $ref: "#/components/headers/AccessToken"
+            X-FlatNavy-Refresh-Token:
+              $ref: "#/components/headers/RefreshToken"
           content:
             application/json:
               schema:
@@ -62,14 +67,8 @@ paths:
                 properties:
                   user:
                     $ref: "#/components/schemas/User"
-                  accessToken:
-                    type: string
-                  refreshToken:
-                    type: string
                 required:
                   - user
-                  - accessToken
-                  - refreshToken
         400:
           description: Bad Request
     put:
@@ -82,6 +81,11 @@ paths:
       responses:
         201:
           description: Created
+          headers:
+            X-FlatNavy-Access-Token:
+              $ref: "#/components/headers/AccessToken"
+            X-FlatNavy-Refresh-Token:
+              $ref: "#/components/headers/RefreshToken"
           content:
             application/json:
               schema:
@@ -89,14 +93,8 @@ paths:
                 properties:
                   user:
                     $ref: "#/components/schemas/User"
-                  accessToken:
-                    type: string
-                  refreshToken:
-                    type: string
                 required:
                   - user
-                  - accessToken
-                  - refreshToken
         401:
           description: Unauthorized
     delete:
@@ -109,6 +107,7 @@ paths:
       responses:
         204:
           description: No Content
+          headers:
         401:
           description: Unauthorized
 
@@ -163,6 +162,11 @@ paths:
       responses:
         201:
           description: Created
+          headers:
+            X-FlatNavy-Access-Token:
+              $ref: "#/components/headers/AccessToken"
+            X-FlatNavy-Refresh-Token:
+              $ref: "#/components/headers/RefreshToken"
           content:
             application/json:
               schema:
@@ -170,14 +174,8 @@ paths:
                 properties:
                   user:
                     $ref: "#/components/schemas/User"
-                  accessToken:
-                    type: string
-                  refreshToken:
-                    type: string
                 required:
                   - user
-                  - accessToken
-                  - refreshToken
         400:
           description: Bad Request
         409:
@@ -388,6 +386,18 @@ components:
       required:
         - id
         - post
+
+  headers:
+    AccessToken:
+      description: JWT Access Token
+      required: true
+      schema:
+        type: string
+    RefreshToken:
+      description: JWT Refresh Token
+      required: true
+      schema:
+        type: string
 
   securitySchemes:
     AccessToken:

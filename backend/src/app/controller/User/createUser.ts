@@ -1,3 +1,4 @@
+import { FlatNavyHttpHeader } from "@flatnavy/api";
 import operations from "@ztrehagem/openapi-to-fastify-schema/generated";
 import type { Context } from "../../context.js";
 import { HashedUserPassword } from "../../model/User/HashedUserPassword.js";
@@ -50,11 +51,15 @@ export const createUser = defineRoute(
       const accessTokenJwt = await serverKey.signToken(accessToken);
       const refreshTokenJwt = await serverKey.signToken(refreshToken);
 
-      return await reply.status(201).send({
-        user: serializeUser(createdUser),
-        accessToken: accessTokenJwt,
-        refreshToken: refreshTokenJwt,
-      });
+      return await reply
+        .status(201)
+        .headers({
+          [FlatNavyHttpHeader.accessToken]: accessTokenJwt,
+          [FlatNavyHttpHeader.refreshToken]: refreshTokenJwt,
+        })
+        .send({
+          user: serializeUser(createdUser),
+        });
     },
   })
 );

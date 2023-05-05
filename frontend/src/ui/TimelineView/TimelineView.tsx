@@ -1,23 +1,23 @@
 import type { schemas } from "@flatnavy/api";
+import { TimelineStream } from "@flatnavy/api/client";
 import React, { useEffect, useState } from "react";
-import { apiOrigin } from "../../lib/api.js";
+import { apiClientContext } from "../../lib/api.js";
 import * as css from "./TimelineView.css.js";
 
 export const TimelineView: React.FC = () => {
   const [entries, setEntries] = useState<Array<schemas["TimelineEntry"]>>([]);
 
   useEffect(() => {
-    const eventSource = new EventSource(
-      new URL("/api/stream/sse/timeline?scope=local", apiOrigin)
-    );
-
-    eventSource.addEventListener("message", (event: MessageEvent<string>) => {
-      const entries = JSON.parse(event.data) as Array<schemas["TimelineEntry"]>;
-      setEntries((prev) => [...entries.reverse(), ...prev].slice(0, 100));
+    const stream = new TimelineStream(apiClientContext, {
+      scope: "local",
+      listener: (entries) => {
+        const reversed = [...entries].reverse();
+        setEntries((prev) => [...reversed, ...prev].slice(0, 100));
+      },
     });
 
     return () => {
-      eventSource.close();
+      stream.close();
       setEntries([]);
     };
   }, []);

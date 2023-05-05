@@ -1,10 +1,12 @@
-import type { RequestPayload, schemas } from "../../types.js";
+import { FlatNavyHttpHeader } from "../../lib/FlatNavyHttpHeader.js";
+import type { schemas } from "../../types.js";
 import type { ApiClientContext } from "../context.js";
 import { ConflictedError } from "../error/ConflictedError.js";
 import { InvalidParametersError } from "../error/InvalidParametersError.js";
 import { UnexpectedResponseError } from "../error/UnexpectedResponseError.js";
-import type { ClientResponse, Result } from "../types.js";
-import { createRequestInit } from "../utils.js";
+import { createDetailedRequest } from "../request.js";
+import { LocalStorageTokenStore } from "../store/TokenStore.js";
+import type { Result } from "../types.js";
 
 export type Params = {
   readonly handle: string;
@@ -14,8 +16,6 @@ export type Params = {
 
 export type Return = {
   user: schemas["User"];
-  accessToken: string;
-  refreshToken: string;
 };
 
 export type ErrorType =
@@ -26,25 +26,22 @@ export type ErrorType =
 export const createUser =
   (context: ApiClientContext) =>
   async (params: Params): Promise<Result<Return, ErrorType>> => {
-    const request = createRequestInit(context, "/api/users", "post");
+    const tokenStore = context.tokenStore ?? LocalStorageTokenStore.shared;
 
-    const body: RequestPayload<"/api/users", "post">["application/json"] = {
-      handle: params.handle,
-      name: params.name,
-      password: params.password,
-    };
+    const { fetch } = createDetailedRequest(context, "/api/users", "post", {
+      body: {
+        "application/json": params,
+      },
+    });
 
-    const headers = new Headers(context.init?.headers);
-    headers.set("Content-Type", "application/json");
-
-    const res = (await fetch(request, {
-      ...context.init,
-      headers,
-      body: JSON.stringify(body),
-    })) as ClientResponse<"/api/users", "post">;
+    const res = await fetch();
 
     switch (res.status) {
       case 201: {
+        tokenStore.setTokens({
+          accessToken: res.headers.get(FlatNavyHttpHeader.accessToken) ?? "",
+          refreshToken: res.headers.get(FlatNavyHttpHeader.refreshToken) ?? "",
+        });
         const payload = await res.json();
         return [null, payload];
       }

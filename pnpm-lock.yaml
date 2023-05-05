@@ -45,6 +45,9 @@ importers:
       '@fastify/cors':
         specifier: ^8.2.1
         version: 8.2.1
+      '@fastify/helmet':
+        specifier: ^10.1.0
+        version: 10.1.0
       '@fastify/static':
         specifier: ^6.10.1
         version: 6.10.1
@@ -77,8 +80,8 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
       '@ztrehagem/openapi-to-fastify-schema':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.1.1
+        version: 0.1.1
       prisma:
         specifier: ^4.13.0
         version: 4.13.0
@@ -838,6 +841,13 @@ packages:
       fast-json-stringify: 5.7.0
     dev: false
 
+  /@fastify/helmet@10.1.0:
+    resolution: {integrity: sha512-v7QJPYf1uVcCwzyHzkDGcHTqDPscXj/61JKxOdvczyDPAKTxSeb9Sc2OBActXaj7zUELiAdgnkKkzNwmCNzBLQ==}
+    dependencies:
+      fastify-plugin: 4.5.0
+      helmet: 6.1.5
+    dev: false
+
   /@fastify/send@2.1.0:
     resolution: {integrity: sha512-yNYiY6sDkexoJR0D8IDy3aRP3+L4wdqCpvx5WP+VtEU58sn7USmKynBzDQex5X42Zzvw2gNzzYgP90UfWShLFA==}
     dependencies:
@@ -1310,8 +1320,8 @@ packages:
       - supports-color
     dev: false
 
-  /@ztrehagem/openapi-to-fastify-schema@0.1.0:
-    resolution: {integrity: sha512-/QkmHtRJPk3uUn6EJjimrTJrWJlGMsqlbHjw3ClDkS2QD1Of1ZeKl1D8aRlAKXGFXmM8NaBvWFg/gJFzZDxbvg==}
+  /@ztrehagem/openapi-to-fastify-schema@0.1.1:
+    resolution: {integrity: sha512-UReyWJOFgaSjtVmd5ZHo41CUvD4CTi5Fup5fdH7ZDpRN3I7yB3yolL8c+RbPVCc63b231Juo2sJWaKdc7mc7fQ==}
     hasBin: true
     dependencies:
       yaml: 2.2.2
@@ -2429,6 +2439,11 @@ packages:
     dependencies:
       function-bind: 1.1.1
     dev: true
+
+  /helmet@6.1.5:
+    resolution: {integrity: sha512-UgAvdoG0BhF9vcCh/j0bWtElo2ZHHk6OzC98NLCM6zK03DEVSM0vUAtT7iR+oTo2Mi6sGelAH3tL6B/uUWxV4g==}
+    engines: {node: '>=14.0.0'}
+    dev: false
 
   /http-errors@2.0.0:
     resolution: {integrity: sha512-FtwrG/euBzaEjYeRqOgly7G0qviiXoJWnvEH2Z1plBdXgbyjv34pHTSb9zoeHMyDy33+DWy5Wt9Wo+TURtOYSQ==}

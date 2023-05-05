@@ -1,5 +1,7 @@
 import fastifyCors from "@fastify/cors";
+import { fastifyHelmet } from "@fastify/helmet";
 import { default as fastifyStatic } from "@fastify/static";
+import { FlatNavyHttpHeader } from "@flatnavy/api";
 import { fastify, type FastifyInstance } from "fastify";
 import * as path from "node:path";
 import type { Context } from "./app/context.js";
@@ -18,11 +20,17 @@ export const createServer = async ({
 }: Params): Promise<FastifyInstance> => {
   const server = fastify();
 
+  await server.register(fastifyHelmet);
+
   if (!ProcessEnv.current.production) {
     await server.register(fastifyCors, {
+      prefix: "/api/",
       origin: true,
       credentials: true,
-      prefix: "/api/",
+      exposedHeaders: [
+        FlatNavyHttpHeader.accessToken,
+        FlatNavyHttpHeader.refreshToken,
+      ],
     });
   }
 

@@ -1,4 +1,4 @@
-import type { components, paths } from "./spec.generated.js";
+import type { components, operations, paths } from "./spec.generated.js";
 
 export type { paths };
 
@@ -13,29 +13,25 @@ export type HttpMethod =
   | "head"
   | "options";
 
-export type Operation<
-  Path extends keyof paths,
-  Method extends keyof paths[Path]
-> = {
-  pathParams: PathParameters<Path, Method>;
-  queryParams: QueryParameters<Path, Method>;
-  requestPayload: RequestPayload<Path, Method>;
-  responsePayload: ResponsePayload<Path, Method>;
-};
+export type OperationPathMethod<OpId extends keyof operations> = {
+  [Path in keyof paths]: {
+    [Method in keyof paths[Path]]: paths[Path][Method] extends operations[OpId]
+      ? { path: Path; method: Method }
+      : never;
+  }[keyof paths[Path]];
+}[keyof paths];
 
 export type PathParameters<
   Path extends keyof paths,
   Method extends keyof paths[Path]
-> = (paths[Path] extends { parameters: { path: infer U } } ? U : object) &
-  (paths[Path][Method] extends { parameters: { path: infer U } } ? U : object);
+> = paths[Path][Method] extends { parameters: { path: infer U } } ? U : void;
 
 export type QueryParameters<
   Path extends keyof paths,
   Method extends keyof paths[Path]
-> = (paths[Path] extends { parameters: { query: infer U } } ? U : object) &
-  (paths[Path][Method] extends { parameters: { query: infer U } } ? U : object);
+> = paths[Path][Method] extends { parameters: { query: infer U } } ? U : void;
 
-export type RequestPayload<
+export type RequestBody<
   Path extends keyof paths,
   Method extends keyof paths[Path]
 > = paths[Path][Method] extends {
@@ -44,15 +40,14 @@ export type RequestPayload<
   ? U
   : void;
 
-export type AnyRequestPayload<
+export type AnyOfRequestBody<
   Path extends keyof paths,
-  Method extends keyof paths[Path]
+  Method extends Exclude<keyof paths[Path], "parameters">
 > = {
-  [Mime in keyof RequestPayload<Path, Method>]: RequestPayload<
-    Path,
-    Method
-  >[Mime];
-}[keyof RequestPayload<Path, Method>];
+  [Mime in keyof RequestBody<Path, Method>]: {
+    [K in Mime]: RequestBody<Path, Method>[Mime];
+  };
+}[keyof RequestBody<Path, Method>];
 
 export type ResponsePayload<
   Path extends keyof paths,
