@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@fastify/cors": "^8.2.1",
+    "@fastify/helmet": "^10.1.0",
     "@fastify/static": "^6.10.1",
     "@fastify/type-provider-json-schema-to-ts": "^2.2.2",
     "@flatnavy/api": "*",

@@ -6,6 +6,7 @@ import type { Context } from "./app/context.js";
 import { createRouter } from "./createRouter.js";
 import { ProcessEnv } from "./ProcessEnv.js";
 import { logError, logInfo } from "./utils/log.js";
+import { fastifyHelmet } from "@fastify/helmet";
 
 export type Params = {
   context: Context;
@@ -17,6 +18,8 @@ export const createServer = async ({
   context,
 }: Params): Promise<FastifyInstance> => {
   const server = fastify();
+
+  await server.register(fastifyHelmet);
 
   if (!ProcessEnv.current.production) {
     await server.register(fastifyCors, {
