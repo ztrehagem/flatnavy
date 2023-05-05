@@ -56,11 +56,9 @@ paths:
         201:
           description: Created
           headers:
-            X-Session-Operation:
-              $ref: "#/components/headers/SessionOperation"
-            X-Access-Token:
+            X-FlatNavy-Access-Token:
               $ref: "#/components/headers/AccessToken"
-            X-Refresh-Token:
+            X-FlatNavy-Refresh-Token:
               $ref: "#/components/headers/RefreshToken"
           content:
             application/json:
@@ -84,11 +82,9 @@ paths:
         201:
           description: Created
           headers:
-            X-Session-Operation:
-              $ref: "#/components/headers/SessionOperation"
-            X-Access-Token:
+            X-FlatNavy-Access-Token:
               $ref: "#/components/headers/AccessToken"
-            X-Refresh-Token:
+            X-FlatNavy-Refresh-Token:
               $ref: "#/components/headers/RefreshToken"
           content:
             application/json:
@@ -112,8 +108,6 @@ paths:
         204:
           description: No Content
           headers:
-            X-Session-Operation:
-              $ref: "#/components/headers/SessionOperation"
         401:
           description: Unauthorized
 
@@ -169,11 +163,9 @@ paths:
         201:
           description: Created
           headers:
-            X-Session-Operation:
-              $ref: "#/components/headers/SessionOperation"
-            X-Access-Token:
+            X-FlatNavy-Access-Token:
               $ref: "#/components/headers/AccessToken"
-            X-Refresh-Token:
+            X-FlatNavy-Refresh-Token:
               $ref: "#/components/headers/RefreshToken"
           content:
             application/json:
@@ -406,15 +398,6 @@ components:
       required: true
       schema:
         type: string
-    SessionOperation:
-      description: Operation type for lifecycle of session.
-      required: true
-      schema:
-        type: string
-        enum:
-          - created
-          - refreshed
-          - revoked
 
   securitySchemes:
     AccessToken:

@@ -1,3 +1,4 @@
+import { FlatNavyHttpHeader } from "@flatnavy/api";
 import operations from "@ztrehagem/openapi-to-fastify-schema/generated";
 import type { Context } from "../../context.js";
 import { HashedUserPassword } from "../../model/User/HashedUserPassword.js";
@@ -53,9 +54,8 @@ export const createUser = defineRoute(
       return await reply
         .status(201)
         .headers({
-          "X-Session-Operation": "create",
-          "X-Access-Token": accessTokenJwt,
-          "X-Refresh-Token": refreshTokenJwt,
+          [FlatNavyHttpHeader.accessToken]: accessTokenJwt,
+          [FlatNavyHttpHeader.refreshToken]: refreshTokenJwt,
         })
         .send({
           user: serializeUser(createdUser),

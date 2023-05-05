@@ -1,12 +1,13 @@
 import fastifyCors from "@fastify/cors";
+import { fastifyHelmet } from "@fastify/helmet";
 import { default as fastifyStatic } from "@fastify/static";
+import { FlatNavyHttpHeader } from "@flatnavy/api";
 import { fastify, type FastifyInstance } from "fastify";
 import * as path from "node:path";
 import type { Context } from "./app/context.js";
 import { createRouter } from "./createRouter.js";
 import { ProcessEnv } from "./ProcessEnv.js";
 import { logError, logInfo } from "./utils/log.js";
-import { fastifyHelmet } from "@fastify/helmet";
 
 export type Params = {
   context: Context;
@@ -27,9 +28,8 @@ export const createServer = async ({
       origin: true,
       credentials: true,
       exposedHeaders: [
-        "X-Session-Operation",
-        "X-Access-Token",
-        "X-Refresh-Token",
+        FlatNavyHttpHeader.accessToken,
+        FlatNavyHttpHeader.refreshToken,
       ],
     });
   }

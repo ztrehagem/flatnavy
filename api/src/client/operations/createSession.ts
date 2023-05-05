@@ -1,3 +1,4 @@
+import { FlatNavyHttpHeader } from "../../main.js";
 import type { schemas } from "../../types.js";
 import type { ApiClientContext } from "../context.js";
 import { InvalidParametersError } from "../error/InvalidParametersError.js";
@@ -33,8 +34,8 @@ export const createSession =
     switch (res.status) {
       case 201: {
         tokenStore.setTokens({
-          accessToken: res.headers.get("X-Access-Token") ?? "",
-          refreshToken: res.headers.get("X-Refresh-Token") ?? "",
+          accessToken: res.headers.get(FlatNavyHttpHeader.accessToken) ?? "",
+          refreshToken: res.headers.get(FlatNavyHttpHeader.refreshToken) ?? "",
         });
         const payload = await res.json();
         return [null, payload];
