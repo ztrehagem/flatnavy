@@ -1,8 +1,8 @@
-import type { Path } from "react-router-dom";
+import { type Path, useParams as useParamsLib } from "react-router-dom";
 import type { RouteParams, RoutePath } from "./types.js";
 
 export const location = <T extends RoutePath>(
-  route: RoutePath,
+  route: T,
   params: RouteParams<T>,
   options?: Omit<Path, "pathname">
 ): Partial<Path> => {
@@ -22,4 +22,8 @@ export const getUserPageLocation = (
   options?: Omit<Path, "pathname">
 ): Partial<Path> => {
   return location("/:userHandle", { userHandle: `@${userHandle}` }, options);
+};
+
+export const useParams = <T extends RoutePath>(path: T): RouteParams<T> => {
+  return useParamsLib() as RouteParams<T>;
 };

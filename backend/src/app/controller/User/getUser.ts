@@ -10,7 +10,7 @@ export const getUser = defineRoute(({ userRepository }: Context) => ({
     const [eUserHandle, userHandle] = UserHandle.create(req.params.userHandle);
 
     if (eUserHandle) {
-      return await reply.status(400).send();
+      return await reply.status(404).send();
     }
 
     const user = await userRepository.getByHandle(userHandle);

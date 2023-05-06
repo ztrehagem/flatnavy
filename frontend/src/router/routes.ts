@@ -26,16 +26,7 @@ const secondaryRoutes = [
   },
   {
     path: ":userHandle" as const,
-    Component: lazy(() => import("../ui/UserPage/UserPage.jsx")),
-    loader: ({ params }) => {
-      if (!params.userHandle?.startsWith("@")) {
-        throw new Response(null, {
-          status: 404,
-          statusText: "Not Found",
-        });
-      }
-      return null;
-    },
+    lazy: () => import("../ui/UserPage/UserPage.jsx"),
   },
 ] satisfies RouteObject[];
 
