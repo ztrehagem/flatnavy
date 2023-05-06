@@ -39,33 +39,3 @@ type UnionToIntersection<U> = (
 ) extends (k: infer I) => void
   ? I
   : never;
-
-// type KeyValidString = "" | `${KeyValidChar}${KeyValidString}`;
-// type KeyValidChar = UpperChar | LowerChar | "_"
-// type UpperChar = Uppercase<LowerChar>
-// type LowerChar =
-//   | "a"
-//   | "b"
-//   | "c"
-//   | "d"
-//   | "e"
-//   | "f"
-//   | "g"
-//   | "h"
-//   | "i"
-//   | "j"
-//   | "k"
-//   | "l"
-//   | "m"
-//   | "n"
-//   | "p"
-//   | "q"
-//   | "r"
-//   | "s"
-//   | "t"
-//   | "u"
-//   | "v"
-//   | "w"
-//   | "x"
-//   | "y"
-//   | "z"
