@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import type { schemas } from "@flatnavy/api";
 import { indexUser } from "@flatnavy/api/client";
 import { apiClientContext } from "../../lib/api.js";
-import * as css from "./UserIndexView.css.js";
+import * as css from "./UserIndexPage.css.js";
 
-export const UserIndexView: React.FC = () => {
+export const UserIndexPage: React.FC = () => {
   const [users, setUsers] = useState<Array<schemas["User"]>>([]);
 
   useEffect(() => {
@@ -30,3 +30,5 @@ export const UserIndexView: React.FC = () => {
     </div>
   );
 };
+
+export default UserIndexPage;

@@ -3,9 +3,9 @@ import { PostForm } from "../PostForm/PostForm.js";
 import { TimelineView } from "../Timeline/TimelineView.js";
 import { useSession } from "../../model/Session/useSession.js";
 import { SectionHeader } from "../Section/SectionHeader.js";
-import * as css from "./HomeView.css.js";
+import * as css from "./MainPage.css.js";
 
-export const MainView: React.FC = () => {
+export const MainPage: React.FC = () => {
   const session = useSession();
 
   return (
@@ -17,3 +17,5 @@ export const MainView: React.FC = () => {
     </div>
   );
 };
+
+export default MainPage;

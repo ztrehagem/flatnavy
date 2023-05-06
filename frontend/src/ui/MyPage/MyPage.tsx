@@ -20,3 +20,5 @@ export const MyPage: React.FC = () => {
     </div>
   );
 };
+
+export default MyPage;

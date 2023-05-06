@@ -1,12 +1,15 @@
-import React from "react";
+import React, { lazy } from "react";
 import type { RouteObject } from "react-router-dom";
-import { MainView } from "../ui/Home/HomeView.jsx";
 import { RootLayout } from "../ui/RootLayout/RootLayout.jsx";
-import { UserIndexView } from "../ui/UserIndex/UserIndexView.jsx";
-import { RegisterView } from "../ui/Register/RegisterView.jsx";
-import { LoginView } from "../ui/Login/LoginView.jsx";
-import { MyPage } from "../ui/MyPage/MyPage.jsx";
 import { Authenticated } from "../model/Session/Authenticated.jsx";
+
+const MainPage = lazy(() => import("../ui/MainPage/MainPage.jsx"));
+const UserIndexPage = lazy(
+  () => import("../ui/UserIndexPage/UserIndexPage.jsx")
+);
+const RegisterPage = lazy(() => import("../ui/RegisterPage/RegisterPage.jsx"));
+const LoginPage = lazy(() => import("../ui/LoginPage/LoginPage.jsx"));
+const MyPage = lazy(() => import("../ui/MyPage/MyPage.jsx"));
 
 export const routes = [
   {
@@ -15,15 +18,15 @@ export const routes = [
     children: [
       {
         path: "" as const,
-        element: <MainView />,
+        element: <MainPage />,
       },
       {
         path: "register" as const,
-        element: <RegisterView />,
+        element: <RegisterPage />,
       },
       {
         path: "login" as const,
-        element: <LoginView />,
+        element: <LoginPage />,
       },
       {
         path: "me" as const,
@@ -35,7 +38,7 @@ export const routes = [
       },
       {
         path: "users" as const,
-        element: <UserIndexView />,
+        element: <UserIndexPage />,
       },
       {
         path: "users/:userId" as const,
