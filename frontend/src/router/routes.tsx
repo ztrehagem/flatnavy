@@ -10,6 +10,7 @@ const UserIndexPage = lazy(
 const RegisterPage = lazy(() => import("../ui/RegisterPage/RegisterPage.jsx"));
 const LoginPage = lazy(() => import("../ui/LoginPage/LoginPage.jsx"));
 const MyPage = lazy(() => import("../ui/MyPage/MyPage.jsx"));
+const UserPage = lazy(() => import("../ui/UserPage/UserPage.jsx"));
 
 export const routes = [
   {
@@ -41,8 +42,14 @@ export const routes = [
         element: <UserIndexPage />,
       },
       {
-        path: "users/:userId" as const,
-        element: <div>users/:userId</div>,
+        path: ":userHandle" as const,
+        element: <UserPage />,
+        loader: ({ params }) => {
+          if (!params.userHandle?.startsWith("@")) {
+            throw new Response(null, { status: 404 });
+          }
+          return null;
+        },
       },
     ],
   },

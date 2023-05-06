@@ -20,6 +20,13 @@ export const name = style({
   fontWeight: "bold",
 });
 
+export const nameAnchor = style({
+  cursor: "pointer",
+  ":hover": {
+    textDecoration: "underline",
+  },
+});
+
 export const handle = style({
   whiteSpace: "nowrap",
   color: fgMuted,

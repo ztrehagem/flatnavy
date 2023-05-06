@@ -21,7 +21,7 @@ type RouteType<Record, Prefix extends string> = Record extends {
 
 type PathParamName<T extends string> = T extends `${infer L}/${infer R}`
   ? PathParamName<L> | PathParamName<R>
-  : T extends `:${infer Param}`
+  : T extends `${string}:${infer Param}`
   ? Param
   : never;
 
@@ -39,3 +39,33 @@ type UnionToIntersection<U> = (
 ) extends (k: infer I) => void
   ? I
   : never;
+
+// type KeyValidString = "" | `${KeyValidChar}${KeyValidString}`;
+// type KeyValidChar = UpperChar | LowerChar | "_"
+// type UpperChar = Uppercase<LowerChar>
+// type LowerChar =
+//   | "a"
+//   | "b"
+//   | "c"
+//   | "d"
+//   | "e"
+//   | "f"
+//   | "g"
+//   | "h"
+//   | "i"
+//   | "j"
+//   | "k"
+//   | "l"
+//   | "m"
+//   | "n"
+//   | "p"
+//   | "q"
+//   | "r"
+//   | "s"
+//   | "t"
+//   | "u"
+//   | "v"
+//   | "w"
+//   | "x"
+//   | "y"
+//   | "z"

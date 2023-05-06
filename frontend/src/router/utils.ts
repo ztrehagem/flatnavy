@@ -8,11 +8,18 @@ export const location = <T extends RoutePath>(
 ): Partial<Path> => {
   const completedPath = route.replace(
     /\/:([^/:]+)/g,
-    (_, name: string) => (params as Record<string, string>)[name]
+    (_, name: string) => `/${(params as Record<string, string>)[name]}`
   );
 
   return {
     pathname: completedPath,
     ...options,
   };
+};
+
+export const getUserPageLocation = (
+  userHandle: string,
+  options?: Omit<Path, "pathname">
+): Partial<Path> => {
+  return location("/:userHandle", { userHandle: `@${userHandle}` }, options);
 };
