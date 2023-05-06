@@ -6,6 +6,7 @@ export { UnexpectedResponseError } from "./error/UnexpectedResponseError.js";
 export { createPost } from "./operations/createPost.js";
 export { createSession } from "./operations/createSession.js";
 export { createUser } from "./operations/createUser.js";
+export { getUser } from "./operations/getUser.js";
 export { deleteSession } from "./operations/deleteSession.js";
 export { getSession } from "./operations/getSession.js";
 export { indexUser } from "./operations/indexUser.js";

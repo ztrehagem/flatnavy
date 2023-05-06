@@ -1,9 +1,9 @@
+import * as path from "node:path";
 import fastifyCors from "@fastify/cors";
 import { fastifyHelmet } from "@fastify/helmet";
 import { default as fastifyStatic } from "@fastify/static";
 import { FlatNavyHttpHeader } from "@flatnavy/api";
 import { fastify, type FastifyInstance } from "fastify";
-import * as path from "node:path";
 import type { Context } from "./app/context.js";
 import { createRouter } from "./createRouter.js";
 import { ProcessEnv } from "./ProcessEnv.js";

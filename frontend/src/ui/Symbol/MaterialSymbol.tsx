@@ -1,6 +1,6 @@
 import React from "react";
-import * as css from "./MaterialSymbol.css.js";
 import type { CSSProperties } from "@vanilla-extract/css";
+import * as css from "./MaterialSymbol.css.js";
 
 export type Props = {
   name: string;

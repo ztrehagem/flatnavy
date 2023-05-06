@@ -1,6 +1,6 @@
 import type * as prisma from "@prisma/client";
-import type { PrismaRepositoryContext } from "../PrismaRepositoryContext.js";
 import { AbortError, type RedisClientType } from "redis";
+import type { PrismaRepositoryContext } from "../PrismaRepositoryContext.js";
 import { TimelineSubscription } from "../../../app/model/Timeline/TimelineSubscription.js";
 import type { ITimelineRepository } from "../../../app/repository/Timeline/ITimelineRepository.js";
 import { TimelineEntry } from "../../../app/model/Timeline/TimelineEntry.js";

@@ -205,8 +205,6 @@ paths:
                     $ref: "#/components/schemas/User"
                 required:
                   - user
-        400:
-          description: Bad Request
         404:
           description: Not Found
     patch:

@@ -1,12 +1,12 @@
 import React from "react";
-import { GlobalNavigation } from "../GlobalNavigation/GlobalNavigation.js";
 import { Outlet } from "react-router-dom";
+import { GlobalHeader } from "../GlobalHeader/GlobalHeader.jsx";
 
-export const RootView: React.FC = () => {
+export const RootLayout: React.FC = () => {
   return (
     <React.Suspense>
       <div>
-        <GlobalNavigation />
+        <GlobalHeader />
 
         <React.Suspense>
           <Outlet />

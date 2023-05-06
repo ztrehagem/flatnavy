@@ -1,6 +1,6 @@
 import { commandOptions, type RedisClientType } from "redis";
-import { Stream } from "./Stream.js";
 import type { TimelineScope } from "../../../app/model/Timeline/TimelineScope.js";
+import { Stream } from "./Stream.js";
 import { parseStreamMessage, type StreamEntry } from "./StreamEntry.js";
 
 export class StreamReader extends Stream {

@@ -2,6 +2,7 @@ import { createVar, globalStyle } from "@vanilla-extract/css";
 
 export const light = createVar();
 export const smoke = createVar();
+export const gray = createVar();
 export const slate = createVar();
 export const dark = createVar();
 
@@ -15,6 +16,7 @@ globalStyle(":root", {
   vars: {
     [light]: "rgb(239 239 239)",
     [smoke]: "rgb(200 200 200)",
+    [gray]: "rgb(127 127 127)",
     [slate]: "rgb(64 64 64)",
     [dark]: "rgb(35 39 45)",
 
@@ -25,6 +27,7 @@ globalStyle(":root", {
 
 export const fg = createVar();
 export const fgWeak = createVar();
+export const fgMuted = createVar();
 export const accent = createVar();
 export const bgStrong = createVar();
 export const bg = createVar();
@@ -33,6 +36,7 @@ globalStyle(":root", {
   vars: {
     [fg]: dark,
     [fgWeak]: slate,
+    [fgMuted]: gray,
     [accent]: darkNavy,
     [bgStrong]: smoke,
     [bg]: light,
@@ -42,6 +46,7 @@ globalStyle(":root", {
       vars: {
         [fg]: light,
         [fgWeak]: smoke,
+        [fgMuted]: gray,
         [accent]: lightNavy,
         [bgStrong]: slate,
         [bg]: dark,
