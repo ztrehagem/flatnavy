@@ -1,8 +1,8 @@
 import React from "react";
 import type { schemas } from "@flatnavy/api";
-import * as css from "./PostView.css.js";
-import { useRelativeTimeText } from "../../lib/DateTime/useRelativeTimeText.js";
 import { Temporal } from "@js-temporal/polyfill";
+import { useRelativeTimeText } from "../../lib/DateTime/useRelativeTimeText.js";
+import * as css from "./PostView.css.js";
 
 export type Props = {
   post: schemas["Post"];

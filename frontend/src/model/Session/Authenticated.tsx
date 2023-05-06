@@ -1,7 +1,7 @@
 import React from "react";
-import { useSession } from "./useSession.js";
 import { Navigate } from "react-router-dom";
 import { location } from "../../router/utils.js";
+import { useSession } from "./useSession.js";
 
 export type Props = {
   children: React.ReactNode;

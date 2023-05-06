@@ -1,11 +1,11 @@
-import type { KeyObject } from "node:crypto";
-import { generateKeyPair, type JsonWebKey } from "node:crypto";
+import { generateKeyPair } from "node:crypto";
+import type { KeyObject, JsonWebKey } from "node:crypto";
 import { importPKCS8, importSPKI, jwtVerify, SignJWT } from "jose";
+import { Temporal } from "@js-temporal/polyfill";
 import type { Result } from "../../../utils/Result.js";
 import { InvalidParameterError } from "../../error/InvalidParameterError.js";
 import { UserHandle } from "../User/UserHandle.js";
 import { SessionId } from "../Session/SessionId.js";
-import { Temporal } from "@js-temporal/polyfill";
 import { AuthenticationToken } from "../Session/AuthenticationToken.js";
 
 type JWT = string;

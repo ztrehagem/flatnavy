@@ -1,8 +1,8 @@
+import type { JsonWebKey } from "crypto";
 import type * as prisma from "@prisma/client";
 import type { IServerKeyRepository } from "../../../app/repository/Server/IServerKeyRepository.js";
 import type { PrismaRepositoryContext } from "../PrismaRepositoryContext.js";
 import { ServerKey } from "../../../app/model/Server/ServerKey.js";
-import type { JsonWebKey } from "crypto";
 
 export class ServerKeyRepository implements IServerKeyRepository {
   readonly #prisma: prisma.PrismaClient;

@@ -1,6 +1,6 @@
 import React from "react";
-import { GlobalHeader } from "../GlobalHeader/GlobalHeader.jsx";
 import { Outlet } from "react-router-dom";
+import { GlobalHeader } from "../GlobalHeader/GlobalHeader.jsx";
 
 export const RootLayout: React.FC = () => {
   return (

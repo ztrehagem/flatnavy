@@ -1,7 +1,7 @@
 import type * as prisma from "@prisma/client";
-import type { UserRecord } from "./User.js";
 import { Post } from "../model/Post/Post.js";
 import { PostId } from "../model/Post/PostId.js";
+import type { UserRecord } from "./User.js";
 import { mapUser } from "./User.js";
 
 type PostRecord = Pick<prisma.Post, "id" | "body" | "createdAt"> & {

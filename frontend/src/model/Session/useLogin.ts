@@ -1,14 +1,14 @@
 import { useCallback, useState } from "react";
-import type { Result } from "../../lib/Result.js";
 import type {
   InvalidParametersError,
   UnexpectedResponseError,
 } from "@flatnavy/api/client";
 import { createSession } from "@flatnavy/api/client";
-import { apiClientContext } from "../../lib/api.js";
-import { Session } from "./Session.type.js";
-import { User } from "../User/User.type.js";
 import { useSetAtom } from "jotai";
+import type { Result } from "../../lib/Result.js";
+import { apiClientContext } from "../../lib/api.js";
+import { User } from "../User/User.type.js";
+import { Session } from "./Session.type.js";
 import { sessionState } from "./Session.state.js";
 
 export type LoginParams = {

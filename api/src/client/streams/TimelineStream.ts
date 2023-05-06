@@ -1,6 +1,5 @@
-import type { schemas } from "../../types.js";
+import type { schemas, OperationPathMethod } from "../../types.js";
 import type { ApiClientContext } from "../context.js";
-import type { OperationPathMethod } from "../../types.js";
 
 const path: OperationPathMethod<"streamTimelineSSE">["path"] =
   "/api/stream/sse/timeline";

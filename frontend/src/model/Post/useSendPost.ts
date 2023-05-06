@@ -1,13 +1,13 @@
 import { useCallback, useState } from "react";
-import type { Result } from "../../lib/Result.js";
-import { Post } from "./Post.type.js";
 import type {
   InvalidParametersError,
   UnauthenticatedError,
   UnexpectedResponseError,
 } from "@flatnavy/api/client";
 import { createPost } from "@flatnavy/api/client";
+import type { Result } from "../../lib/Result.js";
 import { apiClientContext } from "../../lib/api.js";
+import { Post } from "./Post.type.js";
 import { PostId } from "./PostId.type.js";
 
 export type SendPostParams = {

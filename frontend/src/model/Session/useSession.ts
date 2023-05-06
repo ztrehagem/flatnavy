@@ -1,6 +1,6 @@
 import { useAtomValue } from "jotai";
-import type { Session } from "./Session.type.js";
 import { ContextError } from "../../error/ContextError.js";
+import type { Session } from "./Session.type.js";
 import { sessionState } from "./Session.state.js";
 
 interface UseSession {

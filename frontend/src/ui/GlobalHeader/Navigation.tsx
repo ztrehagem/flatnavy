@@ -1,9 +1,9 @@
 import React from "react";
 import { location } from "../../router/utils.js";
-import { NavigationLink } from "./NavigationLink.jsx";
 import { MaterialSymbol } from "../Symbol/MaterialSymbol.jsx";
-import * as css from "./Navigation.css.js";
 import { useSession } from "../../model/Session/useSession.js";
+import { NavigationLink } from "./NavigationLink.jsx";
+import * as css from "./Navigation.css.js";
 
 export const Navigation: React.FC = () => {
   const session = useSession();

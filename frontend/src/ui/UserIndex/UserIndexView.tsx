@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import * as css from "./UserIndexView.css.js";
 import type { schemas } from "@flatnavy/api";
 import { indexUser } from "@flatnavy/api/client";
 import { apiClientContext } from "../../lib/api.js";
+import * as css from "./UserIndexView.css.js";
 
 export const UserIndexView: React.FC = () => {
   const [users, setUsers] = useState<Array<schemas["User"]>>([]);

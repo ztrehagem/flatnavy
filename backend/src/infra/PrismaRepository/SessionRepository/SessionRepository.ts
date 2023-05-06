@@ -1,4 +1,5 @@
 import type * as prisma from "@prisma/client";
+import { Temporal } from "@js-temporal/polyfill";
 import type {
   CreateSessionParams,
   CreateSessionResult,
@@ -6,7 +7,6 @@ import type {
 } from "../../../app/repository/Session/ISessionRepository.js";
 import type { PrismaRepositoryContext } from "../PrismaRepositoryContext.js";
 import { SessionId } from "../../../app/model/Session/SessionId.js";
-import { Temporal } from "@js-temporal/polyfill";
 import { AuthenticationToken } from "../../../app/model/Session/AuthenticationToken.js";
 
 export class SessionRepository implements ISessionRepository {

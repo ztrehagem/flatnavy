@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import * as css from "./NavigationLink.css.js";
 import type { To } from "react-router-dom";
+import * as css from "./NavigationLink.css.js";
 
 export type Props = {
   to: To;
