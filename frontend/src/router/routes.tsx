@@ -1,17 +1,17 @@
 import React from "react";
 import type { RouteObject } from "react-router-dom";
-import { MainView } from "../ui/MainView/MainView.jsx";
-import { RootView } from "../ui/RootView/RootView.jsx";
-import { UserIndexView } from "../ui/UserIndexView/UserIndexView.jsx";
-import { RegisterView } from "../ui/RegisterView/RegisterView.jsx";
-import { LoginView } from "../ui/LoginView/LoginView.jsx";
+import { MainView } from "../ui/Home/HomeView.jsx";
+import { RootLayout } from "../ui/RootLayout/RootLayout.jsx";
+import { UserIndexView } from "../ui/UserIndex/UserIndexView.jsx";
+import { RegisterView } from "../ui/Register/RegisterView.jsx";
+import { LoginView } from "../ui/Login/LoginView.jsx";
 import { MyPage } from "../ui/MyPage/MyPage.jsx";
 import { Authenticated } from "../model/Session/Authenticated.jsx";
 
 export const routes = [
   {
     path: "" as const,
-    element: <RootView />,
+    element: <RootLayout />,
     children: [
       {
         path: "" as const,
