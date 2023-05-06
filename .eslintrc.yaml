@@ -5,6 +5,7 @@ env:
 
 extends:
   - eslint:recommended
+  - plugin:import/recommended
   - plugin:react/recommended
   - plugin:@typescript-eslint/recommended
   - plugin:@typescript-eslint/recommended-requiring-type-checking
@@ -13,6 +14,12 @@ extends:
 settings:
   react:
     version: "18.2"
+  "import/resolver":
+    typescript:
+      project:
+        - frontend/tsconfig.eslint.json
+        - backend/tsconfig.json
+        - api/tsconfig.json
 
 parserOptions:
   project:
@@ -27,6 +34,7 @@ parserOptions:
 rules:
   no-console: error
   no-debugger: error
+  "import/order": warn
   "@typescript-eslint/explicit-module-boundary-types": warn
   "@typescript-eslint/no-unused-vars":
     - warn
