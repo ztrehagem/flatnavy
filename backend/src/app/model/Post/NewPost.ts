@@ -14,11 +14,16 @@ export class NewPost {
   readonly body: string;
 
   static create(params: Params): NewPost | void {
-    if (params.body.length > BODY_MAX_LENGTH) {
+    const body = params.body.trim();
+
+    if (body.length > BODY_MAX_LENGTH) {
       return;
     }
 
-    return new NewPost(params);
+    return new NewPost({
+      ...params,
+      body,
+    });
   }
 
   private constructor(params: Params) {
