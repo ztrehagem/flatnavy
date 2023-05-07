@@ -33,4 +33,5 @@ export const submitText = style({
 
 export const textarea = style({
   padding: "0 8px",
+  lineHeight: "1.5",
 });

@@ -37,5 +37,6 @@ export const time = style({
 });
 
 export const body = style({
+  whiteSpace: "pre-wrap",
   lineHeight: "1.25",
 });
