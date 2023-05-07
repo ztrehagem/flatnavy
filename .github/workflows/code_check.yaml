@@ -1,6 +1,9 @@
 name: Code Check
 
-on: push
+on:
+  push:
+    branches:
+      - "*"
 
 jobs:
   eslint:
